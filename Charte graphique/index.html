@@ -2249,7 +2249,7 @@ body {
 
   // ═══ Copy: Palette Swatch ═══
   function copySwatch(btn, hex, cssVar) {
-    var text = (hex || '') + ' — ' + (cssVar || '');
+    const text = (hex || '') + ' — ' + (cssVar || '');
     copyToClipboard(text, btn);
   }
 
