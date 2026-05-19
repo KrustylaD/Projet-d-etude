@@ -1803,6 +1803,59 @@ body {
     </div>
   </div>
 
+  <div class="code-toggle-wrap">
+    <button class="code-toggle-btn" onclick="toggleCodePanel(this,'code-panel-btn-primary')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> Code
+    </button>
+  </div>
+  <div class="code-panel" id="code-panel-btn-primary">
+    <div class="code-panel-header">
+      <span class="code-panel-label">HTML + CSS</span>
+      <button class="copy-btn" onclick="copyCode(this,'code-btn-primary')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        Copier
+      </button>
+    </div>
+    <div class="code-block" id="code-btn-primary" style="margin-top:0;">
+<span class="comment">&lt;!-- Boutons Primary --&gt;</span>
+&lt;<span class="property">button</span> <span class="value">class</span>=<span class="string">"btn btn-primary btn-sm"</span>&gt;Small&lt;/<span class="property">button</span>&gt;
+&lt;<span class="property">button</span> <span class="value">class</span>=<span class="string">"btn btn-primary btn-md"</span>&gt;Medium&lt;/<span class="property">button</span>&gt;
+&lt;<span class="property">button</span> <span class="value">class</span>=<span class="string">"btn btn-primary btn-lg"</span>&gt;Large CTA&lt;/<span class="property">button</span>&gt;
+
+<span class="comment">/* CSS */</span>
+<span class="punctuation">.</span><span class="property">btn</span> <span class="punctuation">{</span>
+  <span class="property">display</span><span class="punctuation">:</span> <span class="value">inline-flex</span><span class="punctuation">;</span>
+  <span class="property">align-items</span><span class="punctuation">:</span> <span class="value">center</span><span class="punctuation">;</span>
+  <span class="property">justify-content</span><span class="punctuation">:</span> <span class="value">center</span><span class="punctuation">;</span>
+  <span class="property">gap</span><span class="punctuation">:</span> <span class="value">8px</span><span class="punctuation">;</span>
+  <span class="property">font-family</span><span class="punctuation">:</span> <span class="value">var</span><span class="punctuation">(</span><span class="property">--font-body</span><span class="punctuation">);</span>
+  <span class="property">font-weight</span><span class="punctuation">:</span> <span class="value">500</span><span class="punctuation">;</span>
+  <span class="property">border</span><span class="punctuation">:</span> <span class="value">none</span><span class="punctuation">;</span>
+  <span class="property">border-radius</span><span class="punctuation">:</span> <span class="value">var</span><span class="punctuation">(</span><span class="property">--radius-md</span><span class="punctuation">);</span>
+  <span class="property">cursor</span><span class="punctuation">:</span> <span class="value">pointer</span><span class="punctuation">;</span>
+  <span class="property">transition</span><span class="punctuation">:</span> <span class="value">all 150ms cubic-bezier</span><span class="punctuation">(</span>0.16<span class="punctuation">,</span> 1<span class="punctuation">,</span> 0.3<span class="punctuation">,</span> 1<span class="punctuation">);</span>
+  <span class="property">white-space</span><span class="punctuation">:</span> <span class="value">nowrap</span><span class="punctuation">;</span>
+<span class="punctuation">}</span>
+
+<span class="punctuation">.</span><span class="property">btn</span><span class="punctuation">:</span><span class="property">active</span> <span class="punctuation">{</span> <span class="property">transform</span><span class="punctuation">:</span> <span class="value">scale</span><span class="punctuation">(</span>0.97<span class="punctuation">);</span> <span class="punctuation">}</span>
+
+<span class="punctuation">.</span><span class="property">btn-sm</span> <span class="punctuation">{</span> <span class="property">height</span><span class="punctuation">:</span> <span class="value">32px</span><span class="punctuation">;</span> <span class="property">padding</span><span class="punctuation">:</span> <span class="value">0 12px</span><span class="punctuation">;</span> <span class="property">font-size</span><span class="punctuation">:</span> <span class="value">11px</span><span class="punctuation">;</span> <span class="punctuation">}</span>
+<span class="punctuation">.</span><span class="property">btn-md</span> <span class="punctuation">{</span> <span class="property">height</span><span class="punctuation">:</span> <span class="value">44px</span><span class="punctuation">;</span> <span class="property">padding</span><span class="punctuation">:</span> <span class="value">0 20px</span><span class="punctuation">;</span> <span class="property">font-size</span><span class="punctuation">:</span> <span class="value">13px</span><span class="punctuation">;</span> <span class="punctuation">}</span>
+<span class="punctuation">.</span><span class="property">btn-lg</span> <span class="punctuation">{</span> <span class="property">height</span><span class="punctuation">:</span> <span class="value">52px</span><span class="punctuation">;</span> <span class="property">padding</span><span class="punctuation">:</span> <span class="value">0 28px</span><span class="punctuation">;</span> <span class="property">font-size</span><span class="punctuation">:</span> <span class="value">15px</span><span class="punctuation">;</span> <span class="punctuation">}</span>
+
+<span class="punctuation">.</span><span class="property">btn-primary</span> <span class="punctuation">{</span>
+  <span class="property">background</span><span class="punctuation">:</span> <span class="value">#D4FF50</span><span class="punctuation">;</span>
+  <span class="property">color</span><span class="punctuation">:</span> <span class="value">#050D07</span><span class="punctuation">;</span>
+  <span class="property">box-shadow</span><span class="punctuation">:</span> <span class="value">0 0 10px rgba</span><span class="punctuation">(</span>212<span class="punctuation">,</span>255<span class="punctuation">,</span>80<span class="punctuation">,</span>0.10<span class="punctuation">);</span>
+<span class="punctuation">}</span>
+
+<span class="punctuation">.</span><span class="property">btn-primary</span><span class="punctuation">:</span><span class="property">hover</span> <span class="punctuation">{</span>
+  <span class="property">background</span><span class="punctuation">:</span> <span class="value">#C5F030</span><span class="punctuation">;</span>
+  <span class="property">box-shadow</span><span class="punctuation">:</span> <span class="value">0 0 20px rgba</span><span class="punctuation">(</span>212<span class="punctuation">,</span>255<span class="punctuation">,</span>80<span class="punctuation">,</span>0.15<span class="punctuation">);</span>
+<span class="punctuation">}</span>
+    </div>
+  </div>
+
   <div class="comp-demo">
     <h4>Boutons — Secondary</h4>
     <div class="btn-row">
@@ -1812,11 +1865,80 @@ body {
     </div>
   </div>
 
+  <div class="code-toggle-wrap">
+    <button class="code-toggle-btn" onclick="toggleCodePanel(this,'code-panel-btn-secondary')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> Code
+    </button>
+  </div>
+  <div class="code-panel" id="code-panel-btn-secondary">
+    <div class="code-panel-header">
+      <span class="code-panel-label">HTML + CSS</span>
+      <button class="copy-btn" onclick="copyCode(this,'code-btn-secondary')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        Copier
+      </button>
+    </div>
+    <div class="code-block" id="code-btn-secondary" style="margin-top:0;">
+<span class="comment">&lt;!-- Boutons Secondary --&gt;</span>
+&lt;<span class="property">button</span> <span class="value">class</span>=<span class="string">"btn btn-secondary btn-sm"</span>&gt;Small&lt;/<span class="property">button</span>&gt;
+&lt;<span class="property">button</span> <span class="value">class</span>=<span class="string">"btn btn-secondary btn-md"</span>&gt;Medium&lt;/<span class="property">button</span>&gt;
+&lt;<span class="property">button</span> <span class="value">class</span>=<span class="string">"btn btn-secondary btn-lg"</span>&gt;Large&lt;/<span class="property">button</span>&gt;
+
+<span class="comment">/* CSS */</span>
+<span class="punctuation">.</span><span class="property">btn-secondary</span> <span class="punctuation">{</span>
+  <span class="property">background</span><span class="punctuation">:</span> <span class="value">transparent</span><span class="punctuation">;</span>
+  <span class="property">color</span><span class="punctuation">:</span> <span class="value">var</span><span class="punctuation">(</span><span class="property">--cream</span><span class="punctuation">);</span>
+  <span class="property">border</span><span class="punctuation">:</span> <span class="value">1px solid rgba</span><span class="punctuation">(</span>249<span class="punctuation">,</span>249<span class="punctuation">,</span>242<span class="punctuation">,</span>0.12<span class="punctuation">);</span>
+<span class="punctuation">}</span>
+
+<span class="punctuation">.</span><span class="property">btn-secondary</span><span class="punctuation">:</span><span class="property">hover</span> <span class="punctuation">{</span>
+  <span class="property">background</span><span class="punctuation">:</span> <span class="value">rgba</span><span class="punctuation">(</span>249<span class="punctuation">,</span>249<span class="punctuation">,</span>242<span class="punctuation">,</span>0.04<span class="punctuation">);</span>
+  <span class="property">border-color</span><span class="punctuation">:</span> <span class="value">rgba</span><span class="punctuation">(</span>249<span class="punctuation">,</span>249<span class="punctuation">,</span>242<span class="punctuation">,</span>0.25<span class="punctuation">);</span>
+<span class="punctuation">}</span>
+    </div>
+  </div>
+
   <div class="comp-demo">
     <h4>Boutons — Ghost & Danger</h4>
     <div class="btn-row">
       <button class="btn btn-ghost btn-md">Ghost</button>
       <button class="btn btn-danger btn-md">Supprimer</button>
+    </div>
+  </div>
+
+  <div class="code-toggle-wrap">
+    <button class="code-toggle-btn" onclick="toggleCodePanel(this,'code-panel-btn-ghost-danger')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> Code
+    </button>
+  </div>
+  <div class="code-panel" id="code-panel-btn-ghost-danger">
+    <div class="code-panel-header">
+      <span class="code-panel-label">HTML + CSS</span>
+      <button class="copy-btn" onclick="copyCode(this,'code-btn-ghost-danger')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        Copier
+      </button>
+    </div>
+    <div class="code-block" id="code-btn-ghost-danger" style="margin-top:0;">
+<span class="comment">&lt;!-- Ghost --&gt;</span>
+&lt;<span class="property">button</span> <span class="value">class</span>=<span class="string">"btn btn-ghost btn-md"</span>&gt;Retour&lt;/<span class="property">button</span>&gt;
+
+<span class="comment">&lt;!-- Danger --&gt;</span>
+&lt;<span class="property">button</span> <span class="value">class</span>=<span class="string">"btn btn-danger btn-md"</span>&gt;Supprimer&lt;/<span class="property">button</span>&gt;
+
+<span class="comment">/* CSS */</span>
+<span class="punctuation">.</span><span class="property">btn-ghost</span> <span class="punctuation">{</span>
+  <span class="property">background</span><span class="punctuation">:</span> <span class="value">transparent</span><span class="punctuation">;</span>
+  <span class="property">color</span><span class="punctuation">:</span> <span class="value">var</span><span class="punctuation">(</span><span class="property">--cream</span><span class="punctuation">);</span>
+  <span class="property">border</span><span class="punctuation">:</span> <span class="value">none</span><span class="punctuation">;</span>
+<span class="punctuation">}</span>
+
+<span class="punctuation">.</span><span class="property">btn-ghost</span><span class="punctuation">:</span><span class="property">hover</span> <span class="punctuation">{</span> <span class="property">background</span><span class="punctuation">:</span> <span class="value">rgba</span><span class="punctuation">(</span>249<span class="punctuation">,</span>249<span class="punctuation">,</span>242<span class="punctuation">,</span>0.04<span class="punctuation">);</span> <span class="punctuation">}</span>
+
+<span class="punctuation">.</span><span class="property">btn-danger</span> <span class="punctuation">{</span>
+  <span class="property">background</span><span class="punctuation">:</span> <span class="value">var</span><span class="punctuation">(</span><span class="property">--error</span><span class="punctuation">);</span>
+  <span class="property">color</span><span class="punctuation">:</span> <span class="value">#050D07</span><span class="punctuation">;</span>
+<span class="punctuation">}</span>
     </div>
   </div>
 
@@ -1834,6 +1956,52 @@ body {
     </div>
   </div>
 
+  <div class="code-toggle-wrap">
+    <button class="code-toggle-btn" onclick="toggleCodePanel(this,'code-panel-inputs')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> Code
+    </button>
+  </div>
+  <div class="code-panel" id="code-panel-inputs">
+    <div class="code-panel-header">
+      <span class="code-panel-label">HTML + CSS</span>
+      <button class="copy-btn" onclick="copyCode(this,'code-inputs')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        Copier
+      </button>
+    </div>
+    <div class="code-block" id="code-inputs" style="margin-top:0;">
+<span class="comment">&lt;!-- Input --&gt;</span>
+&lt;<span class="property">input</span> <span class="value">type</span>=<span class="string">"text"</span> <span class="value">class</span>=<span class="string">"input"</span> <span class="value">placeholder</span>=<span class="string">"Rechercher une maladie..."</span>&gt;
+
+<span class="comment">&lt;!-- Textarea --&gt;</span>
+&lt;<span class="property">textarea</span> <span class="value">class</span>=<span class="string">"input textarea"</span> <span class="value">placeholder</span>=<span class="string">"Décrivez les symptômes..."</span>&gt;&lt;/<span class="property">textarea</span>&gt;
+
+<span class="comment">/* CSS */</span>
+<span class="punctuation">.</span><span class="property">input</span> <span class="punctuation">{</span>
+  <span class="property">font-family</span><span class="punctuation">:</span> <span class="value">var</span><span class="punctuation">(</span><span class="property">--font-body</span><span class="punctuation">);</span>
+  <span class="property">font-size</span><span class="punctuation">:</span> <span class="value">0.8125rem</span><span class="punctuation">;</span>
+  <span class="property">color</span><span class="punctuation">:</span> <span class="value">var</span><span class="punctuation">(</span><span class="property">--cream</span><span class="punctuation">);</span>
+  <span class="property">background</span><span class="punctuation">:</span> <span class="value">var</span><span class="punctuation">(</span><span class="property">--slate</span><span class="punctuation">);</span>
+  <span class="property">border</span><span class="punctuation">:</span> <span class="value">1px solid rgba</span><span class="punctuation">(</span>249<span class="punctuation">,</span>249<span class="punctuation">,</span>242<span class="punctuation">,</span>0.06<span class="punctuation">);</span>
+  <span class="property">border-radius</span><span class="punctuation">:</span> <span class="value">var</span><span class="punctuation">(</span><span class="property">--radius-md</span><span class="punctuation">);</span>
+  <span class="property">padding</span><span class="punctuation">:</span> <span class="value">0 12px</span><span class="punctuation">;</span>
+  <span class="property">height</span><span class="punctuation">:</span> <span class="value">44px</span><span class="punctuation">;</span>
+  <span class="property">caret-color</span><span class="punctuation">:</span> <span class="value">var</span><span class="punctuation">(</span><span class="property">--lime</span><span class="punctuation">);</span>
+<span class="punctuation">}</span>
+
+<span class="punctuation">.</span><span class="property">input</span><span class="punctuation">:</span><span class="property">focus</span> <span class="punctuation">{</span>
+  <span class="property">outline</span><span class="punctuation">:</span> <span class="value">none</span><span class="punctuation">;</span>
+  <span class="property">border-color</span><span class="punctuation">:</span> <span class="value">var</span><span class="punctuation">(</span><span class="property">--lime</span><span class="punctuation">);</span>
+<span class="punctuation">}</span>
+
+<span class="punctuation">.</span><span class="property">input</span><span class="punctuation">.</span><span class="property">textarea</span> <span class="punctuation">{</span>
+  <span class="property">height</span><span class="punctuation">:</span> <span class="value">100px</span><span class="punctuation">;</span>
+  <span class="property">padding-top</span><span class="punctuation">:</span> <span class="value">12px</span><span class="punctuation">;</span>
+  <span class="property">resize</span><span class="punctuation">:</span> <span class="value">vertical</span><span class="punctuation">;</span>
+<span class="punctuation">}</span>
+    </div>
+  </div>
+
   <div class="comp-demo">
     <h4>Badges & Tags</h4>
     <div class="badge-row">
@@ -1843,6 +2011,65 @@ body {
       <span class="badge badge-info">Info</span>
       <span class="tag tag-maladie">🌾 Mildiou</span>
       <span class="tag tag-culture">🌿 Blé</span>
+    </div>
+  </div>
+
+  <div class="code-toggle-wrap">
+    <button class="code-toggle-btn" onclick="toggleCodePanel(this,'code-panel-badges')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> Code
+    </button>
+  </div>
+  <div class="code-panel" id="code-panel-badges">
+    <div class="code-panel-header">
+      <span class="code-panel-label">HTML + CSS</span>
+      <button class="copy-btn" onclick="copyCode(this,'code-badges')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        Copier
+      </button>
+    </div>
+    <div class="code-block" id="code-badges" style="margin-top:0;">
+<span class="comment">&lt;!-- Badges --&gt;</span>
+&lt;<span class="property">span</span> <span class="value">class</span>=<span class="string">"badge badge-success"</span>&gt;Actif&lt;/<span class="property">span</span>&gt;
+&lt;<span class="property">span</span> <span class="value">class</span>=<span class="string">"badge badge-error"</span>&gt;Urgent&lt;/<span class="property">span</span>&gt;
+&lt;<span class="property">span</span> <span class="value">class</span>=<span class="string">"badge badge-warning"</span>&gt;À vérifier&lt;/<span class="property">span</span>&gt;
+
+<span class="comment">&lt;!-- Tags --&gt;</span>
+&lt;<span class="property">span</span> <span class="value">class</span>=<span class="string">"tag"</span>&gt;Mildiou&lt;/<span class="property">span</span>&gt;
+&lt;<span class="property">span</span> <span class="value">class</span>=<span class="string">"tag"</span>&gt;Rouille&lt;/<span class="property">span</span>&gt;
+
+<span class="comment">/* CSS */</span>
+<span class="punctuation">.</span><span class="property">badge</span> <span class="punctuation">{</span>
+  <span class="property">display</span><span class="punctuation">:</span> <span class="value">inline-flex</span><span class="punctuation">;</span>
+  <span class="property">align-items</span><span class="punctuation">:</span> <span class="value">center</span><span class="punctuation">;</span>
+  <span class="property">gap</span><span class="punctuation">:</span> <span class="value">4px</span><span class="punctuation">;</span>
+  <span class="property">font-family</span><span class="punctuation">:</span> <span class="value">var</span><span class="punctuation">(</span><span class="property">--font-body</span><span class="punctuation">);</span>
+  <span class="property">font-weight</span><span class="punctuation">:</span> <span class="value">500</span><span class="punctuation">;</span>
+  <span class="property">font-size</span><span class="punctuation">:</span> <span class="value">0.625rem</span><span class="punctuation">;</span>
+  <span class="property">text-transform</span><span class="punctuation">:</span> <span class="value">uppercase</span><span class="punctuation">;</span>
+  <span class="property">padding</span><span class="punctuation">:</span> <span class="value">2px 8px</span><span class="punctuation">;</span>
+  <span class="property">border-radius</span><span class="punctuation">:</span> <span class="value">var</span><span class="punctuation">(</span><span class="property">--radius-sm</span><span class="punctuation">);</span>
+<span class="punctuation">}</span>
+
+<span class="punctuation">.</span><span class="property">badge-success</span> <span class="punctuation">{</span>
+  <span class="property">background</span><span class="punctuation">:</span> <span class="value">rgba</span><span class="punctuation">(</span>58<span class="punctuation">,</span>224<span class="punctuation">,</span>134<span class="punctuation">,</span>0.12<span class="punctuation">);</span>
+  <span class="property">color</span><span class="punctuation">:</span> <span class="value">var</span><span class="punctuation">(</span><span class="property">--success</span><span class="punctuation">);</span>
+<span class="punctuation">}</span>
+
+<span class="punctuation">.</span><span class="property">badge-error</span> <span class="punctuation">{</span>
+  <span class="property">background</span><span class="punctuation">:</span> <span class="value">rgba</span><span class="punctuation">(</span>255<span class="punctuation">,</span>78<span class="punctuation">,</span>92<span class="punctuation">,</span>0.12<span class="punctuation">);</span>
+  <span class="property">color</span><span class="punctuation">:</span> <span class="value">var</span><span class="punctuation">(</span><span class="property">--error</span><span class="punctuation">);</span>
+<span class="punctuation">}</span>
+
+<span class="punctuation">.</span><span class="property">tag</span> <span class="punctuation">{</span>
+  <span class="property">display</span><span class="punctuation">:</span> <span class="value">inline-flex</span><span class="punctuation">;</span>
+  <span class="property">align-items</span><span class="punctuation">:</span> <span class="value">center</span><span class="punctuation">;</span>
+  <span class="property">font-family</span><span class="punctuation">:</span> <span class="value">var</span><span class="punctuation">(</span><span class="property">--font-body</span><span class="punctuation">);</span>
+  <span class="property">font-size</span><span class="punctuation">:</span> <span class="value">0.75rem</span><span class="punctuation">;</span>
+  <span class="property">padding</span><span class="punctuation">:</span> <span class="value">4px 12px</span><span class="punctuation">;</span>
+  <span class="property">border-radius</span><span class="punctuation">:</span> <span class="value">var</span><span class="punctuation">(</span><span class="property">--radius-full</span><span class="punctuation">);</span>
+  <span class="property">background</span><span class="punctuation">:</span> <span class="value">rgba</span><span class="punctuation">(</span>249<span class="punctuation">,</span>249<span class="punctuation">,</span>242<span class="punctuation">,</span>0.04<span class="punctuation">);</span>
+  <span class="property">color</span><span class="punctuation">:</span> <span class="value">var</span><span class="punctuation">(</span><span class="property">--cream</span><span class="punctuation">);</span>
+<span class="punctuation">}</span>
     </div>
   </div>
 
@@ -1864,6 +2091,54 @@ body {
     </div>
   </div>
 
+  <div class="code-toggle-wrap">
+    <button class="code-toggle-btn" onclick="toggleCodePanel(this,'code-panel-cards')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> Code
+    </button>
+  </div>
+  <div class="code-panel" id="code-panel-cards">
+    <div class="code-panel-header">
+      <span class="code-panel-label">HTML + CSS</span>
+      <button class="copy-btn" onclick="copyCode(this,'code-cards')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        Copier
+      </button>
+    </div>
+    <div class="code-block" id="code-cards" style="margin-top:0;">
+<span class="comment">&lt;!-- Card standard --&gt;</span>
+&lt;<span class="property">div</span> <span class="value">class</span>=<span class="string">"card"</span>&gt;
+  &lt;<span class="property">h4</span>&gt;Titre&lt;/<span class="property">h4</span>&gt;
+  &lt;<span class="property">p</span>&gt;Contenu de la carte avec description.&lt;/<span class="property">p</span>&gt;
+&lt;/<span class="property">div</span>&gt;
+
+<span class="comment">&lt;!-- Card avec alerte --&gt;</span>
+&lt;<span class="property">div</span> <span class="value">class</span>=<span class="string">"card card-alert card-alert-error"</span>&gt;
+  &lt;<span class="property">h4</span>&gt;Alerte&lt;/<span class="property">h4</span>&gt;
+  &lt;<span class="property">p</span>&gt;Mildiou détecté dans la parcelle 12.&lt;/<span class="property">p</span>&gt;
+&lt;/<span class="property">div</span>&gt;
+
+<span class="comment">/* CSS */</span>
+<span class="punctuation">.</span><span class="property">card</span> <span class="punctuation">{</span>
+  <span class="property">background</span><span class="punctuation">:</span> <span class="value">rgba</span><span class="punctuation">(</span>10<span class="punctuation">,</span>27<span class="punctuation">,</span>14<span class="punctuation">,</span>0.55<span class="punctuation">);</span>
+  <span class="property">border</span><span class="punctuation">:</span> <span class="value">1px solid rgba</span><span class="punctuation">(</span>249<span class="punctuation">,</span>249<span class="punctuation">,</span>242<span class="punctuation">,</span>0.06<span class="punctuation">);</span>
+  <span class="property">border-radius</span><span class="punctuation">:</span> <span class="value">var</span><span class="punctuation">(</span><span class="property">--radius-lg</span><span class="punctuation">);</span>
+  <span class="property">padding</span><span class="punctuation">:</span> <span class="value">var</span><span class="punctuation">(</span><span class="property">--space-lg</span><span class="punctuation">);</span>
+  <span class="property">backdrop-filter</span><span class="punctuation">:</span> <span class="value">blur</span><span class="punctuation">(</span>16px<span class="punctuation">);</span>
+<span class="punctuation">}</span>
+
+<span class="punctuation">.</span><span class="property">card</span> <span class="property">h4</span> <span class="punctuation">{</span>
+  <span class="property">font-family</span><span class="punctuation">:</span> <span class="value">var</span><span class="punctuation">(</span><span class="property">--font-display</span><span class="punctuation">);</span>
+  <span class="property">font-weight</span><span class="punctuation">:</span> <span class="value">700</span><span class="punctuation">;</span>
+  <span class="property">color</span><span class="punctuation">:</span> <span class="value">var</span><span class="punctuation">(</span><span class="property">--cream</span><span class="punctuation">);</span>
+<span class="punctuation">}</span>
+
+<span class="punctuation">.</span><span class="property">card-alert-error</span> <span class="punctuation">{</span>
+  <span class="property">border-color</span><span class="punctuation">:</span> <span class="value">rgba</span><span class="punctuation">(</span>255<span class="punctuation">,</span>78<span class="punctuation">,</span>92<span class="punctuation">,</span>0.20<span class="punctuation">);</span>
+  <span class="property">box-shadow</span><span class="punctuation">:</span> <span class="value">0 0 20px rgba</span><span class="punctuation">(</span>255<span class="punctuation">,</span>78<span class="punctuation">,</span>92<span class="punctuation">,</span>0.08<span class="punctuation">);</span>
+<span class="punctuation">}</span>
+    </div>
+  </div>
+
   <div class="comp-demo">
     <h4>Chatbot UI</h4>
     <div class="chat-demo">
@@ -1879,6 +2154,57 @@ body {
       </div>
     </div>
   </div>
+
+  <div class="code-toggle-wrap">
+    <button class="code-toggle-btn" onclick="toggleCodePanel(this,'code-panel-chatbot')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> Code
+    </button>
+  </div>
+  <div class="code-panel" id="code-panel-chatbot">
+    <div class="code-panel-header">
+      <span class="code-panel-label">HTML + CSS</span>
+      <button class="copy-btn" onclick="copyCode(this,'code-chatbot')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        Copier
+      </button>
+    </div>
+    <div class="code-block" id="code-chatbot" style="margin-top:0;">
+<span class="comment">&lt;!-- Message utilisateur --&gt;</span>
+&lt;<span class="property">div</span> <span class="value">class</span>=<span class="string">"chat-bubble chat-bubble-user"</span>&gt;
+  &lt;<span class="property">p</span>&gt;Mes feuilles de vigne ont des taches jaunes.&lt;/<span class="property">p</span>&gt;
+&lt;/<span class="property">div</span>&gt;
+
+<span class="comment">&lt;!-- Message IA --&gt;</span>
+&lt;<span class="property">div</span> <span class="value">class</span>=<span class="string">"chat-bubble chat-bubble-ai"</span>&gt;
+  &lt;<span class="property">p</span>&gt;D'après vos symptômes, il pourrait s'agir de Mildiou.&lt;/<span class="property">p</span>&gt;
+&lt;/<span class="property">div</span>&gt;
+
+<span class="comment">/* CSS */</span>
+<span class="punctuation">.</span><span class="property">chat-bubble</span> <span class="punctuation">{</span>
+  <span class="property">font-family</span><span class="punctuation">:</span> <span class="value">var</span><span class="punctuation">(</span><span class="property">--font-body</span><span class="punctuation">);</span>
+  <span class="property">font-size</span><span class="punctuation">:</span> <span class="value">0.8125rem</span><span class="punctuation">;</span>
+  <span class="property">max-width</span><span class="punctuation">:</span> <span class="value">80%</span><span class="punctuation">;</span>
+  <span class="property">padding</span><span class="punctuation">:</span> <span class="value">10px 14px</span><span class="punctuation">;</span>
+  <span class="property">border-radius</span><span class="punctuation">:</span> <span class="value">var</span><span class="punctuation">(</span><span class="property">--radius-lg</span><span class="punctuation">);</span>
+  <span class="property">line-height</span><span class="punctuation">:</span> <span class="value">1.5</span><span class="punctuation">;</span>
+<span class="punctuation">}</span>
+
+<span class="punctuation">.</span><span class="property">chat-bubble-user</span> <span class="punctuation">{</span>
+  <span class="property">align-self</span><span class="punctuation">:</span> <span class="value">flex-end</span><span class="punctuation">;</span>
+  <span class="property">background</span><span class="punctuation">:</span> <span class="value">rgba</span><span class="punctuation">(</span>212<span class="punctuation">,</span>255<span class="punctuation">,</span>80<span class="punctuation">,</span>0.08<span class="punctuation">);</span>
+  <span class="property">color</span><span class="punctuation">:</span> <span class="value">var</span><span class="punctuation">(</span><span class="property">--cream</span><span class="punctuation">);</span>
+  <span class="property">border-bottom-right-radius</span><span class="punctuation">:</span> <span class="value">var</span><span class="punctuation">(</span><span class="property">--radius-sm</span><span class="punctuation">);</span>
+<span class="punctuation">}</span>
+
+<span class="punctuation">.</span><span class="property">chat-bubble-ai</span> <span class="punctuation">{</span>
+  <span class="property">align-self</span><span class="punctuation">:</span> <span class="value">flex-start</span><span class="punctuation">;</span>
+  <span class="property">background</span><span class="punctuation">:</span> <span class="value">var</span><span class="punctuation">(</span><span class="property">--slate</span><span class="punctuation">);</span>
+  <span class="property">color</span><span class="punctuation">:</span> <span class="value">var</span><span class="punctuation">(</span><span class="property">--cream</span><span class="punctuation">);</span>
+  <span class="property">border-bottom-left-radius</span><span class="punctuation">:</span> <span class="value">var</span><span class="punctuation">(</span><span class="property">--radius-sm</span><span class="punctuation">);</span>
+<span class="punctuation">}</span>
+    </div>
+  </div>
+
 </section>
 
 <!-- ═══ 7. EFFETS VISUELS ═══ -->
@@ -2258,15 +2584,13 @@ body {
   function toggleCodePanel(btn, panelId) {
     const panel = document.getElementById(panelId);
     if (!panel) return;
+    var isOpen = !panel.classList.contains('open');
     panel.classList.toggle('open');
     btn.classList.toggle('open');
-    const icon = btn.querySelector('.toggle-icon');
-    const label = btn.querySelector('.toggle-label');
-    if (icon) {
-      icon.textContent = panel.classList.contains('open') ? '▲' : '▼';
-    }
-    if (label) {
-      label.textContent = panel.classList.contains('open') ? 'Fermer' : 'Code';
+    if (isOpen) {
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Masquer';
+    } else {
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> Code';
     }
   }
 
