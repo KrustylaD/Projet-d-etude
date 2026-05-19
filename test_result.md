@@ -122,6 +122,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "✅ TESTED: POST /api/auth/signup working correctly. User created with UID, all fields returned properly (email, display_name, farm_name, created_at). Status 200."
+      - working: true
+        agent: "testing"
+        comment: "✅ RE-TESTED (2026-05-19): POST /api/auth/signup working perfectly. Created new test user (test_agriscan@example.com) with UID: 8ec0cb00-919d-4d8b-871c-c077b0ce177a. All fields correct. Data verified in MongoDB agriscan_ai_db. Status 200."
 
   - task: "API Auth - Login"
     implemented: true
@@ -137,6 +140,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "✅ TESTED: POST /api/auth/login working correctly. Login successful with correct credentials, returns user object with UID. Status 200."
+      - working: true
+        agent: "testing"
+        comment: "✅ RE-TESTED (2026-05-19): POST /api/auth/login working perfectly. Login successful with test_agriscan@example.com. Returns complete user object with UID. Status 200."
 
   - task: "API Diagnostic - Create"
     implemented: true
@@ -152,6 +158,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "✅ TESTED: POST /api/diagnostics?user_id={uid} working correctly. Diagnostic created with ID, culture='Tomates', symptoms saved, status='en cours'. Status 200."
+      - working: true
+        agent: "testing"
+        comment: "✅ RE-TESTED (2026-05-19): POST /api/diagnostics working perfectly. Created diagnostic for Tomates with symptoms 'Feuilles jaunissantes avec taches brunes'. Diagnostic ID: bc9b55dd-ca46-45b3-a1a3-8ab939588717. Data verified in MongoDB. Status 200."
 
   - task: "API Chat - Send Message avec IA"
     implemented: true
@@ -167,6 +176,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "✅ TESTED: POST /api/chat?user_id={uid} working perfectly. GPT-5.2 integration successful - AI responded with detailed 2827-char French response about tomato diseases. Message saved to DB. Status 200."
+      - working: true
+        agent: "testing"
+        comment: "✅ RE-TESTED (2026-05-19): POST /api/chat working EXCELLENTLY. GPT-5.2 integration fully functional - AI responded with detailed 2158-char French response about tomato diseases (Alternariose, Septoriose, Mildiou, etc.). Both user message and AI response saved to messages collection in MongoDB. Status 200."
 
   - task: "API Diagnostics - Get by User"
     implemented: true
@@ -182,6 +194,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "✅ TESTED: GET /api/diagnostics/{user_id} working correctly. Retrieved list of diagnostics with all fields. Status 200."
+      - working: true
+        agent: "testing"
+        comment: "✅ RE-TESTED (2026-05-19): GET /api/diagnostics/{user_id} working perfectly. Retrieved 1 diagnostic with all fields (culture, symptoms, status, timestamps). Status 200."
 
   - task: "API Stats - Dashboard"
     implemented: true
@@ -197,6 +212,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "✅ TESTED: GET /api/stats/{user_id} working correctly. Returns total_diagnostics, status_breakdown (en_cours, traité, surveillance), unread_alerts, and recent_diagnostics. Status 200."
+      - working: true
+        agent: "testing"
+        comment: "✅ RE-TESTED (2026-05-19): GET /api/stats/{user_id} working perfectly. Returns total_diagnostics: 1, status_breakdown (en_cours: 1, traité: 0, surveillance: 0), unread_alerts: 0, and recent_diagnostics array. Status 200."
 
   - task: "API Alerts - CRUD"
     implemented: true
@@ -212,6 +230,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "✅ TESTED: POST /api/alerts?user_id={uid} and GET /api/alerts/{user_id} working correctly. Alert created with ID, type, message, severity, read status. Retrieval returns list of alerts. Status 200."
+      - working: true
+        agent: "testing"
+        comment: "✅ RE-TESTED (2026-05-19): POST /api/alerts and GET /api/alerts/{user_id} working perfectly. Alert created with message 'Test alerte', type 'maladie', severity 'warning'. Alert ID: 5fadd9a2-398d-4781-872c-504163aff4ed. Data verified in MongoDB. Retrieval returns 1 alert. Status 200."
 
 frontend:
   - task: "Auth - Login Screen"
@@ -301,7 +322,7 @@ frontend:
 metadata:
   created_by: "main_agent"
   version: "1.0"
-  test_sequence: 1
+  test_sequence: 2
   run_ui: false
 
 test_plan:
@@ -350,4 +371,47 @@ agent_communication:
       - No critical issues found
       
       Test credentials saved in /app/memory/test_credentials.md
+      Test script available at /app/backend_test.py for future testing
+
+  
+  - agent: "testing"
+    message: |
+      ✅ COMPREHENSIVE RE-TEST COMPLETE - ALL TESTS PASSED (8/8 - 100%)
+      Test Date: 2026-05-19 11:27:03 UTC
+      
+      Tested all backend APIs with NEW test data as requested:
+      - Test User: test_agriscan@example.com / testpassword123
+      - Display Name: Agriculteur Test
+      - Farm Name: Ferme Test
+      - User UID: 8ec0cb00-919d-4d8b-871c-c077b0ce177a
+      
+      HIGH PRIORITY TESTS (All Working):
+      1. ✅ POST /api/auth/signup - User creation successful
+      2. ✅ POST /api/auth/login - Authentication working
+      3. ✅ POST /api/diagnostics - Diagnostic created for "Tomates" with symptoms "Feuilles jaunissantes avec taches brunes"
+      4. ✅ POST /api/chat - AI chatbot with GPT-5.2 working EXCELLENTLY (2158-char detailed French response about Alternariose, Septoriose, Mildiou, etc.)
+      
+      MEDIUM PRIORITY TESTS (All Working):
+      5. ✅ GET /api/diagnostics/{user_id} - Retrieved 1 diagnostic
+      6. ✅ GET /api/stats/{user_id} - Stats: 1 total diagnostic, 1 en_cours, 0 unread alerts
+      7. ✅ POST /api/alerts - Alert created with message "Test alerte", type "maladie", severity "warning"
+      8. ✅ GET /api/alerts/{user_id} - Retrieved 1 alert
+      
+      DATABASE VERIFICATION (MongoDB agriscan_ai_db):
+      ✅ Users collection: User record verified with correct email, display_name, farm_name
+      ✅ Diagnostics collection: Diagnostic record verified with culture "Tomates" and symptoms
+      ✅ Alerts collection: Alert record verified with message "Test alerte"
+      ✅ Messages collection: Chat messages collection created (messages_bc9b55dd-ca46-45b3-a1a3-8ab939588717)
+         - User message: "Quelles sont les causes possibles?"
+         - AI response: Detailed 2158-char French response about tomato diseases
+      
+      KEY FINDINGS:
+      - Emergent LLM integration with GPT-5.2 is FULLY FUNCTIONAL and providing excellent agricultural diagnostic responses
+      - MongoDB database "agriscan_ai_db" is working correctly - all data persisted successfully
+      - All CRUD operations functioning properly
+      - Authentication flow complete and secure
+      - Chat message history properly stored in dedicated collections per diagnostic
+      - NO CRITICAL ISSUES FOUND
+      
+      Test credentials updated in /app/memory/test_credentials.md
       Test script available at /app/backend_test.py for future testing

@@ -10,10 +10,10 @@ from datetime import datetime
 
 # Configuration
 BASE_URL = "https://crop-health-scan-21.preview.emergentagent.com/api"
-TEST_EMAIL = "test@agriscan.ai"
-TEST_PASSWORD = "test123456"
-TEST_DISPLAY_NAME = "Test Farmer"
-TEST_FARM_NAME = "Ferme de Test"
+TEST_EMAIL = "test_agriscan@example.com"
+TEST_PASSWORD = "testpassword123"
+TEST_DISPLAY_NAME = "Agriculteur Test"
+TEST_FARM_NAME = "Ferme Test"
 
 # Global variables to store test data
 test_user_uid = None
@@ -120,7 +120,7 @@ def test_create_diagnostic():
     try:
         payload = {
             "culture": "Tomates",
-            "symptoms": "Taches jaunes sur les feuilles"
+            "symptoms": "Feuilles jaunissantes avec taches brunes"
         }
         
         response = requests.post(
@@ -162,7 +162,7 @@ def test_chat_ai():
     try:
         payload = {
             "diagnostic_id": test_diagnostic_id,
-            "message": "Quelles sont les causes possibles de ces taches jaunes?"
+            "message": "Quelles sont les causes possibles?"
         }
         
         response = requests.post(
@@ -256,7 +256,7 @@ def test_create_alert():
     try:
         payload = {
             "type": "maladie",
-            "message": "Nouvelle maladie détectée dans votre région",
+            "message": "Test alerte",
             "severity": "warning"
         }
         
