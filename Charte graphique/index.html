@@ -1624,36 +1624,36 @@ body {
     </table>
   </div>
 
-      <div class="code-toggle-wrap">
-        <button class="code-toggle-btn" onclick="toggleCodePanel(this, 'code-panel-typo')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> Code</button>
-        <div class="code-panel" id="code-panel-typo">
-          <div class="code-panel-header">
-            <span class="code-panel-label">HTML</span>
-            <button class="copy-btn" onclick="copyCode(this, 'code-block-typo')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copier</button>
-          </div>
-          <div class="code-block" id="code-block-typo">
-            <span class="comment">/* ── Google Fonts @import ── */</span>
-            <span class="punctuation">@import</span><span class="string"> url('https://fonts.googleapis.com/css2?family=<span class="value">Inter</span>:wght@<span class="value">400;500</span>&amp;family=<span class="value">JetBrains+Mono</span>:wght@<span class="value">400;700</span>&amp;family=<span class="value">Plus+Jakarta+Sans</span>:wght@<span class="value">700;800</span>&amp;display=swap')</span>;
-            <br><br>
-            <span class="comment">/* ── Polices ── */</span>
-            <span class="property">--font-display</span>: <span class="string">'Plus Jakarta Sans'</span>, <span class="value">sans-serif</span>;
-            <span class="property">--font-body</span>:    <span class="string">'Inter'</span>, <span class="value">sans-serif</span>;
-            <span class="property">--font-mono</span>:    <span class="string">'JetBrains Mono'</span>, <span class="value">monospace</span>;
-            <br><br>
-            <span class="comment">/* ── Échelle typographique (mobile) ── */</span>
-            <span class="comment">/* Display XL : 48px / 3rem</span>
-            <span class="comment">/* Display L  : 36px / 2.25rem</span>
-            <span class="comment">/* H1         : 28px / 1.75rem</span>
-            <span class="comment">/* H2         : 22px / 1.375rem</span>
-            <span class="comment">/* H3         : 18px / 1.125rem</span>
-            <span class="comment">/* H4         : 16px / 1rem</span>
-            <span class="comment">/* Body Large : 17px / 1.0625rem</span>
-            <span class="comment">/* Body       : 15px / 0.9375rem</span>
-            <span class="comment">/* Label      : 11px / 0.6875rem (uppercase, tracking .04em)</span>
-            <span class="comment">/* Data Disp. : 32px / 2rem — JetBrains Mono</span>
-          </div>
-        </div>
+  <div class="code-toggle-wrap">
+    <button class="code-toggle-btn" onclick="toggleCodePanel(this, 'code-panel-typo')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> Code</button>
+    <div class="code-panel" id="code-panel-typo">
+      <div class="code-panel-header">
+        <span class="code-panel-label">HTML</span>
+        <button class="copy-btn" onclick="copyCode(this, 'code-block-typo')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copier</button>
       </div>
+      <div class="code-block" id="code-block-typo" style="margin-top:0">
+        <span class="comment">/* ── Google Fonts @import ── */</span>
+        <span class="punctuation">@import</span><span class="string"> url('https://fonts.googleapis.com/css2?family=<span class="value">Inter</span>:wght@<span class="value">400;500</span>&amp;family=<span class="value">JetBrains+Mono</span>:wght@<span class="value">400;700</span>&amp;family=<span class="value">Plus+Jakarta+Sans</span>:wght@<span class="value">700;800</span>&amp;display=swap')</span>;
+        <br><br>
+        <span class="comment">/* ── Polices ── */</span>
+        <span class="property">--font-display</span>: <span class="string">'Plus Jakarta Sans'</span>, <span class="value">sans-serif</span>;
+        <span class="property">--font-body</span>:    <span class="string">'Inter'</span>, <span class="value">sans-serif</span>;
+        <span class="property">--font-mono</span>:    <span class="string">'JetBrains Mono'</span>, <span class="value">monospace</span>;
+        <br><br>
+        <span class="comment">/* ── Échelle typographique (mobile) ── */</span>
+        <span class="comment">/* Display XL : 48px / 3rem */</span>
+        <span class="comment">/* Display L  : 36px / 2.25rem */</span>
+        <span class="comment">/* H1         : 28px / 1.75rem */</span>
+        <span class="comment">/* H2         : 22px / 1.375rem */</span>
+        <span class="comment">/* H3         : 18px / 1.125rem */</span>
+        <span class="comment">/* H4         : 16px / 1rem */</span>
+        <span class="comment">/* Body Large : 17px / 1.0625rem */</span>
+        <span class="comment">/* Body       : 15px / 0.9375rem */</span>
+        <span class="comment">/* Label      : 11px / 0.6875rem (uppercase, tracking .04em) */</span>
+        <span class="comment">/* Data Disp. : 32px / 2rem — JetBrains Mono */</span>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- ═══ 4. LOGO ═══ -->
@@ -1711,30 +1711,30 @@ body {
     </div>
   </div>
 
-      <div class="code-toggle-wrap">
-        <button class="code-toggle-btn" onclick="toggleCodePanel(this, 'code-panel-logo')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> Code</button>
-        <div class="code-panel" id="code-panel-logo">
-          <div class="code-panel-header">
-            <span class="code-panel-label">SVG</span>
-            <button class="copy-btn" onclick="copyCode(this, 'code-block-logo')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copier</button>
-          </div>
-          <div class="code-block" id="code-block-logo">
-            <span class="comment">&lt;!-- Logo AgriScan.ai — Primaire --&gt;</span>
-            <span class="punctuation">&lt;div</span> <span class="property">class</span>=<span class="string">"logo-symbol"</span> <span class="property">style</span>=<span class="string">"background: var(--forest); border-radius: 28px; padding: 24px;"</span><span class="punctuation">&gt;</span>
-              <span class="punctuation">&lt;svg</span> <span class="property">viewBox</span>=<span class="string">"0 0 24 24"</span> <span class="property">fill</span>=<span class="string">"none"</span> <span class="property">stroke</span>=<span class="string">"var(--cream)"</span> <span class="property">stroke-width</span>=<span class="string">"1.5"</span> <span class="property">stroke-linecap</span>=<span class="string">"round"</span> <span class="property">stroke-linejoin</span>=<span class="string">"round"</span><span class="punctuation">&gt;</span>
-                <span class="punctuation">&lt;path</span> <span class="property">d</span>=<span class="string">"M12 2C8 6 4 10 4 14c0 4 3.5 7 8 7s8-3 8-7c0-4-4-8-8-12z"</span><span class="punctuation">/&gt;</span>
-                <span class="punctuation">&lt;path</span> <span class="property">d</span>=<span class="string">"M12 2v19"</span><span class="punctuation">/&gt;</span>
-                <span class="punctuation">&lt;line</span> <span class="property">x1</span>=<span class="string">"5"</span> <span class="property">y1</span>=<span class="string">"10"</span> <span class="property">x2</span>=<span class="string">"19"</span> <span class="property">y2</span>=<span class="string">"10"</span> <span class="property">stroke</span>=<span class="string">"var(--lime)"</span> <span class="property">stroke-dasharray</span>=<span class="string">"2 1.5"</span> <span class="property">opacity</span>=<span class="string">".8"</span><span class="punctuation">/&gt;</span>
-              <span class="punctuation">&lt;/svg&gt;</span>
-            <span class="punctuation">&lt;/div&gt;</span>
-            <br><br>
-            <span class="comment">&lt;!-- Logotype --&gt;</span>
-            <span class="punctuation">&lt;div</span> <span class="property">class</span>=<span class="string">"logotype"</span><span class="punctuation">&gt;</span>
-              AgriScan<span class="punctuation">&lt;span</span> <span class="property">class</span>=<span class="string">"dot-ai"</span><span class="punctuation">&gt;</span>.ai<span class="punctuation">&lt;/span&gt;</span>
-            <span class="punctuation">&lt;/div&gt;</span>
-          </div>
-        </div>
+  <div class="code-toggle-wrap">
+    <button class="code-toggle-btn" onclick="toggleCodePanel(this, 'code-panel-logo')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> Code</button>
+    <div class="code-panel" id="code-panel-logo">
+      <div class="code-panel-header">
+        <span class="code-panel-label">SVG</span>
+        <button class="copy-btn" onclick="copyCode(this, 'code-block-logo')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copier</button>
       </div>
+      <div class="code-block" id="code-block-logo" style="margin-top:0">
+        <span class="comment">&lt;!-- Logo AgriScan.ai — Primaire --&gt;</span>
+        <span class="punctuation">&lt;div</span> <span class="property">class</span>=<span class="string">"logo-symbol"</span> <span class="property">style</span>=<span class="string">"background: var(--forest); border-radius: 28px; padding: 24px;"</span><span class="punctuation">&gt;</span>
+          <span class="punctuation">&lt;svg</span> <span class="property">viewBox</span>=<span class="string">"0 0 24 24"</span> <span class="property">fill</span>=<span class="string">"none"</span> <span class="property">stroke</span>=<span class="string">"var(--cream)"</span> <span class="property">stroke-width</span>=<span class="string">"1.5"</span> <span class="property">stroke-linecap</span>=<span class="string">"round"</span> <span class="property">stroke-linejoin</span>=<span class="string">"round"</span><span class="punctuation">&gt;</span>
+            <span class="punctuation">&lt;path</span> <span class="property">d</span>=<span class="string">"M12 2C8 6 4 10 4 14c0 4 3.5 7 8 7s8-3 8-7c0-4-4-8-8-12z"</span><span class="punctuation">/&gt;</span>
+            <span class="punctuation">&lt;path</span> <span class="property">d</span>=<span class="string">"M12 2v19"</span><span class="punctuation">/&gt;</span>
+            <span class="punctuation">&lt;line</span> <span class="property">x1</span>=<span class="string">"5"</span> <span class="property">y1</span>=<span class="string">"10"</span> <span class="property">x2</span>=<span class="string">"19"</span> <span class="property">y2</span>=<span class="string">"10"</span> <span class="property">stroke</span>=<span class="string">"var(--lime)"</span> <span class="property">stroke-dasharray</span>=<span class="string">"2 1.5"</span> <span class="property">opacity</span>=<span class="string">".8"</span><span class="punctuation">/&gt;</span>
+          <span class="punctuation">&lt;/svg&gt;</span>
+        <span class="punctuation">&lt;/div&gt;</span>
+        <br><br>
+        <span class="comment">&lt;!-- Logotype --&gt;</span>
+        <span class="punctuation">&lt;div</span> <span class="property">class</span>=<span class="string">"logotype"</span><span class="punctuation">&gt;</span>
+          AgriScan<span class="punctuation">&lt;span</span> <span class="property">class</span>=<span class="string">"dot-ai"</span><span class="punctuation">&gt;</span>.ai<span class="punctuation">&lt;/span&gt;</span>
+        <span class="punctuation">&lt;/div&gt;</span>
+      </div>
+    </div>
+  </div>
 
   <h4 style="font-family:var(--font-display);font-weight:700;font-size:1.125rem;margin-bottom:var(--space-lg);">Usages</h4>
   <div class="dodont-grid">
