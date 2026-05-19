@@ -13,8 +13,26 @@ import {
 import { useRouter } from 'expo-router';
 import { useAuthStore } from '../../src/store/authStore';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Colors, Typography, BorderRadius, Spacing } from '../../src/constants/theme';
+import Svg, { Path, Line } from 'react-native-svg';
+import { Ionicons } from '@expo/vector-icons';
+
+const AgriScanLogo = ({ size = 60 }: { size?: number }) => (
+  <View style={[styles.logoContainer, { width: size, height: size, borderRadius: BorderRadius.squircle }]}>
+    <Svg width={size * 0.55} height={size * 0.55} viewBox="0 0 24 24" fill="none">
+      <Path
+        d="M12 2C8 6 4 10 4 14c0 4 3.5 7 8 7s8-3 8-7c0-4-4-8-8-12z"
+        stroke={Colors.cream}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <Path d="M12 2v19" stroke={Colors.cream} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      <Line x1="5" y1="10" x2="19" y2="10" stroke={Colors.lime} strokeWidth="1.5" strokeDasharray="2 1.5" opacity="0.8" />
+    </Svg>
+  </View>
+);
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -38,29 +56,23 @@ export default function LoginScreen() {
   };
 
   return (
-    <LinearGradient
-      colors={['#1a2f1a', '#0a1a0a', '#000000']}
-      style={styles.container}
-    >
+    <LinearGradient colors={[Colors.forest, Colors.black, Colors.black]} style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          style={styles.keyboardView}
-        >
+        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.keyboardView}>
           <View style={styles.content}>
             <View style={styles.header}>
-              <Ionicons name="leaf" size={60} color="#4ade80" />
-              <Text style={styles.title}>AgriScan AI</Text>
+              <AgriScanLogo />
+              <Text style={styles.title}>AgriScan<Text style={styles.titleAccent}>.ai</Text></Text>
               <Text style={styles.subtitle}>Connexion à votre compte</Text>
             </View>
 
             <View style={styles.form}>
               <View style={styles.inputContainer}>
-                <Ionicons name="mail-outline" size={20} color="#a3a3a3" style={styles.inputIcon} />
+                <Ionicons name="mail-outline" size={20} color={Colors.cream40} style={styles.inputIcon} />
                 <TextInput
                   style={styles.input}
                   placeholder="Email"
-                  placeholderTextColor="#666"
+                  placeholderTextColor={Colors.cream30}
                   value={email}
                   onChangeText={setEmail}
                   keyboardType="email-address"
@@ -70,25 +82,18 @@ export default function LoginScreen() {
               </View>
 
               <View style={styles.inputContainer}>
-                <Ionicons name="lock-closed-outline" size={20} color="#a3a3a3" style={styles.inputIcon} />
+                <Ionicons name="lock-closed-outline" size={20} color={Colors.cream40} style={styles.inputIcon} />
                 <TextInput
                   style={styles.input}
                   placeholder="Mot de passe"
-                  placeholderTextColor="#666"
+                  placeholderTextColor={Colors.cream30}
                   value={password}
                   onChangeText={setPassword}
                   secureTextEntry={!showPassword}
                   autoComplete="password"
                 />
-                <TouchableOpacity
-                  onPress={() => setShowPassword(!showPassword)}
-                  style={styles.eyeIcon}
-                >
-                  <Ionicons
-                    name={showPassword ? 'eye-outline' : 'eye-off-outline'}
-                    size={20}
-                    color="#a3a3a3"
-                  />
+                <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.eyeIcon}>
+                  <Ionicons name={showPassword ? 'eye-outline' : 'eye-off-outline'} size={20} color={Colors.cream40} />
                 </TouchableOpacity>
               </View>
 
@@ -96,9 +101,10 @@ export default function LoginScreen() {
                 style={[styles.button, isLoading && styles.buttonDisabled]}
                 onPress={handleLogin}
                 disabled={isLoading}
+                activeOpacity={0.8}
               >
                 {isLoading ? (
-                  <ActivityIndicator color="#000" />
+                  <ActivityIndicator color={Colors.black} />
                 ) : (
                   <Text style={styles.buttonText}>Se connecter</Text>
                 )}
@@ -122,86 +128,64 @@ export default function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  safeArea: {
-    flex: 1,
-  },
-  keyboardView: {
-    flex: 1,
-  },
-  content: {
-    flex: 1,
+  container: { flex: 1 },
+  safeArea: { flex: 1 },
+  keyboardView: { flex: 1 },
+  content: { flex: 1, justifyContent: 'center', padding: Spacing.xl },
+  header: { alignItems: 'center', marginBottom: Spacing.xxxl },
+  logoContainer: {
+    backgroundColor: Colors.forest,
     justifyContent: 'center',
-    padding: 24,
-  },
-  header: {
     alignItems: 'center',
-    marginBottom: 48,
+    borderWidth: 1,
+    borderColor: Colors.cream08,
   },
   title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#ffffff',
-    marginTop: 16,
+    fontSize: Typography.h1,
+    fontWeight: Typography.extrabold as any,
+    color: Colors.cream,
+    marginTop: Spacing.lg,
+    letterSpacing: -0.5,
   },
-  subtitle: {
-    fontSize: 16,
-    color: '#a3a3a3',
-    marginTop: 8,
-  },
-  form: {
-    width: '100%',
-  },
+  titleAccent: { color: Colors.lime },
+  subtitle: { fontSize: Typography.body, color: Colors.cream50, marginTop: Spacing.sm },
+  form: { width: '100%' },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#1a1a1a',
-    borderRadius: 12,
-    marginBottom: 16,
-    paddingHorizontal: 16,
+    backgroundColor: Colors.slate,
+    borderRadius: BorderRadius.sm,
+    marginBottom: Spacing.lg,
+    paddingHorizontal: Spacing.md,
     borderWidth: 1,
-    borderColor: '#2a2a2a',
+    borderColor: Colors.cream15,
+    height: 44,
   },
-  inputIcon: {
-    marginRight: 12,
-  },
-  input: {
-    flex: 1,
-    height: 56,
-    color: '#ffffff',
-    fontSize: 16,
-  },
-  eyeIcon: {
-    padding: 8,
-  },
+  inputIcon: { marginRight: Spacing.md },
+  input: { flex: 1, height: 44, color: Colors.cream, fontSize: Typography.body },
+  eyeIcon: { padding: Spacing.sm },
   button: {
-    backgroundColor: '#4ade80',
-    borderRadius: 12,
-    height: 56,
+    backgroundColor: Colors.lime,
+    borderRadius: BorderRadius.md,
+    height: 52,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 8,
+    marginTop: Spacing.sm,
+    shadowColor: Colors.lime,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.10,
+    shadowRadius: 10,
+    elevation: 8,
   },
-  buttonDisabled: {
-    opacity: 0.6,
-  },
+  buttonDisabled: { opacity: 0.6 },
   buttonText: {
-    color: '#000000',
-    fontSize: 18,
-    fontWeight: 'bold',
+    color: Colors.black,
+    fontSize: Typography.h4,
+    fontWeight: Typography.medium as any,
+    letterSpacing: 0.4,
+    textTransform: 'uppercase' as any,
   },
-  linkButton: {
-    marginTop: 24,
-    alignItems: 'center',
-  },
-  linkText: {
-    color: '#a3a3a3',
-    fontSize: 16,
-  },
-  linkTextBold: {
-    color: '#4ade80',
-    fontWeight: 'bold',
-  },
+  linkButton: { marginTop: Spacing.xl, alignItems: 'center' },
+  linkText: { color: Colors.cream40, fontSize: Typography.body },
+  linkTextBold: { color: Colors.lime, fontWeight: Typography.medium as any },
 });
