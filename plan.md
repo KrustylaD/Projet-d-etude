@@ -2,458 +2,470 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Construire une app mobile no-code (Bubble) de diagnostic de maladies des plantes via chatbot IA conversationnel.
+**Goal:** Construire une app mobile avec FlutterFlow de diagnostic de maladies des plantes via chatbot IA conversationnel, avec Firebase comme backend.
 
-**Architecture:** Bubble (frontend + backend + BDD) → API Connector → API LLM externe pour le chatbot. Firebase Auth pour l'authentification. Plugin Bubble Map pour la carte interactive.
+**Architecture:** Firebase (BDD + Auth + Firestore) → FlutterFlow (frontend) → API LLM externe pour le chatbot (Anthropic/OpenAI)
 
-**Tech Stack:** Bubble.io (no-code), Firebase, API Anthropic/OpenAI, Plugin Bubble Map (Leaflet)
+**Tech Stack:** FlutterFlow (no-code frontend), Firebase Firestore (base de données), Firebase Authentication, API Anthropic/OpenAI
 
 ---
 
 ## Prérequis
 
-- Compte Bubble (gratuit) sur [bubble.io](https://bubble.io)
 - Compte Firebase (gratuit) sur [console.firebase.google.com](https://console.firebase.google.com)
+- Compte FlutterFlow (gratuit) sur [flutterflow.io](https://flutterflow.io)
 - Clé API pour le LLM (Anthropic : [console.anthropic.com](https://console.anthropic.com) ou OpenAI : [platform.openai.com](https://platform.openai.com))
 
 ---
 
-### Task 1: Création du projet Bubble et configuration Firebase
+## PHASE 1: Configuration Firebase (A à Z)
 
-**Actions Bubble Editor :**
+### Task 1: Création du projet Firebase et Firestore
 
-- [ ] **Step 1: Créer le projet Bubble**
-  - Aller sur [bubble.io](https://bubble.io) → "Create an app"
+- [ ] **Step 1: Créer le projet Firebase**
+  - Aller sur [console.firebase.google.com](https://console.firebase.google.com)
+  - Cliquer sur "Ajouter un projet"
   - Nom : `agridoc`
-  - Template : "Blank" (départ de zéro)
+  - Désactiver Google Analytics (optionnel)
+  - Cliquer sur "Créer un projet"
+  - Attendre que le projet soit prêt (~2-3 min)
 
-- [ ] **Step 2: Configurer Firebase dans Bubble**
-  - Onglet "Plugins" → "Add plugins" → chercher "Firebase"
-  - Installer le plugin Firebase (par Bubble)
-  - Dans la console Firebase, créer un projet nommé `agridoc`
-  - Activer Firestore Database en mode test
-  - Activer Authentication → Email/Password
-  - Copier la config Firebase (Project Settings → General → Web app → Config)
-  - Coller la config dans le plugin Firebase de Bubble (apiKey, authDomain, projectId, etc.)
+- [ ] **Step 2: Activer Firestore Database**
+  - Dans le menu de gauche → "Firestore Database"
+  - Cliquer sur "Créer une base de données"
+  - Mode de sécurité : "Mode test" (pour développement)
+  - Localisation : sélectionner la région la plus proche (ex: `eur3` pour Europe)
+  - Cliquer sur "Créer"
 
-- [ ] **Step 3: Vérifier la connexion Firebase**
-  - Créer une page test temporaire
-  - Ajouter un bouton "Test Firebase" avec un workflow qui crée un document dans Firestore
-  - Preview → cliquer → vérifier que le document apparaît dans Firestore
-  - Supprimer la page test
+- [ ] **Step 3: Activer Firebase Authentication**
+  - Menu de gauche → "Authentification"
+  - Cliquer sur "Commencer"
+  - Onglet "Méthode de connexion"
+  - Activer "Email/Mot de passe"
+  - Cliquer sur "Enregistrer"
 
 ---
 
-### Task 2: Structure de la base de données (Firestore)
+### Task 2: Structure de la base de données Firestore
 
 **Collections à créer :**
 
 - [ ] **Step 1: Collection `users`**
-  - `email` (text)
-  - `name` (text)
-  - `farm_name` (text, optionnel)
-  - `location` (geographic address)
-  - `role` (text: "farmer" | "admin")
-  - `created_at` (date)
+  - Ouvrir Firestore Database
+  - Cliquer sur "Démarrer une collection"
+  - ID de collection : `users`
+  - Premier document (auto-généré)
+  - Ajouter les champs :
+    - `email` — Type: `string`
+    - `name` — Type: `string`
+    - `farm_name` — Type: `string` (optionnel)
+    - `location` — Type: `geopoint` (ou `string` si vous stockez une adresse textuelle)
+    - `role` — Type: `string` (valeurs: "farmer" | "admin")
+    - `created_at` — Type: `timestamp` (utiliser Server Timestamp depuis l'app)
+  - Cliquer sur "Enregistrer"
 
-- [ ] **Step 2: Collection `diagnostics`**
-  - `user_id` (text — référence user)
-  - `culture` (text: ex "tomates", "blé")
-  - `symptoms` (text — description brute)
-  - `conversation` (list of texts — échange complet)
-  - `diagnosis` (text — maladie identifiée)
-  - `probability` (number — pourcentage)
-  - `treatment` (text — recommandation)
-  - `location` (geographic address)
-  - `status` (text: "en cours" | "traité" | "surveillance")
-  - `created_at` (date)
+- [ ] **Step 2: Collection `  `**
+  - Cliquer sur "Ajouter une collection"
+  - ID de collection : `diagnostics`
+  - Ajouter les champs :
+    - `user_ref` — Type: `reference` (référence au document `users/{uid}`)
+    - `culture` — Type: `string` (ex: "tomates", "blé")
+    - `symptoms` — Type: `string` (description libre)
+    - `conversation` — Type: `array` of `map` ; chaque map contient:
+        - `role` (string), `content` (string), `created_at` (timestamp)
+    - `diagnosis` — Type: `string` (maladie identifiée)
+    - `probability` — Type: `int64` (0-100) ou `double` (0.0-1.0) — choisissez un format et restez cohérent
+    - `treatment` — Type: `string` (recommandation)
+    - `location` — Type: `geopoint` (coordonnées) ou `string` (adresse)
+    - `status` — Type: `string` ("en cours" | "traité" | "surveillance")
+    - `created_at` — Type: `timestamp` (Server Timestamp recommandé)
 
 - [ ] **Step 3: Collection `sensor_data`**
-  - `user_id` (text)
-  - `temperature` (number)
-  - `humidity` (number)
-  - `rainfall` (number)
-  - `timestamp` (date)
+  - Cliquer sur "Ajouter une collection"
+  - ID de collection : `sensor_data`
+  - Ajouter les champs :
+    - `user_ref` — Type: `reference` (référence au document `users/{uid}`)
+    - `temperature` — Type: `double` (°C)
+    - `humidity` — Type: `double` (%)
+    - `rainfall` — Type: `double` (mm)
+    - `timestamp` — Type: `timestamp` (Server Timestamp ou horodatage capteur)
 
 - [ ] **Step 4: Collection `alerts`**
-  - `user_id` (text)
-  - `type` (text: "maladie" | "météo")
-  - `message` (text)
-  - `severity` (text: "info" | "warning" | "critical")
-  - `read` (boolean)
-  - `created_at` (date)
+  - Cliquer sur "Ajouter une collection"
+  - ID de collection : `alerts`
+  - Ajouter les champs :
+    - `user_ref` — Type: `reference` (référence au document `users/{uid}`)
+    - `type` — Type: `string` ("maladie" | "météo")
+    - `message` — Type: `string`
+    - `severity` — Type: `string` ("info" | "warning" | "critical")
+    - `read` — Type: `boolean`
+    - `created_at` — Type: `timestamp`
 
 ---
 
-### Task 3: Authentification (Connexion / Inscription)
+### Task 3: Configurer les règles de sécurité Firestore
 
-**Pages à créer :** `login`, `signup`
+- [ ] **Step 1: Accéder aux règles Firestore**
+  - Console Firebase → Firestore Database
+  - Onglet "Règles"
 
-- [ ] **Step 1: Créer la page `signup`**
-  - Ajouter un groupe "Signup Form"
-  - Inputs : `Name` (text), `Email` (text), `Password` (password), `Farm` (text), `Location` (address)
-  - Bouton "Créer mon compte"
-  - Workflow : Firebase → Create User (email, password) → Créer document `users` avec les infos → Rediriger vers `home`
-
-- [ ] **Step 2: Créer la page `login`**
-  - Inputs : `Email`, `Password`
-  - Bouton "Se connecter"
-  - Workflow : Firebase → Sign In (email, password) → Rediriger vers `home`
-  - Lien "Pas encore de compte ?" → `signup`
-  - Lien "Mot de passe oublié ?" → workflow Firebase reset password
-
-- [ ] **Step 3: Gérer les erreurs d'auth**
-  - Dans chaque workflow, ajouter une étape conditionnelle : si erreur, afficher un message dans un groupe "Error Message" (texte rouge)
-  - Messages : "Email déjà utilisé", "Mot de passe incorrect", "Email invalide"
-
-- [ ] **Step 4: Barre de navigation conditionnelle**
-  - Si user connecté → afficher "Mon compte" et "Déconnexion"
-  - Si non connecté → afficher "Connexion"
-  - Workflow Déconnexion : Firebase → Sign Out → Rediriger vers `home`
+- [ ] **Step 2: Remplacer les règles par defaut**
+  ```
+  rules_version = '2';
+  service cloud.firestore {
+    match /databases/{database}/documents {
+      // Authentification requise pour toute lecture/écriture
+      match /users/{uid} {
+        allow read, write: if request.auth.uid == uid;
+      }
+      
+      match /diagnostics/{document=**} {
+        allow read: if request.auth != null && resource.data.user_id == request.auth.uid;
+        allow create: if request.auth != null && request.resource.data.user_id == request.auth.uid;
+        allow update, delete: if request.auth != null && resource.data.user_id == request.auth.uid;
+      }
+      
+      match /alerts/{document=**} {
+        allow read: if request.auth != null && resource.data.user_id == request.auth.uid;
+        allow create: if request.auth != null;
+        allow update, delete: if request.auth != null && resource.data.user_id == request.auth.uid;
+      }
+      
+      match /sensor_data/{document=**} {
+        allow read: if request.auth != null && resource.data.user_id == request.auth.uid;
+        allow create: if request.auth != null && request.resource.data.user_id == request.auth.uid;
+      }
+    }
+  }
+  ```
+  - Cliquer sur "Publier"
 
 ---
 
-### Task 4: Page d'accueil
+### Task 4: Obtenir les clés d'accès Firebase pour FlutterFlow
 
-**Page :** `home`
+- [ ] **Step 1: Récupérer les identifiants du projet**
+  - Console Firebase → Paramètres du projet (icône engrenage en haut)
+  - Onglet "Général"
+  - Copier et sauvegarder :
+    - **Project ID** (ex: `agridoc-abc123`)
+    - **Project Number** (ex: `123456789`)
+    - **API Key** (à créer si absente)
 
-- [ ] **Step 1: Structure de la page**
-  - Header : Logo "🌱 AgriDoc" + menu nav (Diagnostic | Carte | Communauté | Connexion/Compte)
-  - Zone contenu scrollable
-  - Footer : Mentions légales | CGU | Contact | Réseaux sociaux
+- [ ] **Step 2: Créer une clé API Web**
+  - Console Firebase → Paramètres du projet
+  - Onglet "Clés API"
+  - Cliquer sur "Créer une clé API"
+  - Copier la clé générée (ex: `AIza...`)
 
-- [ ] **Step 2: Section alertes**
-  - Groupe "Alert Box" avec fond vert clair, bordure gauche verte
-  - RepeatingGroup lié à la collection `alerts` (filtré par user)
-  - Affiche les alertes non lues : icône + message + date
-
-- [ ] **Step 3: Grille d'accès rapide (2x2)**
-  - 4 boutons en grille CSS Grid :
-    - "🔍 Diagnostic IA" (vert) → workflow navigate to `diagnostic`
-    - "🗺️ Carte" (bleu) → workflow navigate to `map`
-    - "👥 Communauté" (violet) → workflow navigate to `community`
-    - "📊 Tableau de bord" (orange) → workflow navigate to `dashboard`
-
-- [ ] **Step 4: Section actualités**
-  - Groupe "News" avec 2-3 cartes statiques :
-    - Météo 7 jours (données simulées)
-    - Conseil de saison (texte fixe)
-    - Astuce du mois (texte fixe)
-
-- [ ] **Step 5: Responsive**
-  - Vérifier en preview mobile (icône téléphone dans Bubble)
-  - Ajuster les largeurs en pourcentage (pas de pixels fixes)
-  - La grille 2x2 doit rester lisible sur mobile
+- [ ] **Step 3: Copier la config Firebase**
+  - Console Firebase → Paramètres du projet → Onglet "Général"
+  - Scroller vers le bas → "Vos applications"
+  - Cliquer sur le bouton "</>" (Web)
+  - Copier tout le bloc `firebaseConfig` (il contient apiKey, projectId, databaseURL, etc.)
 
 ---
 
-### Task 5: Module Diagnostic IA (chatbot)
+## PHASE 2: Configuration de FlutterFlow
 
-**Page :** `diagnostic`
+### Task 5: Création du projet FlutterFlow et connexion Firebase
 
-- [ ] **Step 1: Interface du chat**
-  - RepeatingGroup vertical avec scroll automatique
-  - Chaque cellule = une bulle de message (conditionnelle) :
-    - Si `role = "user"` → bulle alignée à droite, fond vert clair
-    - Si `role = "assistant"` → bulle alignée à gauche, fond bleu clair
-    - Si `role = "diagnosis"` → bulle avec fond orange clair, bordure orange
-  - Chaque bulle affiche `content` (text)
+- [ ] **Step 1: Créer un projet FlutterFlow**
+  - Aller sur [flutterflow.io](https://flutterflow.io)
+  - Se connecter ou créer un compte
+  - Cliquer sur "Create New Project" ou "+ New Project"
+  - Nom : `agridoc`
+  - Template : "Blank" ou "Starter"
+  - Cliquer sur "Create"
 
-- [ ] **Step 2: Zone de saisie**
-  - Input multiligne "Décrivez les symptômes..."
-  - Bouton "Envoyer" (👈 ou icône flèche)
+- [ ] **Step 2: Connecter Firebase à FlutterFlow**
+  - Ouvrir le projet FlutterFlow
+  - Menu : Settings → "Firebase"
+  - Cliquer sur "Connect Firebase"
+  - Sélectionner le mode : "Automatic" (recommandé) ou "Manual"
+  - Si Automatic : 
+    - Cliquer sur "Sign in with Google"
+    - Sélectionner le projet Firebase `agridoc`
+    - Autoriser FlutterFlow
+  - Si Manual :
+    - Coller les identifiants Firebase (projectId, apiKey, etc.)
+  - Cliquer sur "Verify"
 
-- [ ] **Step 3: Configuration de l'API Connector**
+- [ ] **Step 3: Vérifier la connexion**
+  - Dans FlutterFlow, aller à "Backend" → "Firestore"
+  - Vérifier que les collections apparaissent : `users`, `diagnostics`, `alerts`, `sensor_data`
 
-  Dans l'onglet "Plugins" → "API Connector" → "Add another API" :
+---
 
-  ```
-  Nom de l'API : Anthropic (ou OpenAI)
-  Authentication : Private key in header
-  Header Key : x-api-key (Anthropic) ou Authorization: Bearer (OpenAI)
-  ```
+### Task 6: Configuration de l'authentification Firebase dans FlutterFlow
 
-  Ajouter un appel API :
+- [ ] **Step 1: Activer le contrôle d'authentification**
+  - Menu : Settings → "Authentication"
+  - Activer "Firebase Authentication"
+  - Sélectionner "Email / Password"
 
-  ```
-  Name : chat_diagnostic
-  Use as : Action
-  Method : POST
-  URL : https://api.anthropic.com/v1/messages
-  Headers :
-    x-api-key: [VOTRE_CLÉ]
-    anthropic-version: 2023-06-01
-    content-type: application/json
-  Body type : JSON
-  Body :
+- [ ] **Step 2: Créer la page de connexion**
+  - Cliquer sur "Pages"
+  - Ajouter une nouvelle page : "login"
+  - Ajouter des composants :
+    - TextInput pour Email
+    - TextInput pour Mot de passe
+    - Button "Se connecter"
+  - Dans le workflow du bouton :
+    - Action : Firebase → Sign in with Email
+    - Récupérer email et password des inputs
+    - Si succès : naviguer vers "home"
+    - Si erreur : afficher message d'erreur
+
+- [ ] **Step 3: Créer la page d'inscription**
+  - Ajouter une nouvelle page : "signup"
+  - Ajouter des composants :
+    - TextInput pour Nom
+    - TextInput pour Email
+    - TextInput pour Mot de passe
+    - TextInput pour Nom de la ferme
+    - TextInput pour Localisation
+    - Button "Créer mon compte"
+  - Dans le workflow du bouton :
+    - Action Firebase → Create User (email, password)
+    - Créer un document dans la collection `users` avec les infos
+    - Si succès : naviguer vers "home"
+    - Si erreur : afficher message
+
+- [ ] **Step 4: Gérer la déconnexion**
+  - Dans la navigation principale, ajouter un menu utilisateur
+  - Option "Déconnexion"
+  - Workflow : Firebase → Sign Out → Rediriger vers login
+
+---
+
+### Task 7: Configuration de l'API LLM dans FlutterFlow
+
+- [ ] **Step 1: Créer une fonction API pour le chatbot**
+  - Menu : "Backend" → "API Calls"
+  - Ajouter une nouvelle API : "chat_diagnostic"
+  - Méthode : POST
+  - URL : `https://api.anthropic.com/v1/messages` (Anthropic) ou `https://api.openai.com/v1/chat/completions` (OpenAI)
+
+- [ ] **Step 2: Configurer les headers**
+  - Ajouter Header : `x-api-key: [VOTRE_CLÉ_ANTHROPIC]` (ou `Authorization: Bearer [CLÉ_OPENAI]`)
+  - Ajouter Header : `content-type: application/json`
+  - Si Anthropic : Ajouter Header : `anthropic-version: 2023-06-01`
+
+- [ ] **Step 3: Configurer le body de la requête**
+  - Body type : JSON
+  - Pour Anthropic :
+  ```json
   {
     "model": "claude-3-haiku-20240307",
     "max_tokens": 500,
-    "system": "Tu es un assistant de diagnostic agricole. Tu aides les agriculteurs à identifier les maladies des plantes. Pose des questions de clarification, puis donne un diagnostic avec probabilité, traitement et prévention. Sois concis. IMPORTANT : quand tu as assez d'informations pour un diagnostic, commence ta réponse par 'DIAGNOSTIC:' suivi de la maladie, probabilité, traitement.",
-    "messages": [{"role": "user", "content": "<user_message>"}]
+    "system": "Tu es un assistant de diagnostic agricole. Tu aides les agriculteurs à identifier les maladies des plantes. Pose des questions de clarification, puis donne un diagnostic avec probabilité, traitement et prévention. Sois concis. Quand tu as assez d'informations, commence ta réponse par 'DIAGNOSTIC:' suivi de la maladie, probabilité, traitement.",
+    "messages": [{"role": "user", "content": "$user_message"}]
+  }
+  ```
+  - Pour OpenAI :
+  ```json
+  {
+    "model": "gpt-3.5-turbo",
+    "max_tokens": 500,
+    "system": "[même prompt qu'Anthropic]",
+    "messages": [{"role": "user", "content": "$user_message"}]
   }
   ```
 
-  > Si OpenAI : URL = `https://api.openai.com/v1/chat/completions`, modèle = `gpt-3.5-turbo`, adapter le body.
+---
 
-- [ ] **Step 4: Prompt system pour l'IA**
-  ```
-  Tu es AgriDoc, un assistant de diagnostic des maladies des plantes.
-  Ton rôle : aider les agriculteurs à identifier les maladies de leurs cultures.
+## PHASE 3: Construction des pages et workflows FlutterFlow
 
-  Règles :
-  1. Pose UNE question à la fois pour affiner le diagnostic
-  2. Demande : la culture concernée, les symptômes visibles, la localisation
-     des symptômes, depuis quand, conditions météo récentes
-  3. Après 3-4 échanges, donne un diagnostic au format :
-     DIAGNOSTIC:
-     Maladie: [nom]
-     Probabilité: [pourcentage]%
-     Traitement: [recommandation]
-     Prévention: [conseils]
-  4. Si tu n'es pas sûr, indique les 2 maladies les plus probables
-  5. Reste concis (pas plus de 3-4 phrases par réponse)
-  ```
+### Task 8: Page d'accueil (home)
 
-- [ ] **Step 5: Workflow d'envoi de message**
+- [ ] **Step 1: Créer la page home**
+  - Ajouter une nouvelle page : "home"
+  - Ajouter un AppBar avec :
+    - Logo ou titre "🌱 AgriDoc"
+    - Menu utilisateur (avatar + bouton déconnexion)
 
-  Quand l'utilisateur clique "Envoyer" :
-  1. Créer un document temporaire `current_chat` avec `role = "user"` et `content = input`
-  2. Ajouter au RepeatingGroup (la bulle apparaît)
-  3. Appeler l'API `chat_diagnostic` avec le contenu
-  4. Récupérer la réponse de l'API
-  5. Créer un document avec `role = "assistant"` et `content = réponse`
-  6. Ajouter au RepeatingGroup
-  7. Vider l'input
-  8. Scroller en bas du chat
+- [ ] **Step 2: Ajouter une section alertes**
+  - Ajouter un ListView connecté à la collection `alerts`
+  - Filtrer par : `user_id == current_user.uid` et `read == false`
+  - Afficher : icône + message + date + bouton "Marquer comme lu"
 
-- [ ] **Step 6: Détection et sauvegarde du diagnostic**
-  - Après chaque réponse de l'assistant, vérifier si le texte contient "DIAGNOSTIC:"
-  - Si oui : extraire maladie, probabilité, traitement
-  - Créer un document dans `diagnostics` avec toutes les infos
-  - Ajouter une alerte dans `alerts` pour le tableau de bord
-  - Afficher un bouton "Voir le traitement détaillé"
+- [ ] **Step 3: Ajouter des boutons d'accès rapide**
+  - Grille 2x2 avec 4 boutons :
+    - "🔍 Diagnostic IA" → naviguer vers "diagnostic"
+    - "🗺️ Carte" → naviguer vers "map"
+    - "👥 Communauté" → naviguer vers "community"
+    - "📊 Tableau de bord" → naviguer vers "dashboard"
 
-- [ ] **Step 7: Gestion de l'historique de conversation**
-  - Stocker tous les messages d'une session dans un champ `conversation` (list)
-  - Bouton "Nouveau diagnostic" → vider le chat et réinitialiser
-  - Le RepeatingGroup est lié aux messages de la session courante
+- [ ] **Step 4: Ajouter une section actualités**
+  - Afficher 2-3 cartes avec :
+    - Météo 7 jours (données simulées ou API météo)
+    - Conseil de saison (texte fixe)
+    - Astuce du mois (texte fixe)
 
 ---
 
-### Task 6: Carte interactive
+### Task 9: Page Diagnostic IA (chatbot)
 
-**Page :** `map`
+- [ ] **Step 1: Créer la page diagnostic**
+  - Ajouter une nouvelle page : "diagnostic"
+  - Ajouter un ListView pour le chat (messages)
+  - Chaque message a un conditional :
+    - Si `role == "user"` : aligné à droite, fond vert
+    - Si `role == "assistant"` : aligné à gauche, fond bleu
+    - Si `role == "diagnosis"` : fond orange
 
-- [ ] **Step 1: Installer le plugin Map**
-  - Plugins → Add plugins → chercher "Map" (par Bubble) ou "Leaflet"
-  - Installer et configurer (clé API Mapbox gratuite optionnelle, sinon OpenStreetMap)
+- [ ] **Step 2: Ajouter la zone de saisie**
+  - TextInput multiligne : "Décrivez les symptômes..."
+  - Button "Envoyer" (avec icône flèche ou texte)
 
-- [ ] **Step 2: Ajouter la carte**
-  - Glisser l'élément "Map" sur la page
-  - Régler hauteur : 100% de la hauteur d'écran moins le header
-  - Centrer sur la France (lat: 46.603354, lng: 1.888334, zoom: 6)
+- [ ] **Step 3: Créer le workflow d'envoi**
+  - Au clic sur "Envoyer" :
+    1. Récupérer le texte de l'input
+    2. Ajouter le message utilisateur à la liste locale (UI update)
+    3. Effacer l'input
+    4. Appeler l'API LLM (chat_diagnostic)
+    5. Récupérer la réponse
+    6. Ajouter la réponse à la liste
+    7. Créer un document dans `diagnostics` avec :
+       - `user_id`, `culture`, `symptoms`, `conversation` (array de messages), `created_at`
+       - Si la réponse contient "DIAGNOSTIC:" : extraire et remplir `diagnosis`, `probability`, `treatment`
 
-- [ ] **Step 3: Ajouter les marqueurs**
-  - Source de données : rechercher les `diagnostics` (tous les utilisateurs, pour vue communautaire)
-  - Chaque diagnostic → un marqueur sur la carte
-  - Couleur du marqueur selon le statut :
-    - `probability > 70%` → rouge (alerte)
-    - `probability 30-70%` → jaune (surveiller)
-    - `probability < 30%` → vert (sain)
-  - Au clic sur un marqueur → popup avec : culture, maladie, probabilité, date
-
-- [ ] **Step 4: Filtres**
-  - Ajouter des boutons de filtre en haut de la carte :
-    - "Tout" | "Alertes" | "Tomates" | "Blé" | "Vigne"
-  - Chaque bouton applique un filtre sur la source de données des marqueurs
-
-- [ ] **Step 5: Légende**
-  - En bas de la carte, afficher :
-    - 🔴 Alerte (>70%) | 🟡 Surveiller (30-70%) | 🟢 Sain (<30%)
-
----
-
-### Task 7: Tableau de bord utilisateur
-
-**Page :** `dashboard`
-
-- [ ] **Step 1: Indicateurs météo (4 cartes en grille 2x2)**
-  - Récupérer les dernières données de `sensor_data` pour le user
-  - Carte 1 : 🌡️ Température → `sensor_data.temperature` °C
-  - Carte 2 : 💧 Humidité → `sensor_data.humidity` %
-  - Carte 3 : 🌧️ Pluie (7j) → somme `sensor_data.rainfall` sur 7 jours
-  - Carte 4 : ⚠️ Alertes → count de `alerts` non lues
-
-- [ ] **Step 2: Historique des diagnostics**
-  - RepeatingGroup lié à `diagnostics` filtré par user, trié par date desc
-  - Chaque ligne affiche : maladie, culture, probabilité (barre de progression colorée), date, statut
-  - Bouton "Voir le diagnostic" → popup avec conversation complète + traitement
-
-- [ ] **Step 3: Alertes IA personnalisées**
-  - RepeatingGroup lié à `alerts` filtré par user, non lues
-  - Chaque alerte : icône + message + bouton "Marquer comme lu"
-  - Workflow "Marquer comme lu" → update `alerts.read = true`
-
-- [ ] **Step 4: Données simulées (fallback)**
-  - Si aucun `sensor_data` n'existe, afficher des valeurs par défaut :
-    - Température : 22°C, Humidité : 65%, Pluie : 12mm
-  - Ajouter un bouton "Ajouter des données" → page ou popup de saisie
+- [ ] **Step 4: Gérer les erreurs API**
+  - Si erreur réseau : afficher "Impossible de se connecter"
+  - Si limite d'API atteinte : afficher "Limite dépassée, réessayez plus tard"
 
 ---
 
-### Task 8: Espace communautaire (optionnel)
+### Task 10: Page Carte interactive
 
-**Page :** `community`
+- [ ] **Step 1: Créer la page map**
+  - Ajouter une nouvelle page : "map"
+  - Ajouter un composant Google Map (intégration native FlutterFlow)
 
-- [ ] **Step 1: Forum simplifié**
-  - Collection `posts` : `user_id`, `user_name`, `title`, `content`, `category`, `created_at`
-  - Collection `comments` : `post_id`, `user_id`, `user_name`, `content`, `created_at`
+- [ ] **Step 2: Afficher les diagnostics sur la carte**
+  - Récupérer tous les documents `diagnostics` de l'utilisateur
+  - Pour chaque diagnostic, créer un marqueur avec :
+    - Position : `location`
+    - Info bulle : `culture`, `diagnosis`, `date`
+    - Couleur selon `status` (rouge=urgent, orange=surveillance, vert=traité)
 
-- [ ] **Step 2: Interface**
-  - RepeatingGroup des posts (triés par date desc)
-  - Chaque post : titre, auteur, catégorie, date, nombre de commentaires
-  - Bouton "Nouveau post" → popup avec formulaire (titre, catégorie, contenu)
-  - Au clic sur un post → page `post_detail` avec les commentaires
-
-- [ ] **Step 3: Catégories**
-  - Cultures (Tomates, Blé, Vigne, Maraîchage, Autres)
-  - Bonnes pratiques
-  - Questions générales
-
----
-
-### Task 9: Pages compte utilisateur
-
-**Pages :** `account`, `edit_account`
-
-- [ ] **Step 1: Page `account`**
-  - Afficher les infos du user courant : nom, email, exploitation, localisation
-  - Bouton "Modifier mon profil" → workflow navigate to `edit_account`
-  - Bouton "Déconnexion" → Firebase Sign Out
-  - Section "Mes cultures suivies" → liste éditables
-
-- [ ] **Step 2: Page `edit_account`**
-  - Formulaire pré-rempli avec les données du user
-  - Inputs : Name, Farm Name, Location
-  - Bouton "Enregistrer" → update document `users` → rediriger vers `account`
+- [ ] **Step 3: Ajouter des contrôles**
+  - Zoom +/-
+  - Centrer sur la localisation actuelle (géolocalisation)
+  - Filtrer les marqueurs par date ou statut
 
 ---
 
-### Task 10: Administration (back-office)
+### Task 11: Tableau de bord (dashboard)
 
-**Page :** `admin`
+- [ ] **Step 1: Créer la page dashboard**
+  - Ajouter une nouvelle page : "dashboard"
 
-- [ ] **Step 1: Restreindre l'accès**
-  - Dans le workflow de la page `admin`, vérifier si `current user.role = "admin"`
-  - Si non → rediriger vers `home` avec message "Accès non autorisé"
+- [ ] **Step 2: Afficher des statistiques**
+  - Nombre total de diagnostics
+  - Maladies détectées (top 5)
+  - Cultures principales
+  - Taux de réussite des traitements
 
-- [ ] **Step 2: Dashboard stats**
-  - Nombre total d'utilisateurs : count de `users`
-  - Nombre de diagnostics ce mois : count de `diagnostics` filtrés par mois courant
-  - Maladie la plus fréquente : agrégation sur `diagnostics.diagnosis`
-  - Région la plus active : agrégation sur `diagnostics.location`
-
-- [ ] **Step 3: Gestion des utilisateurs**
-  - RepeatingGroup lié à `users`
-  - Colonnes : Nom, Email, Exploitation, Date inscription, Nombre de diagnostics, Rôle
-  - Actions par utilisateur : bouton "Désactiver" (update `users.active = false`), "Passer admin"
-
-- [ ] **Step 4: Gestion des données**
-  - Liste des diagnostics récents (tous utilisateurs)
-  - Possibilité de supprimer un diagnostic (bouton corbeille)
-  - Export CSV (optionnel) → workflow avec Bubble CSV export
+- [ ] **Step 3: Afficher l'historique**
+  - ListView des 10 derniers diagnostics
+  - Afficher : date, culture, maladie, statut
+  - Cliquer sur un diagnostic pour voir les détails
 
 ---
 
-### Task 11: Intégration des données capteurs simulées
+### Task 12: Section Communauté
 
-- [ ] **Step 1: Créer un script de génération de données**
-  - Dans Bubble, créer une page cachée `data_generator` accessible uniquement en preview
-  - Ajouter un workflow récurrent (Schedule API Workflow sur le plan payant) OU
-  - Ajouter un bouton manuel "Générer données" pour la démo
-  - Le workflow crée un document dans `sensor_data` avec :
-    ```
-    user_id = current user
-    temperature = random entre 15 et 35
-    humidity = random entre 40 et 90
-    rainfall = random entre 0 et 25
-    timestamp = current date/time
-    ```
+- [ ] **Step 1: Créer la page community**
+  - Ajouter une nouvelle page : "community"
 
-- [ ] **Step 2: Option alternative — script Python externe**
-  ```python
-  import random, time, firebase_admin
-  from firebase_admin import credentials, firestore
+- [ ] **Step 2: Ajouter un forum simplifié**
+  - ListView des posts (texte fixe ou données statiques pour la démo)
+  - Chaque post : auteur, date, contenu, nombre de likes
 
-  cred = credentials.Certificate("serviceAccountKey.json")
-  firebase_admin.initialize_app(cred)
-  db = firestore.client()
-
-  while True:
-      db.collection("sensor_data").add({
-          "user_id": "demo_user",
-          "temperature": round(random.uniform(15, 35), 1),
-          "humidity": round(random.uniform(40, 90), 1),
-          "rainfall": round(random.uniform(0, 25), 1),
-          "timestamp": firestore.SERVER_TIMESTAMP
-      })
-      time.sleep(3600)  # Toutes les heures
-  ```
-
-- [ ] **Step 3: Démo sans backend**
-  - Insérer manuellement 5-10 documents dans `sensor_data` via la console Firebase
-  - Ces données seront affichées dans le tableau de bord
+- [ ] **Step 3: Permettre de partager des conseils**
+  - TextInput pour écrire un nouveau post
+  - Button "Partager"
+  - Workflow : créer un document dans une collection `posts` (à créer)
 
 ---
 
-### Task 12: Tests, responsive et déploiement
+## PHASE 4: Tests et Déploiement
 
-- [ ] **Step 1: Tests fonctionnels**
-  - Créer un compte test (email: test@agridoc.fr / mdp: test123)
-  - Tester le flow complet : inscription → connexion → diagnostic → carte → dashboard → déconnexion
-  - Vérifier que les données s'enregistrent dans Firestore
-  - Vérifier le chatbot : envoyer un message, recevoir une réponse, obtenir un diagnostic
+### Task 13: Tests locaux
 
-- [ ] **Step 2: Tests responsive**
-  - Preview mobile dans Bubble
-  - Tester sur smartphone réel (ouvrir le lien Bubble dans Chrome mobile)
-  - Vérifier : pas de scroll horizontal, texte lisible, boutons cliquables
-  - Ajuster les tailles de police pour mobile (minimum 16px pour les inputs)
+- [ ] **Step 1: Tester l'authentification**
+  - Créer un compte de test
+  - Se connecter
+  - Vérifier que le document utilisateur est créé dans Firestore
+  - Se déconnecter et reconnecter
 
-- [ ] **Step 3: Déploiement**
-  - Bubble → Settings → Domain/Email → copier le lien public (sous-domaine bubbleapps.io)
-  - Optionnel : connecter un domaine personnalisé
-  - Partager le lien pour la soutenance
+- [ ] **Step 2: Tester le module diagnostic**
+  - Envoyer un message au chatbot
+  - Vérifier que la réponse de l'API LLM s'affiche
+  - Vérifier que le diagnostic est sauvegardé dans Firestore
 
-- [ ] **Step 4: Préparation soutenance**
-  - Créer 3 comptes utilisateurs avec diagnostics types
-  - Avoir un scénario de démo prêt :
-    1. Connexion
-    2. Diagnostic : "Mes plants de tomates ont des taches brunes sur les feuilles"
-    3. Interaction avec le chatbot
-    4. Affichage du diagnostic
-    5. Navigation vers la carte
-    6. Consultation du tableau de bord
+- [ ] **Step 3: Tester la navigation**
+  - Vérifier que tous les liens fonctionnent
+  - Tester sur mobile (mode responsive)
+
+- [ ] **Step 4: Vérifier les données Firestore**
+  - Console Firebase → Firestore Database
+  - Vérifier les collections : `users`, `diagnostics`, `alerts`
 
 ---
 
-### Task 13: Rapport et documentation
+### Task 14: Déploiement
 
-- [ ] **Step 1: Structure du rapport (Word/PowerPoint)**
-  - Introduction : problématique IA & Agriculture
-  - Présentation du projet AgriDoc
-  - Veille technologique (outils no-code, modèles IA, APIs)
-  - Architecture technique (schéma)
-  - Fonctionnalités détaillées (captures d'écran)
-  - Difficultés rencontrées et solutions
-  - Conclusion et perspectives
+- [ ] **Step 1: Générer la version Android/iOS**
+  - Dans FlutterFlow : Menu "Deploy" → "Build"
+  - Sélectionner Android / iOS
+  - Cliquer sur "Build"
+  - Attendre la compilation (~5-10 min)
 
-- [ ] **Step 2: Captures d'écran**
-  - Prendre des screenshots de chaque page
-  - Annoter les fonctionnalités clés
+- [ ] **Step 2: Télécharger l'APK (Android) ou IPA (iOS)**
+  - Une fois la compilation terminée, télécharger le fichier
+  - Tester sur un appareil mobile ou un émulateur
 
-- [ ] **Step 3: Préparation soutenance orale**
-  - Démo live de l'application (5 min)
-  - Présentation PowerPoint (10 slides max)
-  - Questions/réponses
+- [ ] **Step 3: Passer en mode production Firebase**
+  - Console Firebase → Firestore Database
+  - Onglet "Règles"
+  - Changer le mode de "test" à "production"
+  - Adapter les règles si nécessaire
+
+---
+
+## Architecture Finale
+
+```
+┌──────────────────────────────────────────┐
+│         App Mobile (FlutterFlow)          │
+│  (Authentification, Diagnostic, Carte)   │
+└────────────────────┬─────────────────────┘
+                     │
+        ┌────────────┴────────────┐
+        │                         │
+   ┌────▼─────────┐      ┌────────▼──────┐
+   │   Firebase   │      │ API LLM        │
+   │ ┌──────────┐ │      │ (Anthropic /   │
+   │ │ Firestore│ │      │  OpenAI)       │
+   │ │ (Data)   │ │      │                │
+   │ ├──────────┤ │      └────────────────┘
+   │ │ Auth     │ │
+   │ │ (Users)  │ │
+   │ └──────────┘ │
+   └──────────────┘
+```
+
+---
+
+## Points clés
+
+✅ **Firebase** = toute la logique backend (authentification, stockage, sécurité)
+✅ **FlutterFlow** = interface mobile + workflows
+✅ **API LLM** = intelligence du chatbot de diagnostic
+✅ **Règles Firestore** = sécurité des données (chaque user ne voit que ses données)
+✅ **Collections Firestore** = structure claire et scalable
+
+
