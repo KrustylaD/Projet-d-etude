@@ -1,4 +1,4 @@
-# AgriDoc — Plan d'implémentation
+# AgriScan AI — Plan d'implémentation
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -25,7 +25,7 @@
 - [ ] **Step 1: Créer le projet Firebase**
   - Aller sur [console.firebase.google.com](https://console.firebase.google.com)
   - Cliquer sur "Ajouter un projet"
-  - Nom : `agridoc`
+  - Nom : `AgriScan AI`
   - Désactiver Google Analytics (optionnel)
   - Cliquer sur "Créer un projet"
   - Attendre que le projet soit prêt (~2-3 min)
@@ -148,7 +148,7 @@
   - Console Firebase → Paramètres du projet (icône engrenage en haut)
   - Onglet "Général"
   - Copier et sauvegarder :
-    - **Project ID** (ex: `agridoc-abc123`)
+    - **Project ID** (ex: `AgriScan AI-abc123`)
     - **Project Number** (ex: `123456789`)
     - **API Key** (à créer si absente)
 
@@ -174,7 +174,7 @@
   - Aller sur [flutterflow.io](https://flutterflow.io)
   - Se connecter ou créer un compte
   - Cliquer sur "Create New Project" ou "+ New Project"
-  - Nom : `agridoc`
+  - Nom : `AgriScan AI`
   - Template : "Blank" ou "Starter"
   - Cliquer sur "Create"
 
@@ -185,7 +185,7 @@
   - Sélectionner le mode : "Automatic" (recommandé) ou "Manual"
   - Si Automatic : 
     - Cliquer sur "Sign in with Google"
-    - Sélectionner le projet Firebase `agridoc`
+    - Sélectionner le projet Firebase `AgriScan AI`
     - Autoriser FlutterFlow
   - Si Manual :
     - Coller les identifiants Firebase (projectId, apiKey, etc.)
@@ -282,7 +282,7 @@
 - [ ] **Step 1: Créer la page home**
   - Ajouter une nouvelle page : "home"
   - Ajouter un AppBar avec :
-    - Logo ou titre "🌱 AgriDoc"
+    - Logo ou titre "🌱 AgriScan AI"
     - Menu utilisateur (avatar + bouton déconnexion)
 
 - [ ] **Step 2: Ajouter une section alertes**
