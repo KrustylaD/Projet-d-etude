@@ -2222,6 +2222,90 @@ body {
   }, { rootMargin: '-40% 0px -55% 0px' });
 
   sections.forEach(s => observer.observe(s));
+
+  // ═══ Toggle Code Panel ═══
+  function toggleCodePanel(btn, panelId) {
+    const panel = document.getElementById(panelId);
+    if (!panel) return;
+    panel.classList.toggle('open');
+    btn.classList.toggle('open');
+    const icon = btn.querySelector('.toggle-icon');
+    const label = btn.querySelector('.toggle-label');
+    if (icon) {
+      icon.textContent = panel.classList.contains('open') ? '▲' : '▼';
+    }
+    if (label) {
+      label.textContent = panel.classList.contains('open') ? 'Fermer' : 'Code';
+    }
+  }
+
+  // ═══ Copy: Generic Code Block ═══
+  function copyCode(btn, codeBlockId) {
+    const block = document.getElementById(codeBlockId);
+    if (!block) return;
+    const text = extractTextContent(block);
+    copyToClipboard(text, btn);
+  }
+
+  // ═══ Copy: Palette Swatch ═══
+  function copySwatch(btn, hex, cssVar) {
+    const text = hex + ' — ' + cssVar;
+    copyToClipboard(text, btn);
+  }
+
+  // ═══ Copy: Icon SVG ═══
+  function copyIconSvg(btn, svgElementId) {
+    const svg = document.getElementById(svgElementId);
+    if (!svg) return;
+    const text = svg.outerHTML;
+    copyToClipboard(text, btn);
+  }
+
+  // ═══ Clipboard with fallback ═══
+  function copyToClipboard(text, btn) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(
+        function() { showCopied(btn); },
+        function() { fallbackCopy(text, btn); }
+      );
+    } else {
+      fallbackCopy(text, btn);
+    }
+  }
+
+  function fallbackCopy(text, btn) {
+    var textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.style.position = 'fixed';
+    textarea.style.left = '-9999px';
+    document.body.appendChild(textarea);
+    textarea.select();
+    try {
+      document.execCommand('copy');
+      showCopied(btn);
+    } catch (e) {
+      // silently fail
+    }
+    document.body.removeChild(textarea);
+  }
+
+  function extractTextContent(el) {
+    var clone = el.cloneNode(true);
+    var spans = clone.querySelectorAll('span');
+    spans.forEach(function(span) { span.replaceWith(span.textContent); });
+    return clone.textContent.trim();
+  }
+
+  // ═══ "✓ Copié !" feedback ═══
+  function showCopied(btn) {
+    var originalHTML = btn.innerHTML;
+    btn.innerHTML = '✓ Copié !';
+    btn.classList.add('copied');
+    setTimeout(function() {
+      btn.innerHTML = originalHTML;
+      btn.classList.remove('copied');
+    }, 2000);
+  }
 </script>
 
 </body>
