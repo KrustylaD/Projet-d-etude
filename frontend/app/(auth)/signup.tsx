@@ -16,6 +16,23 @@ import { useAuthStore } from '../../src/store/authStore';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Colors, Typography, BorderRadius, Spacing } from '../../src/constants/theme';
+
+const AgriScanLogo = ({ size = 60 }: { size?: number }) => (
+  <View style={[signupStyles.logoContainer, { width: size, height: size, borderRadius: BorderRadius.squircle }]}>
+    <Ionicons name="leaf" size={size * 0.5} color={Colors.lime} />
+  </View>
+);
+
+const signupStyles = StyleSheet.create({
+  logoContainer: {
+    backgroundColor: Colors.forest,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: Colors.cream08,
+  },
+});
 
 export default function SignupScreen() {
   const router = useRouter();
@@ -46,24 +63,15 @@ export default function SignupScreen() {
   };
 
   return (
-    <LinearGradient
-      colors={['#1a2f1a', '#0a1a0a', '#000000']}
-      style={styles.container}
-    >
+    <LinearGradient colors={[Colors.forest, Colors.black, Colors.black]} style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          style={styles.keyboardView}
-        >
-          <ScrollView
-            contentContainerStyle={styles.scrollContent}
-            keyboardShouldPersistTaps="handled"
-          >
+        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.keyboardView}>
+          <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
             <View style={styles.content}>
               <View style={styles.header}>
-                <Ionicons name="leaf" size={60} color="#4ade80" />
+                <AgriScanLogo />
                 <Text style={styles.title}>Créer un compte</Text>
-                <Text style={styles.subtitle}>Rejoignez AgriScan AI</Text>
+                <Text style={styles.subtitle}>Rejoignez AgriScan<Text style={styles.titleAccent}>.ai</Text></Text>
               </View>
 
               <View style={styles.form}>
@@ -158,91 +166,58 @@ export default function SignupScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  safeArea: {
-    flex: 1,
-  },
-  keyboardView: {
-    flex: 1,
-  },
-  scrollContent: {
-    flexGrow: 1,
-  },
-  content: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 24,
-    paddingTop: 48,
-    paddingBottom: 48,
-  },
-  header: {
-    alignItems: 'center',
-    marginBottom: 32,
-  },
+  container: { flex: 1 },
+  safeArea: { flex: 1 },
+  keyboardView: { flex: 1 },
+  scrollContent: { flexGrow: 1 },
+  content: { flex: 1, justifyContent: 'center', padding: Spacing.xl, paddingTop: Spacing.xxxl, paddingBottom: Spacing.xxxl },
+  header: { alignItems: 'center', marginBottom: Spacing.xxl },
   title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#ffffff',
-    marginTop: 16,
+    fontSize: Typography.h1,
+    fontWeight: Typography.extrabold as any,
+    color: Colors.cream,
+    marginTop: Spacing.lg,
+    letterSpacing: -0.5,
   },
-  subtitle: {
-    fontSize: 16,
-    color: '#a3a3a3',
-    marginTop: 8,
-  },
-  form: {
-    width: '100%',
-  },
+  titleAccent: { color: Colors.lime },
+  subtitle: { fontSize: Typography.body, color: Colors.cream50, marginTop: Spacing.sm },
+  form: { width: '100%' },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#1a1a1a',
-    borderRadius: 12,
-    marginBottom: 16,
-    paddingHorizontal: 16,
+    backgroundColor: Colors.slate,
+    borderRadius: BorderRadius.sm,
+    marginBottom: Spacing.lg,
+    paddingHorizontal: Spacing.md,
     borderWidth: 1,
-    borderColor: '#2a2a2a',
-  },
-  inputIcon: {
-    marginRight: 12,
-  },
-  input: {
-    flex: 1,
+    borderColor: Colors.cream15,
     height: 56,
-    color: '#ffffff',
-    fontSize: 16,
   },
-  eyeIcon: {
-    padding: 8,
-  },
+  inputIcon: { marginRight: Spacing.md },
+  input: { flex: 1, height: 56, color: Colors.cream, fontSize: Typography.body },
+  eyeIcon: { padding: Spacing.sm },
   button: {
-    backgroundColor: '#4ade80',
-    borderRadius: 12,
-    height: 56,
+    backgroundColor: Colors.lime,
+    borderRadius: BorderRadius.md,
+    height: 52,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 8,
+    marginTop: Spacing.sm,
+    shadowColor: Colors.lime,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.10,
+    shadowRadius: 10,
+    elevation: 8,
   },
-  buttonDisabled: {
-    opacity: 0.6,
-  },
+  buttonDisabled: { opacity: 0.6 },
   buttonText: {
-    color: '#000000',
-    fontSize: 18,
-    fontWeight: 'bold',
+    color: Colors.black,
+    fontSize: Typography.h4,
+    fontWeight: Typography.medium as any,
+    letterSpacing: 0.4,
+    textTransform: 'uppercase' as any,
   },
-  linkButton: {
-    marginTop: 24,
-    alignItems: 'center',
-  },
-  linkText: {
-    color: '#a3a3a3',
-    fontSize: 16,
-  },
-  linkTextBold: {
-    color: '#4ade80',
-    fontWeight: 'bold',
-  },
+  linkButton: { marginTop: Spacing.xl, alignItems: 'center' },
+  linkText: { color: Colors.cream40, fontSize: Typography.body },
+  linkTextBold: { color: Colors.lime, fontWeight: Typography.medium as any },
 });

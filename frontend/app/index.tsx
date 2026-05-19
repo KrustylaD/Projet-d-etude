@@ -4,46 +4,11 @@ import { useRouter } from 'expo-router';
 import { useAuthStore } from '../src/store/authStore';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Colors, Typography, BorderRadius } from '../src/constants/theme';
-import Svg, { Path, Line } from 'react-native-svg';
+import { Ionicons } from '@expo/vector-icons';
 
 const AgriScanLogo = ({ size = 88 }: { size?: number }) => (
   <View style={[styles.logoContainer, { width: size, height: size, borderRadius: BorderRadius.squircle }]}>
-    <Svg width={size * 0.55} height={size * 0.55} viewBox="0 0 24 24" fill="none">
-      <Path
-        d="M12 2C8 6 4 10 4 14c0 4 3.5 7 8 7s8-3 8-7c0-4-4-8-8-12z"
-        stroke={Colors.cream}
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <Path
-        d="M12 2v19"
-        stroke={Colors.cream}
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <Line
-        x1="5"
-        y1="10"
-        x2="19"
-        y2="10"
-        stroke={Colors.lime}
-        strokeWidth="1.5"
-        strokeDasharray="2 1.5"
-        opacity="0.8"
-      />
-      <Line
-        x1="6"
-        y1="14"
-        x2="18"
-        y2="14"
-        stroke={Colors.lime}
-        strokeWidth="1.5"
-        strokeDasharray="2 1.5"
-        opacity="0.6"
-      />
-    </Svg>
+    <Ionicons name="leaf" size={size * 0.5} color={Colors.lime} />
   </View>
 );
 
