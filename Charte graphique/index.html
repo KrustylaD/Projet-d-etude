@@ -2249,7 +2249,7 @@ body {
 
   // ═══ Copy: Palette Swatch ═══
   function copySwatch(btn, hex, cssVar) {
-    const text = hex + ' — ' + cssVar;
+    var text = (hex || '') + ' — ' + (cssVar || '');
     copyToClipboard(text, btn);
   }
 
@@ -2274,7 +2274,7 @@ body {
   }
 
   function fallbackCopy(text, btn) {
-    var textarea = document.createElement('textarea');
+    const textarea = document.createElement('textarea');
     textarea.value = text;
     textarea.style.position = 'fixed';
     textarea.style.left = '-9999px';
@@ -2290,20 +2290,22 @@ body {
   }
 
   function extractTextContent(el) {
-    var clone = el.cloneNode(true);
-    var spans = clone.querySelectorAll('span');
+    const clone = el.cloneNode(true);
+    const spans = clone.querySelectorAll('span');
     spans.forEach(function(span) { span.replaceWith(span.textContent); });
     return clone.textContent.trim();
   }
 
   // ═══ "✓ Copié !" feedback ═══
   function showCopied(btn) {
-    var originalHTML = btn.innerHTML;
+    if (btn._copyTimer) clearTimeout(btn._copyTimer);
+    const originalHTML = btn.innerHTML;
     btn.innerHTML = '✓ Copié !';
     btn.classList.add('copied');
-    setTimeout(function() {
+    btn._copyTimer = setTimeout(function() {
       btn.innerHTML = originalHTML;
       btn.classList.remove('copied');
+      btn._copyTimer = null;
     }, 2000);
   }
 </script>
