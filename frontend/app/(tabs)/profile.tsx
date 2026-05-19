@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Alert,
+  Image,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuthStore } from '../../src/store/authStore';
@@ -41,9 +42,22 @@ export default function ProfileScreen() {
         <ScrollView contentContainerStyle={styles.scrollContent}>
           {/* Profile Header */}
           <View style={styles.profileHeader}>
-            <View style={styles.avatarContainer}>
-              <Ionicons name="person" size={48} color="#4ade80" />
-            </View>
+            <TouchableOpacity
+              onPress={() => router.push('/edit-profile')}
+              activeOpacity={0.85}
+              style={styles.avatarTouch}
+            >
+              <View style={styles.avatarContainer}>
+                {user?.photo_url ? (
+                  <Image source={{ uri: user.photo_url }} style={styles.avatarImage} />
+                ) : (
+                  <Ionicons name="person" size={48} color="#4ade80" />
+                )}
+              </View>
+              <View style={styles.editBadge}>
+                <Ionicons name="pencil" size={14} color="#000" />
+              </View>
+            </TouchableOpacity>
             <Text style={styles.userName}>{user?.display_name || 'Utilisateur'}</Text>
             <Text style={styles.userEmail}>{user?.email}</Text>
             {user?.farm_name && (
@@ -52,12 +66,21 @@ export default function ProfileScreen() {
                 <Text style={styles.farmName}>{user.farm_name}</Text>
               </View>
             )}
+
+            <TouchableOpacity
+              style={styles.editProfileButton}
+              onPress={() => router.push('/edit-profile')}
+              activeOpacity={0.85}
+            >
+              <Ionicons name="create-outline" size={18} color="#4ade80" />
+              <Text style={styles.editProfileButtonText}>Modifier le profil</Text>
+            </TouchableOpacity>
           </View>
 
           {/* Account Info */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Informations du compte</Text>
-            
+
             <View style={styles.infoCard}>
               <View style={styles.infoRow}>
                 <View style={styles.infoLabel}>
@@ -89,10 +112,30 @@ export default function ProfileScreen() {
             </View>
           </View>
 
+          {/* Sécurité */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Sécurité</Text>
+
+            <View style={styles.menuCard}>
+              <TouchableOpacity
+                style={styles.menuItem}
+                onPress={() => router.push('/change-password')}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="key-outline" size={24} color="#4ade80" />
+                <View style={styles.menuItemContent}>
+                  <Text style={styles.menuItemTitle}>Changer le mot de passe</Text>
+                  <Text style={styles.menuItemSubtitle}>Modifier votre mot de passe actuel</Text>
+                </View>
+                <Ionicons name="chevron-forward" size={20} color="#666" />
+              </TouchableOpacity>
+            </View>
+          </View>
+
           {/* App Info */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>À propos</Text>
-            
+
             <View style={styles.menuCard}>
               <View style={styles.menuItem}>
                 <Ionicons name="leaf" size={24} color="#4ade80" />
@@ -106,7 +149,7 @@ export default function ProfileScreen() {
                 <Ionicons name="information-circle-outline" size={24} color="#60a5fa" />
                 <View style={styles.menuItemContent}>
                   <Text style={styles.menuItemTitle}>Aide & Support</Text>
-                  <Text style={styles.menuItemSubtitle}>Besoin d'assistance ?</Text>
+                  <Text style={styles.menuItemSubtitle}>Besoin d&apos;assistance ?</Text>
                 </View>
                 <Ionicons name="chevron-forward" size={20} color="#666" />
               </View>
@@ -156,6 +199,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 32,
   },
+  avatarTouch: {
+    position: 'relative',
+    marginBottom: 16,
+  },
   avatarContainer: {
     width: 100,
     height: 100,
@@ -165,7 +212,24 @@ const styles = StyleSheet.create({
     borderColor: '#4ade80',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 16,
+    overflow: 'hidden',
+  },
+  avatarImage: {
+    width: '100%',
+    height: '100%',
+  },
+  editBadge: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: '#4ade80',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 3,
+    borderColor: '#0a1a0a',
   },
   userName: {
     fontSize: 24,
@@ -193,6 +257,24 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     color: '#4ade80',
+  },
+  editProfileButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    marginTop: 20,
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    backgroundColor: 'rgba(74, 222, 128, 0.08)',
+    borderRadius: 24,
+    borderWidth: 1,
+    borderColor: '#4ade80',
+  },
+  editProfileButtonText: {
+    color: '#4ade80',
+    fontSize: 14,
+    fontWeight: '700',
   },
   section: {
     marginBottom: 24,

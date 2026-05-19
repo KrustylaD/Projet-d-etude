@@ -9,6 +9,8 @@ export default function RootLayout() {
       <Stack.Screen name="(auth)/login" />
       <Stack.Screen name="(auth)/signup" />
       <Stack.Screen name="(tabs)" />
+      <Stack.Screen name="edit-profile" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
+      <Stack.Screen name="change-password" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
     </Stack>
   );
 }

@@ -1,368 +1,221 @@
-#!/usr/bin/env python3
 """
-Backend API Testing for AgriScan AI
-Tests all backend endpoints in priority order
+Backend tests for AgriScan AI - User Profile Management endpoints
+Tests PATCH /api/users/{uid} and PATCH /api/users/{uid}/password
 """
-
+import sys
 import requests
-import json
 from datetime import datetime
 
-# Configuration
-BASE_URL = "https://crop-health-scan-21.preview.emergentagent.com/api"
+BACKEND_URL = "https://crop-health-scan-21.preview.emergentagent.com"
+API_URL = f"{BACKEND_URL}/api"
+
+# Test credentials (from /app/memory/test_credentials.md)
 TEST_EMAIL = "test_agriscan@example.com"
 TEST_PASSWORD = "testpassword123"
-TEST_DISPLAY_NAME = "Agriculteur Test"
-TEST_FARM_NAME = "Ferme Test"
+TEST_UID = "8ec0cb00-919d-4d8b-871c-c077b0ce177a"
 
-# Global variables to store test data
-test_user_uid = None
-test_diagnostic_id = None
+results = []
 
-def print_test_header(test_name):
-    """Print formatted test header"""
-    print("\n" + "="*80)
-    print(f"TEST: {test_name}")
-    print("="*80)
 
-def print_result(success, message, response=None):
-    """Print test result"""
-    status = "✅ PASS" if success else "❌ FAIL"
-    print(f"{status}: {message}")
-    if response:
-        print(f"Response Status: {response.status_code}")
-        try:
-            print(f"Response Body: {json.dumps(response.json(), indent=2)}")
-        except:
-            print(f"Response Text: {response.text}")
-    print("-"*80)
+def ensure_test_user():
+    """Ensure the test user exists in DB. If not, create via signup and update TEST_UID."""
+    global TEST_UID
+    # Try login first
+    r = requests.post(f"{API_URL}/auth/login", json={
+        "email": TEST_EMAIL, "password": TEST_PASSWORD
+    })
+    if r.status_code == 200:
+        TEST_UID = r.json()["uid"]
+        print(f"[INFO] Existing test user found. UID={TEST_UID}")
+        return
+    # else signup fresh
+    r2 = requests.post(f"{API_URL}/auth/signup", json={
+        "email": TEST_EMAIL,
+        "password": TEST_PASSWORD,
+        "display_name": "Agriculteur Test",
+        "farm_name": "Ferme Test",
+    })
+    if r2.status_code == 200:
+        TEST_UID = r2.json()["uid"]
+        print(f"[INFO] Created fresh test user. UID={TEST_UID}")
+    else:
+        # if email exists but credentials wrong, that's bad
+        print(f"[ERROR] Could not create test user: {r2.status_code} {r2.text}")
+        sys.exit(2)
 
-# ============= HIGH PRIORITY TESTS =============
 
-def test_signup():
-    """Test POST /api/auth/signup"""
-    global test_user_uid
-    print_test_header("1. POST /api/auth/signup - Create User Account")
-    
-    try:
-        # First, try to delete existing test user if any
-        # (This is just for cleanup, ignore errors)
-        
-        payload = {
-            "email": TEST_EMAIL,
-            "password": TEST_PASSWORD,
-            "display_name": TEST_DISPLAY_NAME,
-            "farm_name": TEST_FARM_NAME
-        }
-        
-        response = requests.post(f"{BASE_URL}/auth/signup", json=payload, timeout=10)
-        
-        if response.status_code == 200:
-            data = response.json()
-            if "uid" in data and data["email"] == TEST_EMAIL:
-                test_user_uid = data["uid"]
-                print_result(True, f"User created successfully with UID: {test_user_uid}", response)
-                return True
-            else:
-                print_result(False, "Response missing required fields", response)
-                return False
-        elif response.status_code == 400 and "already exists" in response.text.lower():
-            print_result(True, "User already exists (acceptable for testing)", response)
-            # Try to login to get the UID
-            return test_login()
-        else:
-            print_result(False, f"Unexpected status code: {response.status_code}", response)
-            return False
-            
-    except Exception as e:
-        print_result(False, f"Exception occurred: {str(e)}")
-        return False
+def log(name, ok, info=""):
+    status = "PASS" if ok else "FAIL"
+    print(f"[{status}] {name} {('| ' + info) if info else ''}")
+    results.append({"name": name, "ok": ok, "info": info})
 
-def test_login():
-    """Test POST /api/auth/login"""
-    global test_user_uid
-    print_test_header("2. POST /api/auth/login - Login with Credentials")
-    
-    try:
-        payload = {
-            "email": TEST_EMAIL,
-            "password": TEST_PASSWORD
-        }
-        
-        response = requests.post(f"{BASE_URL}/auth/login", json=payload, timeout=10)
-        
-        if response.status_code == 200:
-            data = response.json()
-            if "uid" in data and data["email"] == TEST_EMAIL:
-                test_user_uid = data["uid"]
-                print_result(True, f"Login successful with UID: {test_user_uid}", response)
-                return True
-            else:
-                print_result(False, "Response missing required fields", response)
-                return False
-        else:
-            print_result(False, f"Login failed with status: {response.status_code}", response)
-            return False
-            
-    except Exception as e:
-        print_result(False, f"Exception occurred: {str(e)}")
-        return False
 
-def test_create_diagnostic():
-    """Test POST /api/diagnostics?user_id={uid}"""
-    global test_diagnostic_id
-    print_test_header("3. POST /api/diagnostics - Create Diagnostic")
-    
-    if not test_user_uid:
-        print_result(False, "Cannot test: No user UID available (signup/login failed)")
-        return False
-    
-    try:
-        payload = {
-            "culture": "Tomates",
-            "symptoms": "Feuilles jaunissantes avec taches brunes"
-        }
-        
-        response = requests.post(
-            f"{BASE_URL}/diagnostics",
-            params={"user_id": test_user_uid},
-            json=payload,
-            timeout=10
-        )
-        
-        if response.status_code == 200:
-            data = response.json()
-            if "id" in data and data["culture"] == "Tomates":
-                test_diagnostic_id = data["id"]
-                print_result(True, f"Diagnostic created with ID: {test_diagnostic_id}", response)
-                return True
-            else:
-                print_result(False, "Response missing required fields", response)
-                return False
-        else:
-            print_result(False, f"Failed with status: {response.status_code}", response)
-            return False
-            
-    except Exception as e:
-        print_result(False, f"Exception occurred: {str(e)}")
-        return False
+def test_login_returns_photo_url():
+    r = requests.post(f"{API_URL}/auth/login", json={
+        "email": TEST_EMAIL, "password": TEST_PASSWORD
+    })
+    ok = r.status_code == 200 and "photo_url" in r.json()
+    log("Login returns photo_url field", ok, f"status={r.status_code}, photo_url={r.json().get('photo_url') if r.status_code==200 else 'N/A'}")
 
-def test_chat_ai():
-    """Test POST /api/chat?user_id={uid} - AI Chat with GPT-5.2"""
-    print_test_header("4. POST /api/chat - Send Message to AI Chatbot (GPT-5.2)")
-    
-    if not test_user_uid:
-        print_result(False, "Cannot test: No user UID available")
-        return False
-    
-    if not test_diagnostic_id:
-        print_result(False, "Cannot test: No diagnostic ID available")
-        return False
-    
-    try:
-        payload = {
-            "diagnostic_id": test_diagnostic_id,
-            "message": "Quelles sont les causes possibles?"
-        }
-        
-        response = requests.post(
-            f"{BASE_URL}/chat",
-            params={"user_id": test_user_uid},
-            json=payload,
-            timeout=30  # Longer timeout for AI response
-        )
-        
-        if response.status_code == 200:
-            data = response.json()
-            if "content" in data and "role" in data and data["role"] == "assistant":
-                print_result(True, f"AI responded successfully. Response length: {len(data['content'])} chars", response)
-                return True
-            else:
-                print_result(False, "Response missing required fields", response)
-                return False
-        else:
-            print_result(False, f"Failed with status: {response.status_code}", response)
-            return False
-            
-    except Exception as e:
-        print_result(False, f"Exception occurred: {str(e)}")
-        return False
 
-# ============= MEDIUM PRIORITY TESTS =============
+def test_get_user_returns_photo_url():
+    r = requests.get(f"{API_URL}/users/{TEST_UID}")
+    ok = r.status_code == 200 and "photo_url" in r.json()
+    log("GET /users/{uid} returns photo_url field", ok, f"status={r.status_code}")
 
-def test_get_diagnostics():
-    """Test GET /api/diagnostics/{user_id}"""
-    print_test_header("5. GET /api/diagnostics/{user_id} - Get All Diagnostics")
-    
-    if not test_user_uid:
-        print_result(False, "Cannot test: No user UID available")
-        return False
-    
-    try:
-        response = requests.get(f"{BASE_URL}/diagnostics/{test_user_uid}", timeout=10)
-        
-        if response.status_code == 200:
-            data = response.json()
-            if isinstance(data, list):
-                print_result(True, f"Retrieved {len(data)} diagnostic(s)", response)
-                return True
-            else:
-                print_result(False, "Response is not a list", response)
-                return False
-        else:
-            print_result(False, f"Failed with status: {response.status_code}", response)
-            return False
-            
-    except Exception as e:
-        print_result(False, f"Exception occurred: {str(e)}")
-        return False
 
-def test_get_stats():
-    """Test GET /api/stats/{user_id}"""
-    print_test_header("6. GET /api/stats/{user_id} - Get Dashboard Statistics")
-    
-    if not test_user_uid:
-        print_result(False, "Cannot test: No user UID available")
-        return False
-    
-    try:
-        response = requests.get(f"{BASE_URL}/stats/{test_user_uid}", timeout=10)
-        
-        if response.status_code == 200:
-            data = response.json()
-            required_fields = ["total_diagnostics", "status_breakdown", "unread_alerts"]
-            if all(field in data for field in required_fields):
-                print_result(True, f"Stats retrieved: {data['total_diagnostics']} total diagnostics", response)
-                return True
-            else:
-                print_result(False, "Response missing required fields", response)
-                return False
-        else:
-            print_result(False, f"Failed with status: {response.status_code}", response)
-            return False
-            
-    except Exception as e:
-        print_result(False, f"Exception occurred: {str(e)}")
-        return False
+def test_signup_returns_photo_url():
+    email = f"throwaway_{int(datetime.utcnow().timestamp())}@example.com"
+    r = requests.post(f"{API_URL}/auth/signup", json={
+        "email": email,
+        "password": "throwawaypw123",
+        "display_name": "Throwaway",
+    })
+    ok = r.status_code == 200 and "photo_url" in r.json()
+    log("Signup response includes photo_url field", ok, f"status={r.status_code}")
 
-def test_create_alert():
-    """Test POST /api/alerts?user_id={uid}"""
-    print_test_header("7. POST /api/alerts - Create Alert")
-    
-    if not test_user_uid:
-        print_result(False, "Cannot test: No user UID available")
-        return False
-    
-    try:
-        payload = {
-            "type": "maladie",
-            "message": "Test alerte",
-            "severity": "warning"
-        }
-        
-        response = requests.post(
-            f"{BASE_URL}/alerts",
-            params={"user_id": test_user_uid},
-            json=payload,
-            timeout=10
-        )
-        
-        if response.status_code == 200:
-            data = response.json()
-            if "id" in data and data["message"] == payload["message"]:
-                print_result(True, f"Alert created with ID: {data['id']}", response)
-                return True
-            else:
-                print_result(False, "Response missing required fields", response)
-                return False
-        else:
-            print_result(False, f"Failed with status: {response.status_code}", response)
-            return False
-            
-    except Exception as e:
-        print_result(False, f"Exception occurred: {str(e)}")
-        return False
 
-def test_get_alerts():
-    """Test GET /api/alerts/{user_id}"""
-    print_test_header("8. GET /api/alerts/{user_id} - Get Alerts")
-    
-    if not test_user_uid:
-        print_result(False, "Cannot test: No user UID available")
-        return False
-    
-    try:
-        response = requests.get(f"{BASE_URL}/alerts/{test_user_uid}", timeout=10)
-        
-        if response.status_code == 200:
-            data = response.json()
-            if isinstance(data, list):
-                print_result(True, f"Retrieved {len(data)} alert(s)", response)
-                return True
-            else:
-                print_result(False, "Response is not a list", response)
-                return False
-        else:
-            print_result(False, f"Failed with status: {response.status_code}", response)
-            return False
-            
-    except Exception as e:
-        print_result(False, f"Exception occurred: {str(e)}")
-        return False
+def test_patch_single_field():
+    new_name = "Agriculteur Test Modifié"
+    r = requests.patch(f"{API_URL}/users/{TEST_UID}", json={"display_name": new_name})
+    if r.status_code != 200:
+        log("PATCH single field (display_name)", False, f"status={r.status_code} body={r.text[:200]}")
+        return
+    body = r.json()
+    ok = body.get("display_name") == new_name and "photo_url" in body
+    log("PATCH single field (display_name)", ok, f"returned name={body.get('display_name')}")
+    g = requests.get(f"{API_URL}/users/{TEST_UID}")
+    ok2 = g.status_code == 200 and g.json().get("display_name") == new_name
+    log("Persistence verified for display_name", ok2, f"GET name={g.json().get('display_name')}")
 
-# ============= MAIN TEST RUNNER =============
 
-def run_all_tests():
-    """Run all tests in priority order"""
-    print("\n" + "="*80)
-    print("AGRISCAN AI - BACKEND API TESTING")
-    print(f"Base URL: {BASE_URL}")
-    print(f"Test Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    print("="*80)
-    
-    results = {}
-    
-    # HIGH PRIORITY TESTS
-    print("\n" + "#"*80)
-    print("# HIGH PRIORITY TESTS")
-    print("#"*80)
-    
-    results["signup"] = test_signup()
-    results["login"] = test_login()
-    results["create_diagnostic"] = test_create_diagnostic()
-    results["chat_ai"] = test_chat_ai()
-    
-    # MEDIUM PRIORITY TESTS
-    print("\n" + "#"*80)
-    print("# MEDIUM PRIORITY TESTS")
-    print("#"*80)
-    
-    results["get_diagnostics"] = test_get_diagnostics()
-    results["get_stats"] = test_get_stats()
-    results["create_alert"] = test_create_alert()
-    results["get_alerts"] = test_get_alerts()
-    
-    # SUMMARY
-    print("\n" + "="*80)
-    print("TEST SUMMARY")
-    print("="*80)
-    
-    passed = sum(1 for v in results.values() if v)
-    total = len(results)
-    
-    print(f"\nTotal Tests: {total}")
-    print(f"Passed: {passed}")
-    print(f"Failed: {total - passed}")
-    print(f"Success Rate: {(passed/total)*100:.1f}%\n")
-    
-    print("Detailed Results:")
-    for test_name, result in results.items():
-        status = "✅ PASS" if result else "❌ FAIL"
-        print(f"  {status} - {test_name}")
-    
-    print("\n" + "="*80)
-    
-    return results
+def test_patch_photo_url_only():
+    url = "https://cdn.example.com/avatars/agriculteur.png"
+    r = requests.patch(f"{API_URL}/users/{TEST_UID}", json={"photo_url": url})
+    ok = r.status_code == 200 and r.json().get("photo_url") == url
+    log("PATCH photo_url only", ok, f"status={r.status_code}, photo_url={r.json().get('photo_url') if r.status_code==200 else 'N/A'}")
+
+
+def test_patch_multiple_fields():
+    payload = {
+        "phone_number": "+33612345678",
+        "farm_name": "Ferme des Oliviers",
+        "location": "Provence, France",
+        "photo_url": "https://example.com/photo.jpg",
+    }
+    r = requests.patch(f"{API_URL}/users/{TEST_UID}", json=payload)
+    if r.status_code != 200:
+        log("PATCH multiple fields", False, f"status={r.status_code} body={r.text[:200]}")
+        return
+    body = r.json()
+    ok = all(body.get(k) == v for k, v in payload.items())
+    log("PATCH multiple fields returns updated values", ok, f"body keys={list(body.keys())}")
+    g = requests.get(f"{API_URL}/users/{TEST_UID}").json()
+    ok2 = all(g.get(k) == v for k, v in payload.items())
+    log("Persistence verified for multi-field update (re-fetch via GET)", ok2)
+
+
+def test_patch_empty_body():
+    r = requests.patch(f"{API_URL}/users/{TEST_UID}", json={})
+    ok = r.status_code == 400
+    log("PATCH empty body returns 400", ok, f"status={r.status_code}, body={r.text[:120]}")
+
+
+def test_patch_nonexistent_uid():
+    fake_uid = "00000000-0000-0000-0000-000000000000"
+    r = requests.patch(f"{API_URL}/users/{fake_uid}", json={"display_name": "X"})
+    ok = r.status_code == 404
+    log("PATCH non-existent uid returns 404", ok, f"status={r.status_code}")
+
+
+def test_password_wrong_old():
+    r = requests.patch(f"{API_URL}/users/{TEST_UID}/password", json={
+        "old_password": "wrongpassword!",
+        "new_password": "irrelevant123",
+    })
+    ok = r.status_code == 401
+    log("PATCH password wrong old_password returns 401", ok, f"status={r.status_code}")
+
+
+def test_password_nonexistent_uid():
+    fake_uid = "00000000-0000-0000-0000-000000000000"
+    r = requests.patch(f"{API_URL}/users/{fake_uid}/password", json={
+        "old_password": "any", "new_password": "anyother"
+    })
+    ok = r.status_code == 404
+    log("PATCH password non-existent uid returns 404", ok, f"status={r.status_code}")
+
+
+def test_password_change_and_login():
+    new_pw = "newpass_temp_4567"
+    r = requests.patch(f"{API_URL}/users/{TEST_UID}/password", json={
+        "old_password": TEST_PASSWORD, "new_password": new_pw
+    })
+    ok = r.status_code == 200
+    log("PATCH password change OK", ok, f"status={r.status_code} body={r.text[:120]}")
+
+    r1 = requests.post(f"{API_URL}/auth/login", json={"email": TEST_EMAIL, "password": TEST_PASSWORD})
+    ok1 = r1.status_code == 401
+    log("Login with OLD password fails after change", ok1, f"status={r1.status_code}")
+
+    r2 = requests.post(f"{API_URL}/auth/login", json={"email": TEST_EMAIL, "password": new_pw})
+    ok2 = r2.status_code == 200
+    log("Login with NEW password succeeds", ok2, f"status={r2.status_code}")
+
+    r3 = requests.patch(f"{API_URL}/users/{TEST_UID}/password", json={
+        "old_password": new_pw, "new_password": TEST_PASSWORD
+    })
+    ok3 = r3.status_code == 200
+    log("Restore original password", ok3, f"status={r3.status_code}")
+
+    r4 = requests.post(f"{API_URL}/auth/login", json={"email": TEST_EMAIL, "password": TEST_PASSWORD})
+    ok4 = r4.status_code == 200
+    log("Login with ORIGINAL password after restore", ok4, f"status={r4.status_code}")
+
+
+def restore_profile_fields():
+    r = requests.patch(f"{API_URL}/users/{TEST_UID}", json={
+        "display_name": "Agriculteur Test",
+        "farm_name": "Ferme Test",
+    })
+    log("Restore default display_name/farm_name", r.status_code == 200, f"status={r.status_code}")
+
 
 if __name__ == "__main__":
-    run_all_tests()
+    print(f"Backend URL: {API_URL}")
+    ensure_test_user()
+    print(f"Test UID: {TEST_UID}\n")
+    print("=" * 60)
+    print("PRE-CHECKS")
+    print("=" * 60)
+    test_login_returns_photo_url()
+    test_get_user_returns_photo_url()
+    test_signup_returns_photo_url()
+
+    print("\n" + "=" * 60)
+    print("PATCH /api/users/{uid}")
+    print("=" * 60)
+    test_patch_single_field()
+    test_patch_photo_url_only()
+    test_patch_multiple_fields()
+    test_patch_empty_body()
+    test_patch_nonexistent_uid()
+
+    print("\n" + "=" * 60)
+    print("PATCH /api/users/{uid}/password")
+    print("=" * 60)
+    test_password_wrong_old()
+    test_password_nonexistent_uid()
+    test_password_change_and_login()
+
+    print("\n" + "=" * 60)
+    print("CLEANUP")
+    print("=" * 60)
+    restore_profile_fields()
+
+    print("\n" + "=" * 60)
+    total = len(results)
+    passed = sum(1 for r in results if r["ok"])
+    print(f"RESULT: {passed}/{total} tests passed")
+    print("=" * 60)
+    sys.exit(0 if passed == total else 1)

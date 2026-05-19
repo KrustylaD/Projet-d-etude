@@ -318,11 +318,81 @@ frontend:
       - working: "NA"
         agent: "main"
         comment: "Écran de profil avec informations utilisateur et déconnexion"
+      - working: "NA"
+        agent: "main"
+        comment: "Profil enrichi : affichage de la photo de profil (photo_url), bouton 'Modifier le profil' (route /edit-profile en modal), section Sécurité avec 'Changer le mot de passe' (route /change-password)."
+
+  - task: "Edit Profile Modal"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/app/edit-profile.tsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Nouvel écran modal pour modifier pseudo, téléphone, ferme, localisation, photo de profil. Utilise expo-image-picker avec gestion permissions (base64). Appelle store.updateProfile()."
+
+  - task: "Change Password Modal"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/app/change-password.tsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Nouvel écran modal pour changer mot de passe (ancien + nouveau + confirmation). Validations longueur minimale 6, non-vide, correspondance. Appelle store.updatePassword()."
+
+  - task: "Markdown Rendering in Diagnostic Chat"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/MarkdownMessage.tsx, /app/frontend/app/(tabs)/diagnostic.tsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Composant MarkdownMessage réécrit avec react-native-markdown-display. Intégré dans diagnostic.tsx : messages assistant rendus en markdown (titres, gras, listes, etc.) avec palette verte. Messages user restent en texte simple."
+
+backend:
+  - task: "API User - Update Profile (PATCH /users/{uid})"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Endpoint PATCH /api/users/{uid} pour mettre à jour display_name, phone_number, farm_name, location, photo_url. UserResponse étendu avec photo_url."
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED (2026-05-19): PATCH /api/users/{uid} fully working. Verified: (1) single-field updates (display_name only, photo_url only) persist correctly; (2) multi-field updates (phone_number+farm_name+location+photo_url) all persist; (3) UserResponse now correctly includes photo_url field; (4) data is actually persisted in MongoDB (confirmed via subsequent GET /api/users/{uid}); (5) empty body returns 400 'No data to update'; (6) non-existent uid returns 404 'User not found'. Also verified signup, login, and GET /users/{uid} all return photo_url field (null by default). Note: the stale UID in test_credentials.md no longer existed in DB; recreated test user via signup with same email/password — new UID: d7859780-639c-47cd-b264-6a466bd8e9e9. Updated test_credentials.md."
+
+  - task: "API User - Update Password (PATCH /users/{uid}/password)"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Endpoint PATCH /api/users/{uid}/password : vérifie l'ancien mot de passe puis met à jour avec le nouveau."
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED (2026-05-19): PATCH /api/users/{uid}/password fully working. Verified: (1) successful password change with correct old_password returns 200 + message; (2) new password actually works for login (login with old password now returns 401, login with new password returns 200); (3) wrong old_password returns 401 'Incorrect old password'; (4) non-existent uid returns 404 'User not found'. Original test password was restored at the end so /app/memory/test_credentials.md remains valid. 18/18 backend test assertions passed."
 
 metadata:
   created_by: "main_agent"
-  version: "1.0"
-  test_sequence: 2
+  version: "1.1"
+  test_sequence: 3
   run_ui: false
 
 test_plan:

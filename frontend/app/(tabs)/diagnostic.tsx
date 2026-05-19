@@ -16,6 +16,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Message } from '../../src/types';
+import { Colors, Typography, Spacing, BorderRadius } from '../../src/constants/theme';
+import { MarkdownMessage } from '../../src/components/MarkdownMessage';
 
 export default function DiagnosticScreen() {
   const { user } = useAuthStore();
@@ -222,14 +224,15 @@ export default function DiagnosticScreen() {
                   />
                 )}
                 <View style={styles.messageContent}>
-                  <Text
-                    style={[
-                      styles.messageText,
-                      message.role === 'user' ? styles.userText : styles.aiText,
-                    ]}
-                  >
-                    {message.content}
-                  </Text>
+                  {message.role === 'user' ? (
+                    <Text style={[styles.messageText, styles.userText]}>
+                      {message.content}
+                    </Text>
+                  ) : (
+                    <View style={styles.aiTextWrapper}>
+                      <MarkdownMessage content={message.content} />
+                    </View>
+                  )}
                 </View>
               </View>
             ))}
@@ -409,6 +412,15 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#2a2a2a',
     overflow: 'hidden',
+  },
+  aiTextWrapper: {
+    backgroundColor: '#1a1a1a',
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: 16,
+    borderBottomLeftRadius: 4,
+    borderWidth: 1,
+    borderColor: '#2a2a2a',
   },
   inputContainer: {
     flexDirection: 'row',

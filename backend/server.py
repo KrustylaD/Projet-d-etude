@@ -65,6 +65,7 @@ class UserResponse(BaseModel):
     phone_number: Optional[str] = None
     farm_name: Optional[str] = None
     location: Optional[str] = None
+    photo_url: Optional[str] = None
     created_at: datetime
 
 class MessageCreate(BaseModel):
@@ -147,6 +148,7 @@ async def signup(user_data: UserCreate):
             phone_number=user_dict.get("phone_number"),
             farm_name=user_dict.get("farm_name"),
             location=user_dict.get("location"),
+            photo_url=user_dict.get("photo_url"),
             created_at=user_dict["created_at"]
         )
     except HTTPException:
@@ -174,6 +176,7 @@ async def login(credentials: UserLogin):
             phone_number=user.get("phone_number"),
             farm_name=user.get("farm_name"),
             location=user.get("location"),
+            photo_url=user.get("photo_url"),
             created_at=user["created_at"]
         )
     except HTTPException:

@@ -1,0 +1,256 @@
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TextInput,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  Alert,
+  ActivityIndicator,
+} from 'react-native';
+import { useRouter } from 'expo-router';
+import { useAuthStore } from '../src/store/authStore';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+export default function ChangePasswordScreen() {
+  const router = useRouter();
+  const { updatePassword } = useAuthStore();
+
+  const [oldPassword, setOldPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showOld, setShowOld] = useState(false);
+  const [showNew, setShowNew] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleSave = async () => {
+    if (!oldPassword || !newPassword || !confirmPassword) {
+      Alert.alert('Erreur', 'Veuillez remplir tous les champs');
+      return;
+    }
+    if (newPassword.length < 6) {
+      Alert.alert('Erreur', 'Le nouveau mot de passe doit contenir au moins 6 caractères');
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      Alert.alert('Erreur', 'Les nouveaux mots de passe ne correspondent pas');
+      return;
+    }
+    if (oldPassword === newPassword) {
+      Alert.alert('Erreur', "Le nouveau mot de passe doit être différent de l'ancien");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await updatePassword(oldPassword, newPassword);
+      Alert.alert('Succès', 'Mot de passe modifié avec succès !', [
+        { text: 'OK', onPress: () => router.back() },
+      ]);
+    } catch (error: any) {
+      Alert.alert('Erreur', error.message || 'Impossible de changer le mot de passe');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const renderPasswordInput = (
+    value: string,
+    onChange: (v: string) => void,
+    placeholder: string,
+    show: boolean,
+    toggleShow: () => void
+  ) => (
+    <View style={styles.inputWrapper}>
+      <Ionicons name="lock-closed-outline" size={20} color="#a3a3a3" style={styles.inputIcon} />
+      <TextInput
+        style={styles.input}
+        placeholder={placeholder}
+        placeholderTextColor="#666"
+        value={value}
+        onChangeText={onChange}
+        secureTextEntry={!show}
+        autoCapitalize="none"
+      />
+      <TouchableOpacity onPress={toggleShow} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+        <Ionicons name={show ? 'eye-off-outline' : 'eye-outline'} size={20} color="#a3a3a3" />
+      </TouchableOpacity>
+    </View>
+  );
+
+  return (
+    <LinearGradient colors={['#1a2f1a', '#0a1a0a', '#000000']} style={styles.container}>
+      <SafeAreaView style={styles.safeArea} edges={['top']}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.keyboardView}
+        >
+          <View style={styles.header}>
+            <TouchableOpacity onPress={() => router.back()} style={styles.headerButton}>
+              <Ionicons name="close" size={28} color="#ffffff" />
+            </TouchableOpacity>
+            <Text style={styles.headerTitle}>Mot de passe</Text>
+            <View style={styles.headerButton} />
+          </View>
+
+          <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
+            <View style={styles.iconHeader}>
+              <View style={styles.iconBubble}>
+                <Ionicons name="shield-checkmark" size={36} color="#4ade80" />
+              </View>
+              <Text style={styles.subtitle}>
+                Choisissez un mot de passe sûr (6 caractères minimum)
+              </Text>
+            </View>
+
+            <View style={styles.form}>
+              <View style={styles.field}>
+                <Text style={styles.label}>Ancien mot de passe</Text>
+                {renderPasswordInput(
+                  oldPassword,
+                  setOldPassword,
+                  'Votre mot de passe actuel',
+                  showOld,
+                  () => setShowOld(!showOld)
+                )}
+              </View>
+
+              <View style={styles.field}>
+                <Text style={styles.label}>Nouveau mot de passe</Text>
+                {renderPasswordInput(
+                  newPassword,
+                  setNewPassword,
+                  'Au moins 6 caractères',
+                  showNew,
+                  () => setShowNew(!showNew)
+                )}
+              </View>
+
+              <View style={styles.field}>
+                <Text style={styles.label}>Confirmer le nouveau</Text>
+                {renderPasswordInput(
+                  confirmPassword,
+                  setConfirmPassword,
+                  'Retapez le nouveau',
+                  showConfirm,
+                  () => setShowConfirm(!showConfirm)
+                )}
+              </View>
+            </View>
+
+            <TouchableOpacity
+              style={[styles.saveButton, loading && styles.saveButtonDisabled]}
+              onPress={handleSave}
+              disabled={loading}
+              activeOpacity={0.85}
+            >
+              {loading ? (
+                <ActivityIndicator color="#000" />
+              ) : (
+                <>
+                  <Ionicons name="key" size={20} color="#000" />
+                  <Text style={styles.saveButtonText}>Mettre à jour le mot de passe</Text>
+                </>
+              )}
+            </TouchableOpacity>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </LinearGradient>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: { flex: 1 },
+  safeArea: { flex: 1 },
+  keyboardView: { flex: 1 },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#1a1a1a',
+  },
+  headerButton: { width: 44, height: 40, justifyContent: 'center' },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#ffffff',
+    flex: 1,
+    textAlign: 'center',
+  },
+  scrollContent: {
+    padding: 20,
+    paddingBottom: 60,
+  },
+  iconHeader: {
+    alignItems: 'center',
+    marginVertical: 24,
+  },
+  iconBubble: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: 'rgba(74, 222, 128, 0.12)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#1f3a1f',
+  },
+  subtitle: {
+    color: '#a3a3a3',
+    fontSize: 14,
+    marginTop: 14,
+    textAlign: 'center',
+    paddingHorizontal: 20,
+  },
+  form: { gap: 16 },
+  field: { marginBottom: 4 },
+  label: {
+    color: '#ffffff',
+    fontSize: 14,
+    fontWeight: '600',
+    marginBottom: 8,
+    marginLeft: 4,
+  },
+  inputWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#1a1a1a',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#2a2a2a',
+    paddingHorizontal: 14,
+  },
+  inputIcon: { marginRight: 10 },
+  input: {
+    flex: 1,
+    color: '#ffffff',
+    fontSize: 16,
+    paddingVertical: 14,
+  },
+  saveButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    backgroundColor: '#4ade80',
+    borderRadius: 14,
+    paddingVertical: 16,
+    marginTop: 32,
+  },
+  saveButtonDisabled: { opacity: 0.6 },
+  saveButtonText: {
+    color: '#000000',
+    fontSize: 16,
+    fontWeight: '700',
+  },
+});
