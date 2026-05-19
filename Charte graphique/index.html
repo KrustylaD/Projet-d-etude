@@ -1,0 +1,2084 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Charte Graphique — AgriScan.ai</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════
+   AGRISCAN.AI — CHARTE GRAPHIQUE WEBSITE
+   Direction : SYNAPSE
+   ═══════════════════════════════════════════ */
+
+:root {
+  --black: #050D07;
+  --forest: #0A1B0E;
+  --cream: #F9F9F2;
+  --lime: #D4FF50;
+  --slate: #2D3A2F;
+  --success: #3AE086;
+  --error: #FF4E5C;
+  --warning: #FFB443;
+  --info: #4DAAFF;
+
+  --font-display: 'Plus Jakarta Sans', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-squircle: 28px;
+  --radius-full: 9999px;
+
+  --space-xs: 4px; --space-sm: 8px; --space-md: 12px;
+  --space-lg: 16px; --space-xl: 24px; --space-2xl: 32px;
+  --space-3xl: 48px; --space-4xl: 64px; --space-5xl: 96px;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  background: var(--black);
+  color: var(--cream);
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background: var(--black);
+  min-height: 100vh;
+}
+
+/* ═══ GRAIN OVERLAY ═══ */
+.grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9998;
+  opacity: .03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ═══ SCROLLBAR ═══ */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--black); }
+::-webkit-scrollbar-thumb { background: rgba(249,249,242,0.10); border-radius: var(--radius-full); }
+::-webkit-scrollbar-thumb:hover { background: rgba(249,249,242,0.20); }
+
+/* ═══ NAVIGATION ═══ */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  background: rgba(5,13,7,0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(249,249,242,0.06);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-lg);
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.nav-logo-symbol {
+  width: 36px;
+  height: 36px;
+  background: var(--forest);
+  border-radius: var(--radius-squircle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(249,249,242,0.10);
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-logo-symbol svg {
+  width: 22px;
+  height: 22px;
+  color: var(--lime);
+  position: relative;
+  z-index: 1;
+}
+
+.nav-logo-text {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.125rem;
+  color: var(--cream);
+  letter-spacing: -0.02em;
+}
+
+.nav-logo-text span { color: var(--lime); }
+
+.nav-links {
+  display: flex;
+  gap: var(--space-md);
+  margin-left: auto;
+  overflow-x: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.nav-links::-webkit-scrollbar { display: none; }
+
+.nav-link {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.6875rem;
+  color: rgba(249,249,242,0.40);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  padding: 6px 4px;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color var(--duration-fast) var(--ease-out),
+              border-color var(--duration-fast) var(--ease-out);
+}
+
+.nav-link:hover { color: rgba(249,249,242,0.70); }
+.nav-link.active { color: var(--lime); border-bottom-color: var(--lime); }
+
+/* ═══ HERO ═══ */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--space-4xl) var(--space-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(212,255,80,0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-logo {
+  width: 88px;
+  height: 88px;
+  background: var(--forest);
+  border-radius: var(--radius-squircle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(249,249,242,0.08);
+  box-shadow: 0 0 40px rgba(212,255,80,0.25), 0 0 80px rgba(212,255,80,0.08);
+  animation: logo-pulse 3s ease-in-out infinite;
+  position: relative;
+}
+
+.hero-logo svg { width: 48px; height: 48px; color: var(--lime); }
+
+@keyframes logo-pulse {
+  0%, 100% { box-shadow: 0 0 40px rgba(212,255,80,0.25), 0 0 80px rgba(212,255,80,0.08); }
+  50% { box-shadow: 0 0 60px rgba(212,255,80,0.40), 0 0 120px rgba(212,255,80,0.15); }
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 3rem;
+  letter-spacing: -0.02em;
+  margin-top: var(--space-2xl);
+  color: var(--cream);
+}
+
+.hero-title span { color: var(--lime); }
+
+.hero-subtitle {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 1.0625rem;
+  color: rgba(249,249,242,0.50);
+  margin-top: var(--space-md);
+  max-width: 480px;
+}
+
+.hero-meta {
+  display: flex;
+  gap: var(--space-lg);
+  margin-top: var(--space-2xl);
+}
+
+.hero-meta-item {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 0.75rem;
+  color: rgba(249,249,242,0.30);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border: 1px solid rgba(249,249,242,0.08);
+  border-radius: var(--radius-full);
+}
+
+.hero-scroll {
+  position: absolute;
+  bottom: var(--space-2xl);
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(249,249,242,0.15);
+  animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(8px); }
+}
+
+/* ═══ SECTIONS ═══ */
+.section {
+  padding: var(--space-5xl) var(--space-lg);
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.section-label {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.625rem;
+  color: var(--lime);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: var(--space-sm);
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 2.25rem;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  color: var(--cream);
+  margin-bottom: var(--space-sm);
+}
+
+.section-desc {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 1.0625rem;
+  color: rgba(249,249,242,0.50);
+  max-width: 600px;
+  margin-bottom: var(--space-3xl);
+}
+
+/* ═══ COLOR SWATCHES ═══ */
+.swatch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: var(--space-lg);
+  margin-bottom: var(--space-3xl);
+}
+
+.swatch {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid rgba(249,249,242,0.06);
+  transition: transform var(--duration-fast) var(--ease-out),
+              border-color var(--duration-fast) var(--ease-out);
+}
+
+.swatch:hover {
+  transform: translateY(-2px);
+  border-color: rgba(212,255,80,0.15);
+}
+
+.swatch-preview {
+  height: 100px;
+  position: relative;
+}
+
+.swatch-info {
+  background: rgba(10,27,14,0.60);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: var(--space-md);
+}
+
+.swatch-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.875rem;
+  color: var(--cream);
+}
+
+.swatch-hex {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 0.75rem;
+  color: rgba(249,249,242,0.40);
+  margin-top: 2px;
+}
+
+.swatch-role {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 0.6875rem;
+  color: rgba(249,249,242,0.30);
+  margin-top: 4px;
+  line-height: 1.3;
+}
+
+/* ═══ SEMANTIC SWATCHES ═══ */
+.semantic-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: var(--space-md);
+  margin-bottom: var(--space-3xl);
+}
+
+.semantic-swatch {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid rgba(249,249,242,0.06);
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.semantic-swatch:hover { transform: translateY(-2px); }
+
+.semantic-preview { height: 64px; }
+.semantic-info { padding: var(--space-sm) var(--space-md); background: rgba(10,27,14,0.50); }
+
+.semantic-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.8125rem;
+}
+
+.semantic-hex {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 0.6875rem;
+  color: rgba(249,249,242,0.40);
+}
+
+/* ═══ CONTRAST TABLE ═══ */
+.contrast-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: var(--space-3xl);
+  font-size: 0.8125rem;
+}
+
+.contrast-table th {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.625rem;
+  color: rgba(249,249,242,0.40);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid rgba(249,249,242,0.06);
+  text-align: left;
+}
+
+.contrast-table td {
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid rgba(249,249,242,0.04);
+  font-family: var(--font-body);
+  font-weight: 400;
+  color: rgba(249,249,242,0.60);
+}
+
+.contrast-table tr:hover td {
+  background: rgba(212,255,80,0.03);
+}
+
+.contrast-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.625rem;
+}
+
+.contrast-badge.aa { background: rgba(58,224,134,0.15); color: var(--success); }
+.contrast-badge.aaa { background: rgba(212,255,80,0.15); color: var(--lime); }
+
+/* ═══ GRADIENT CARDS ═══ */
+.gradient-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--space-lg);
+  margin-bottom: var(--space-3xl);
+}
+
+.gradient-card {
+  height: 120px;
+  border-radius: var(--radius-lg);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(249,249,242,0.06);
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.gradient-card:hover { transform: translateY(-2px); }
+
+.gradient-label {
+  position: absolute;
+  bottom: var(--space-sm);
+  left: var(--space-md);
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 0.6875rem;
+  color: rgba(249,249,242,0.60);
+  text-shadow: 0 1px 4px rgba(5,13,7,0.80);
+}
+
+/* ═══ TYPE SPECIMEN ═══ */
+.type-family {
+  margin-bottom: var(--space-3xl);
+}
+
+.type-family-header {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-md);
+  margin-bottom: var(--space-xl);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid rgba(249,249,242,0.06);
+}
+
+.type-family-name {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.75rem;
+  color: var(--cream);
+  letter-spacing: -0.01em;
+}
+
+.type-family-meta {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 0.75rem;
+  color: rgba(249,249,242,0.30);
+}
+
+.type-alphabet {
+  font-size: 1.5rem;
+  letter-spacing: 0.04em;
+  color: rgba(249,249,242,0.15);
+  margin-bottom: var(--space-xl);
+  word-break: break-all;
+  line-height: 1.6;
+}
+
+.type-scale-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: var(--space-xl);
+}
+
+.type-scale-table th {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.625rem;
+  color: rgba(249,249,242,0.40);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: var(--space-xs) var(--space-md);
+  text-align: left;
+  border-bottom: 1px solid rgba(249,249,242,0.06);
+}
+
+.type-scale-table td {
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid rgba(249,249,242,0.04);
+  vertical-align: baseline;
+}
+
+.type-scale-name { color: rgba(249,249,242,0.30); font-size: 0.75rem; width: 120px; }
+.type-scale-size { font-family: var(--font-mono); color: rgba(249,249,242,0.40); font-size: 0.75rem; width: 80px; }
+.type-scale-usage { color: rgba(249,249,242,0.30); font-size: 0.75rem; }
+
+/* ═══ LOGO SECTION ═══ */
+.logo-variants {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--space-lg);
+  margin-bottom: var(--space-3xl);
+}
+
+.logo-card {
+  background: rgba(10,27,14,0.60);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(249,249,242,0.06);
+  border-radius: var(--radius-lg);
+  padding: var(--space-2xl) var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  transition: border-color var(--duration-fast) var(--ease-out);
+}
+
+.logo-card:hover { border-color: rgba(212,255,80,0.15); }
+
+.logo-card-symbol {
+  width: 64px;
+  height: 64px;
+  background: var(--forest);
+  border-radius: var(--radius-squircle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(249,249,242,0.08);
+}
+
+.logo-card-symbol.glow {
+  box-shadow: 0 0 30px rgba(212,255,80,0.25);
+}
+
+.logo-card-symbol svg { width: 36px; height: 36px; }
+
+.logo-card-name {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.9375rem;
+  letter-spacing: -0.02em;
+  color: var(--cream);
+}
+
+.logo-card-name span { color: var(--lime); }
+
+.logo-card-variant {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.625rem;
+  color: rgba(249,249,242,0.30);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ═══ DO / DON'T ═══ */
+.dodont-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-3xl);
+}
+
+.dodont-col h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: var(--space-md);
+}
+
+.dodont-do h4 { color: var(--success); }
+.dodont-dont h4 { color: var(--error); }
+
+.dodont-list {
+  list-style: none;
+  padding: 0;
+}
+
+.dodont-list li {
+  padding: var(--space-sm) 0;
+  font-size: 0.875rem;
+  color: rgba(249,249,242,0.50);
+  border-bottom: 1px solid rgba(249,249,242,0.04);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+}
+
+.dodont-list li::before {
+  flex-shrink: 0;
+  width: 16px;
+  font-weight: 700;
+}
+
+.dodont-do li::before { content: '✓'; color: var(--success); }
+.dodont-dont li::before { content: '✕'; color: var(--error); }
+
+/* ═══ SPACING DEMO ═══ */
+.space-demo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-3xl);
+}
+
+.space-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.space-bar {
+  height: 24px;
+  background: var(--lime);
+  border-radius: var(--radius-sm);
+  transition: opacity var(--duration-fast);
+  opacity: 0.15;
+}
+
+.space-row:hover .space-bar { opacity: 0.30; }
+
+.space-label {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 0.6875rem;
+  color: rgba(249,249,242,0.40);
+  white-space: nowrap;
+  width: 70px;
+}
+
+.space-value {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 0.6875rem;
+  color: rgba(249,249,242,0.25);
+  width: 40px;
+}
+
+/* ═══ COMPONENT DEMOS ═══ */
+.comp-demo {
+  margin-bottom: var(--space-3xl);
+}
+
+.comp-demo h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--cream);
+  margin-bottom: var(--space-lg);
+}
+
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  align-items: center;
+  margin-bottom: var(--space-lg);
+}
+
+/* Button styles */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-weight: 500;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+  white-space: nowrap;
+}
+.btn:active { transform: scale(0.97); transition: transform var(--duration-fast) var(--ease-spring); }
+.btn-sm { height: 32px; padding: 0 12px; font-size: 0.6875rem; }
+.btn-md { height: 44px; padding: 0 20px; font-size: 0.8125rem; }
+.btn-lg { height: 52px; padding: 0 28px; font-size: 0.9375rem; }
+
+.btn-primary { background: var(--lime); color: var(--black); box-shadow: 0 0 10px rgba(212,255,80,0.10); }
+.btn-primary:hover { background: #C5F030; box-shadow: 0 0 20px rgba(212,255,80,0.15); }
+.btn-secondary { background: transparent; color: var(--lime); border: 1px solid rgba(212,255,80,0.40); }
+.btn-secondary:hover { background: rgba(212,255,80,0.08); border-color: rgba(212,255,80,0.60); }
+.btn-ghost { background: transparent; color: var(--lime); }
+.btn-ghost:hover { background: rgba(212,255,80,0.08); }
+.btn-danger { background: var(--error); color: var(--cream); }
+.btn-danger:hover { background: #E64450; box-shadow: 0 0 20px rgba(255,78,92,0.20); }
+.btn-disabled { background: rgba(212,255,80,0.15); color: rgba(5,13,7,0.30); pointer-events: none; }
+
+.input-demo {
+  background: var(--slate);
+  color: var(--cream);
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  border: 1px solid rgba(249,249,242,0.12);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  height: 44px;
+  caret-color: var(--lime);
+  outline: none;
+  transition: border-color var(--duration-fast) var(--ease-out);
+}
+.input-demo:focus { border-color: rgba(212,255,80,0.50); box-shadow: 0 0 0 2px rgba(212,255,80,0.10); }
+.input-demo::placeholder { color: rgba(249,249,242,0.30); }
+
+.input-row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  max-width: 400px;
+  margin-bottom: var(--space-lg);
+}
+
+.input-label {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.6875rem;
+  color: rgba(249,249,242,0.60);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 6px;
+}
+
+/* ═══ CARDS ═══ */
+.card-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+
+.card {
+  background: linear-gradient(135deg, rgba(10,27,14,0.60), rgba(45,58,47,0.40));
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(249,249,242,0.06);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  transition: border-color var(--duration-fast) var(--ease-out);
+}
+
+.card:hover { border-color: rgba(212,255,80,0.12); }
+
+.card h5 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--cream);
+  margin-bottom: var(--space-xs);
+}
+
+.card p {
+  font-size: 0.8125rem;
+  color: rgba(249,249,242,0.40);
+  line-height: 1.45;
+}
+
+.card-stat {
+  text-align: center;
+}
+
+.card-stat-val {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 2rem;
+  color: var(--lime);
+}
+
+.card-stat-lbl {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.6875rem;
+  color: rgba(249,249,242,0.40);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-top: 4px;
+}
+
+/* ═══ BADGES ═══ */
+.badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
+  align-items: center;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.625rem;
+  line-height: 1;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.badge-success { background: rgba(58,224,134,0.12); color: var(--success); }
+.badge-error { background: rgba(255,78,92,0.12); color: var(--error); }
+.badge-warning { background: rgba(255,180,67,0.12); color: var(--warning); }
+.badge-info { background: rgba(77,170,255,0.12); color: var(--info); }
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.75rem;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+}
+
+.tag-maladie { background: rgba(255,78,92,0.10); color: var(--error); border: 1px solid rgba(255,78,92,0.25); }
+.tag-culture { background: rgba(58,224,134,0.10); color: var(--success); border: 1px solid rgba(58,224,134,0.25); }
+
+/* ═══ CODE BLOCK ═══ */
+.code-block {
+  background: rgba(10,27,14,0.50);
+  border: 1px solid rgba(249,249,242,0.06);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  overflow-x: auto;
+  margin-bottom: var(--space-3xl);
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 0.75rem;
+  line-height: 1.7;
+  color: rgba(249,249,242,0.60);
+  white-space: pre;
+  position: relative;
+}
+
+.code-block .comment { color: rgba(249,249,242,0.20); }
+.code-block .property { color: rgba(249,249,242,0.70); }
+.code-block .value { color: var(--lime); }
+.code-block .string { color: var(--success); }
+.code-block .punctuation { color: rgba(249,249,242,0.30); }
+
+/* ═══ SCREEN MOCKUPS ═══ */
+.screen-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-xl);
+  margin-bottom: var(--space-3xl);
+}
+
+.screen-mock {
+  background: var(--black);
+  border: 1px solid rgba(249,249,242,0.08);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  transition: border-color var(--duration-fast);
+}
+
+.screen-mock:hover { border-color: rgba(212,255,80,0.15); }
+
+.screen-header {
+  height: 40px;
+  background: rgba(10,27,14,0.80);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-md);
+  gap: var(--space-sm);
+  border-bottom: 1px solid rgba(249,249,242,0.04);
+}
+
+.screen-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(249,249,242,0.08);
+}
+
+.screen-title-bar {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.625rem;
+  color: rgba(249,249,242,0.25);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-left: auto;
+}
+
+.screen-body {
+  padding: var(--space-lg);
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.screen-placeholder {
+  background: rgba(249,249,242,0.03);
+  border-radius: var(--radius-md);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  color: rgba(249,249,242,0.10);
+  font-size: 0.75rem;
+}
+
+.screen-tab-bar {
+  height: 44px;
+  background: rgba(10,27,14,0.90);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  border-top: 1px solid rgba(249,249,242,0.06);
+}
+
+.screen-tab {
+  width: 16px;
+  height: 16px;
+  border-radius: var(--radius-sm);
+  background: rgba(249,249,242,0.08);
+}
+
+.screen-tab.active { background: var(--lime); }
+
+.screen-label {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.875rem;
+  color: var(--cream);
+  text-align: center;
+  margin-top: var(--space-md);
+}
+
+/* ═══ CHAT DEMO ═══ */
+.chat-demo {
+  max-width: 400px;
+  margin: 0 auto var(--space-3xl);
+}
+
+.chat-msg {
+  padding: 10px 14px;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin-bottom: var(--space-sm);
+  max-width: 85%;
+}
+
+.chat-msg.ai {
+  background: var(--slate);
+  border: 1px solid rgba(249,249,242,0.06);
+  border-radius: 12px 12px 12px 4px;
+  color: var(--cream);
+  align-self: flex-start;
+  margin-right: auto;
+}
+
+.chat-msg.user {
+  background: rgba(212,255,80,0.10);
+  border: 1px solid rgba(212,255,80,0.15);
+  border-radius: 12px 12px 4px 12px;
+  color: var(--cream);
+  align-self: flex-end;
+  margin-left: auto;
+  text-align: right;
+}
+
+.typing-dots { display: flex; gap: 4px; padding: 10px 14px; }
+.typing-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(249,249,242,0.30);
+  animation: typing-bounce 1.4s ease-in-out infinite both;
+}
+.typing-dot:nth-child(1) { animation-delay: 0s; }
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typing-bounce {
+  0%, 80%, 100% { transform: translateY(0); opacity: 0.3; }
+  40% { transform: translateY(-4px); opacity: 0.8; }
+}
+
+/* ═══ ICON GRID ═══ */
+.icon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: var(--space-md);
+  margin-bottom: var(--space-3xl);
+}
+
+.icon-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-lg) var(--space-sm);
+  border: 1px solid rgba(249,249,242,0.04);
+  border-radius: var(--radius-md);
+  transition: border-color var(--duration-fast);
+}
+
+.icon-cell:hover { border-color: rgba(212,255,80,0.12); }
+
+.icon-cell svg { width: 24px; height: 24px; color: rgba(249,249,242,0.30); }
+.icon-cell:hover svg { color: var(--lime); }
+
+.icon-cell span {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 0.625rem;
+  color: rgba(249,249,242,0.20);
+  text-align: center;
+  word-break: break-all;
+}
+
+/* ═══ FOOTER ═══ */
+.footer {
+  padding: var(--space-4xl) var(--space-lg) var(--space-3xl);
+  text-align: center;
+  border-top: 1px solid rgba(249,249,242,0.06);
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.footer-logo {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.5rem;
+  color: var(--cream);
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-sm);
+}
+
+.footer-logo span { color: var(--lime); }
+
+.footer-text {
+  font-size: 0.8125rem;
+  color: rgba(249,249,242,0.25);
+}
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 768px) {
+  .hero-title { font-size: 2rem; }
+  .section { padding: var(--space-4xl) var(--space-lg); }
+  .section-title { font-size: 1.75rem; }
+  .nav-links { gap: var(--space-sm); }
+  .nav-link { font-size: 0.5625rem; }
+  .swatch-grid { grid-template-columns: repeat(2, 1fr); }
+  .semantic-grid { grid-template-columns: repeat(2, 1fr); }
+  .dodont-grid { grid-template-columns: 1fr; }
+  .card-row { grid-template-columns: 1fr; }
+  .screen-grid { grid-template-columns: 1fr; }
+  .gradient-grid { grid-template-columns: repeat(2, 1fr); }
+  .logo-variants { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 480px) {
+  .hero-title { font-size: 1.75rem; }
+  .section-title { font-size: 1.5rem; }
+  .swatch-grid { grid-template-columns: 1fr; }
+  .semantic-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+
+<!-- ═══ NAVIGATION ═══ -->
+<nav class="nav">
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-symbol">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2C8 6 4 10 4 14c0 4 3.5 7 8 7s8-3 8-7c0-4-4-8-8-12z"/>
+        <path d="M12 2v19"/>
+        <line x1="6" y1="9" x2="18" y2="9" stroke-dasharray="2 1.5" opacity="0.5"/>
+        <line x1="7" y1="13" x2="17" y2="13" stroke-dasharray="2 1.5" opacity="0.5"/>
+      </svg>
+    </div>
+    <div class="nav-logo-text">AgriScan<span>.ai</span></div>
+  </a>
+  <div class="nav-links">
+    <a href="#concept" class="nav-link">Concept</a>
+    <a href="#palette" class="nav-link">Palette</a>
+    <a href="#typo" class="nav-link">Typo</a>
+    <a href="#logo" class="nav-link">Logo</a>
+    <a href="#grille" class="nav-link">Grille</a>
+    <a href="#composants" class="nav-link">UI</a>
+    <a href="#effets" class="nav-link">Effets</a>
+    <a href="#ecrans" class="nav-link">Écrans</a>
+    <a href="#tokens" class="nav-link">CSS</a>
+  </div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="hero-logo">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2C8 6 4 10 4 14c0 4 3.5 7 8 7s8-3 8-7c0-4-4-8-8-12z"/>
+      <path d="M12 2v19"/>
+      <line x1="5" y1="10" x2="19" y2="10" stroke-dasharray="2 1.5" opacity="0.6"/>
+      <line x1="6" y1="14" x2="18" y2="14" stroke-dasharray="2 1.5" opacity="0.4"/>
+    </svg>
+  </div>
+  <h1 class="hero-title">Charte Graphique<br>AgriScan<span>.ai</span></h1>
+  <p class="hero-subtitle">Système de design pour l'application mobile de diagnostic de maladies des plantes par IA. Direction SYNAPSE — Dark Tech Cinématique × Nature.</p>
+  <div class="hero-meta">
+    <span class="hero-meta-item">v1.0 — Mai 2026</span>
+    <span class="hero-meta-item">Bachelor 2025/2026</span>
+    <span class="hero-meta-item">Chambre d'Agriculture</span>
+  </div>
+  <div class="hero-scroll">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+  </div>
+</section>
+
+<!-- ═══ 1. CONCEPT ═══ -->
+<section id="concept" class="section">
+  <div class="section-label">01</div>
+  <h2 class="section-title">Concept & Positionnement</h2>
+  <p class="section-desc">Identité de marque, piliers créatifs et univers visuel d'AgriScan.ai.</p>
+
+  <div class="card-row">
+    <div class="card">
+      <h5>🎯 Mission</h5>
+      <p>Apporter un diagnostic IA fiable et instantané aux agriculteurs, directement sur le terrain, pour protéger les cultures et optimiser les traitements.</p>
+    </div>
+    <div class="card">
+      <h5>👥 Cible</h5>
+      <p>Agriculteurs (tout âge) en priorité. Jury académique et Chambre d'Agriculture en secondaire.</p>
+    </div>
+    <div class="card">
+      <h5>🎨 Direction</h5>
+      <p><strong>SYNAPSE</strong> — la connexion entre la plante et l'IA. Lisibilité, précision, rapidité.</p>
+    </div>
+    <div class="card">
+      <h5>🗣️ Ton</h5>
+      <p>Sérieux, moderne, rassurant, expert. Ni jouet gadget, ni froid dystopique, ni rustique traditionnel.</p>
+    </div>
+  </div>
+
+  <div class="card-row">
+    <div class="card">
+      <h5>🧠 Synapse</h5>
+      <p>La connexion plante → IA. Lisibilité, précision, rapidité.</p>
+    </div>
+    <div class="card">
+      <h5>🌍 Terrain</h5>
+      <p>L'ancrage agricole. Textures, authenticité, rugosité du réel.</p>
+    </div>
+    <div class="card">
+      <h5>⚡ Technologie</h5>
+      <p>L'intelligence embarquée. Lignes nettes, glow, data visualisation.</p>
+    </div>
+    <div class="card">
+      <h5>🤝 Confiance</h5>
+      <p>L'accompagnement expert. Palette rassurante, hiérarchie claire, feedback immédiat.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 2. PALETTE ═══ -->
+<section id="palette" class="section">
+  <div class="section-label">02</div>
+  <h2 class="section-title">Palette de Couleurs</h2>
+  <p class="section-desc">5 couleurs principales + 4 sémantiques. Contraste WCAG AAA sur fonds sombres.</p>
+
+  <div class="swatch-grid">
+    <div class="swatch">
+      <div class="swatch-preview" style="background:#050D07;"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">Black</div>
+        <div class="swatch-hex">#050D07</div>
+        <div class="swatch-role">Fond principal dominant. Écrans, body.</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-preview" style="background:#0A1B0E;"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">Forest Green</div>
+        <div class="swatch-hex">#0A1B0E</div>
+        <div class="swatch-role">Fond secondaire. Cartes, headers, logo.</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-preview" style="background:#F9F9F2;"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">Cream</div>
+        <div class="swatch-hex">#F9F9F2</div>
+        <div class="swatch-role">Texte principal sur fond sombre. Titres, icônes.</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-preview" style="background:#D4FF50;"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">Lime</div>
+        <div class="swatch-hex">#D4FF50</div>
+        <div class="swatch-role">Accents, CTA, highlights. JAMAIS en fond large ou texte long.</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-preview" style="background:#2D3A2F;"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">Slate</div>
+        <div class="swatch-hex">#2D3A2F</div>
+        <div class="swatch-role">Éléments secondaires. Inputs, bulles IA, bordures.</div>
+      </div>
+    </div>
+  </div>
+
+  <h4 style="font-family:var(--font-display);font-weight:700;font-size:1.125rem;margin-bottom:var(--space-lg);margin-top:var(--space-xl);">Couleurs Sémantiques</h4>
+
+  <div class="semantic-grid">
+    <div class="semantic-swatch">
+      <div class="semantic-preview" style="background:#3AE086;"></div>
+      <div class="semantic-info">
+        <div class="semantic-name" style="color:#3AE086;">Success</div>
+        <div class="semantic-hex">#3AE086</div>
+      </div>
+    </div>
+    <div class="semantic-swatch">
+      <div class="semantic-preview" style="background:#FF4E5C;"></div>
+      <div class="semantic-info">
+        <div class="semantic-name" style="color:#FF4E5C;">Error</div>
+        <div class="semantic-hex">#FF4E5C</div>
+      </div>
+    </div>
+    <div class="semantic-swatch">
+      <div class="semantic-preview" style="background:#FFB443;"></div>
+      <div class="semantic-info">
+        <div class="semantic-name" style="color:#FFB443;">Warning</div>
+        <div class="semantic-hex">#FFB443</div>
+      </div>
+    </div>
+    <div class="semantic-swatch">
+      <div class="semantic-preview" style="background:#4DAAFF;"></div>
+      <div class="semantic-info">
+        <div class="semantic-name" style="color:#4DAAFF;">Info</div>
+        <div class="semantic-hex">#4DAAFF</div>
+      </div>
+    </div>
+  </div>
+
+  <h4 style="font-family:var(--font-display);font-weight:700;font-size:1.125rem;margin-bottom:var(--space-lg);margin-top:var(--space-xl);">Contrastes WCAG</h4>
+
+  <div style="overflow-x:auto;">
+    <table class="contrast-table">
+      <thead>
+        <tr>
+          <th>Texte</th>
+          <th>Fond</th>
+          <th>Ratio</th>
+          <th>AA</th>
+          <th>AAA</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span style="display:inline-block;width:12px;height:12px;border-radius:2px;background:#F9F9F2;vertical-align:middle;margin-right:6px;"></span> Cream #F9F9F2</td>
+          <td><span style="display:inline-block;width:12px;height:12px;border-radius:2px;background:#050D07;vertical-align:middle;margin-right:6px;"></span> Black #050D07</td>
+          <td style="font-family:var(--font-mono);">18.6:1</td>
+          <td><span class="contrast-badge aaa">AAA</span></td>
+          <td><span class="contrast-badge aaa">AAA</span></td>
+        </tr>
+        <tr>
+          <td><span style="display:inline-block;width:12px;height:12px;border-radius:2px;background:#D4FF50;vertical-align:middle;margin-right:6px;"></span> Lime #D4FF50</td>
+          <td><span style="display:inline-block;width:12px;height:12px;border-radius:2px;background:#050D07;vertical-align:middle;margin-right:6px;"></span> Black #050D07</td>
+          <td style="font-family:var(--font-mono);">14.8:1</td>
+          <td><span class="contrast-badge aaa">AAA</span></td>
+          <td><span class="contrast-badge aaa">AAA</span></td>
+        </tr>
+        <tr>
+          <td><span style="display:inline-block;width:12px;height:12px;border-radius:2px;background:#F9F9F2;vertical-align:middle;margin-right:6px;"></span> Cream #F9F9F2</td>
+          <td><span style="display:inline-block;width:12px;height:12px;border-radius:2px;background:#2D3A2F;vertical-align:middle;margin-right:6px;"></span> Slate #2D3A2F</td>
+          <td style="font-family:var(--font-mono);">10.3:1</td>
+          <td><span class="contrast-badge aaa">AAA</span></td>
+          <td><span class="contrast-badge aaa">AAA</span></td>
+        </tr>
+        <tr>
+          <td><span style="display:inline-block;width:12px;height:12px;border-radius:2px;background:#3AE086;vertical-align:middle;margin-right:6px;"></span> Success #3AE086</td>
+          <td><span style="display:inline-block;width:12px;height:12px;border-radius:2px;background:#050D07;vertical-align:middle;margin-right:6px;"></span> Black #050D07</td>
+          <td style="font-family:var(--font-mono);">9.8:1</td>
+          <td><span class="contrast-badge aaa">AAA</span></td>
+          <td><span class="contrast-badge aaa">AAA</span></td>
+        </tr>
+        <tr>
+          <td><span style="display:inline-block;width:12px;height:12px;border-radius:2px;background:#FF4E5C;vertical-align:middle;margin-right:6px;"></span> Error #FF4E5C</td>
+          <td><span style="display:inline-block;width:12px;height:12px;border-radius:2px;background:#050D07;vertical-align:middle;margin-right:6px;"></span> Black #050D07</td>
+          <td style="font-family:var(--font-mono);">6.1:1</td>
+          <td><span class="contrast-badge aa">AA</span></td>
+          <td><span class="contrast-badge aaa">AAA*</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4 style="font-family:var(--font-display);font-weight:700;font-size:1.125rem;margin-bottom:var(--space-lg);">Gradients Signature</h4>
+
+  <div class="gradient-grid">
+    <div class="gradient-card" style="background:linear-gradient(135deg,#050D07 0%,#0A1B0E 40%,#122215 100%);">
+      <span class="gradient-label">AgriScan Hero</span>
+    </div>
+    <div class="gradient-card" style="background:linear-gradient(135deg,#D4FF50 0%,#A8E030 50%,#6BBF1E 100%);">
+      <span class="gradient-label">Lime Synapse</span>
+    </div>
+    <div class="gradient-card" style="background:linear-gradient(180deg,rgba(212,255,80,0.05) 0%,rgba(5,13,7,0) 100%);">
+      <span class="gradient-label">Scan Data</span>
+    </div>
+    <div class="gradient-card" style="background:linear-gradient(135deg,rgba(255,78,92,0.15) 0%,rgba(255,180,67,0.10) 100%);">
+      <span class="gradient-label">Diagnostic Alert</span>
+    </div>
+    <div class="gradient-card" style="background:linear-gradient(135deg,rgba(10,27,14,0.60) 0%,rgba(45,58,47,0.40) 100%);">
+      <span class="gradient-label">Glass Card</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 3. TYPOGRAPHIE ═══ -->
+<section id="typo" class="section">
+  <div class="section-label">03</div>
+  <h2 class="section-title">Typographie</h2>
+  <p class="section-desc">Système à 3 polices : Plus Jakarta Sans pour les titres, Inter pour le corps, JetBrains Mono pour les données.</p>
+
+  <div class="type-family">
+    <div class="type-family-header">
+      <span class="type-family-name">Plus Jakarta Sans</span>
+      <span class="type-family-meta">Weights 800 · 700 · Google Fonts</span>
+    </div>
+    <div class="type-alphabet" style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;">
+      ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789
+    </div>
+    <div class="type-alphabet" style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;margin-top:-16px;">
+      ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789
+    </div>
+  </div>
+
+  <div class="type-family">
+    <div class="type-family-header">
+      <span class="type-family-name">Inter</span>
+      <span class="type-family-meta">Weights 400 · 500 · Google Fonts</span>
+    </div>
+    <div class="type-alphabet" style="font-family:'Inter',sans-serif;font-weight:400;">
+      ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789
+    </div>
+    <div class="type-alphabet" style="font-family:'Inter',sans-serif;font-weight:500;margin-top:-16px;">
+      ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789
+    </div>
+  </div>
+
+  <div class="type-family">
+    <div class="type-family-header">
+      <span class="type-family-name">JetBrains Mono</span>
+      <span class="type-family-meta">Weights 400 · 700 · Google Fonts</span>
+    </div>
+    <div class="type-alphabet" style="font-family:'JetBrains Mono',monospace;font-weight:400;">
+      ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789
+    </div>
+    <div class="type-alphabet" style="font-family:'JetBrains Mono',monospace;font-weight:700;margin-top:-16px;">
+      ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789
+    </div>
+  </div>
+
+  <h4 style="font-family:var(--font-display);font-weight:700;font-size:1.125rem;margin-bottom:var(--space-lg);">Échelle Typographique Mobile</h4>
+  <div style="overflow-x:auto;">
+    <table class="type-scale-table">
+      <thead>
+        <tr><th>Niveau</th><th>Poids</th><th>Taille</th><th>Hauteur</th><th>Usage</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="font-family:var(--font-display);font-weight:800;font-size:3rem;line-height:1;">Display XL</td>
+          <td class="type-scale-name">800</td>
+          <td class="type-scale-size">48px / 3rem</td>
+          <td class="type-scale-usage">1.0</td>
+          <td class="type-scale-usage">Splash screen</td>
+        </tr>
+        <tr>
+          <td style="font-family:var(--font-display);font-weight:800;font-size:2.25rem;line-height:1.1;">Display L</td>
+          <td class="type-scale-name">800</td>
+          <td class="type-scale-size">36px / 2.25rem</td>
+          <td class="type-scale-usage">1.1</td>
+          <td class="type-scale-usage">Titre diagnostic</td>
+        </tr>
+        <tr>
+          <td style="font-family:var(--font-display);font-weight:800;font-size:1.75rem;line-height:1.2;">H1</td>
+          <td class="type-scale-name">800</td>
+          <td class="type-scale-size">28px / 1.75rem</td>
+          <td class="type-scale-usage">1.2</td>
+          <td class="type-scale-usage">Titres d'écran</td>
+        </tr>
+        <tr>
+          <td style="font-family:var(--font-display);font-weight:700;font-size:1.375rem;line-height:1.3;">H2</td>
+          <td class="type-scale-name">700</td>
+          <td class="type-scale-size">22px / 1.375rem</td>
+          <td class="type-scale-usage">1.3</td>
+          <td class="type-scale-usage">Titres de section</td>
+        </tr>
+        <tr>
+          <td style="font-family:var(--font-display);font-weight:700;font-size:1.125rem;line-height:1.35;">H3</td>
+          <td class="type-scale-name">700</td>
+          <td class="type-scale-size">18px / 1.125rem</td>
+          <td class="type-scale-usage">1.35</td>
+          <td class="type-scale-usage">Titres cartes</td>
+        </tr>
+        <tr>
+          <td style="font-family:var(--font-display);font-weight:700;font-size:1rem;">H4</td>
+          <td class="type-scale-name">700</td>
+          <td class="type-scale-size">16px / 1rem</td>
+          <td class="type-scale-usage">1.4</td>
+          <td class="type-scale-usage">Labels navigation</td>
+        </tr>
+        <tr>
+          <td style="font-family:var(--font-body);font-weight:400;font-size:1.0625rem;line-height:1.5;">Body Large</td>
+          <td class="type-scale-name">400</td>
+          <td class="type-scale-size">17px / 1.0625rem</td>
+          <td class="type-scale-usage">1.5</td>
+          <td class="type-scale-usage">Descriptions</td>
+        </tr>
+        <tr>
+          <td style="font-family:var(--font-body);font-weight:400;font-size:0.9375rem;line-height:1.5;">Body</td>
+          <td class="type-scale-name">400</td>
+          <td class="type-scale-size">15px / 0.9375rem</td>
+          <td class="type-scale-usage">1.5</td>
+          <td class="type-scale-usage">Corps standard</td>
+        </tr>
+        <tr>
+          <td style="font-family:var(--font-body);font-weight:500;font-size:0.6875rem;text-transform:uppercase;letter-spacing:.04em;">Label</td>
+          <td class="type-scale-name">500</td>
+          <td class="type-scale-size">11px / 0.6875rem</td>
+          <td class="type-scale-usage">1.3</td>
+          <td class="type-scale-usage">Boutons, badges</td>
+        </tr>
+        <tr>
+          <td style="font-family:var(--font-mono);font-weight:700;font-size:2rem;">Data Display</td>
+          <td class="type-scale-name">700</td>
+          <td class="type-scale-size">32px / 2rem</td>
+          <td class="type-scale-usage">1.2</td>
+          <td class="type-scale-usage">Statistiques</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══ 4. LOGO ═══ -->
+<section id="logo" class="section">
+  <div class="section-label">04</div>
+  <h2 class="section-title">Logo & Identité</h2>
+  <p class="section-desc">Squircle contenant une feuille stylisée croisée avec des lignes de scan numériques. Logotype en Plus Jakarta Sans 800.</p>
+
+  <div class="logo-variants">
+    <div class="logo-card">
+      <div class="logo-card-symbol" style="background:var(--forest);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#F9F9F2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2C8 6 4 10 4 14c0 4 3.5 7 8 7s8-3 8-7c0-4-4-8-8-12z"/>
+          <path d="M12 2v19"/>
+          <line x1="5" y1="10" x2="19" y2="10" stroke="#D4FF50" stroke-dasharray="2 1.5" opacity="0.8"/>
+        </svg>
+      </div>
+      <div class="logo-card-name">AgriScan<span>.ai</span></div>
+      <div class="logo-card-variant">Primaire — Cream sur Forest</div>
+    </div>
+
+    <div class="logo-card" style="background:var(--black);">
+      <div class="logo-card-symbol glow" style="background:var(--forest);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#F9F9F2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2C8 6 4 10 4 14c0 4 3.5 7 8 7s8-3 8-7c0-4-4-8-8-12z"/>
+          <path d="M12 2v19"/>
+          <line x1="5" y1="10" x2="19" y2="10" stroke="#D4FF50" stroke-dasharray="2 1.5" opacity="0.8"/>
+        </svg>
+      </div>
+      <div class="logo-card-name">AgriScan<span>.ai</span></div>
+      <div class="logo-card-variant">Glow — Splash Screen</div>
+    </div>
+
+    <div class="logo-card" style="background:var(--cream);">
+      <div class="logo-card-symbol" style="background:transparent;border:1px solid rgba(5,13,7,0.15);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#050D07" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2C8 6 4 10 4 14c0 4 3.5 7 8 7s8-3 8-7c0-4-4-8-8-12z"/>
+          <path d="M12 2v19"/>
+          <line x1="5" y1="10" x2="19" y2="10" stroke-dasharray="2 1.5" opacity="0.8"/>
+        </svg>
+      </div>
+      <div class="logo-card-name" style="color:#050D07;">AgriScan<span style="color:var(--lime);">.ai</span></div>
+      <div class="logo-card-variant">Monochrome Noir</div>
+    </div>
+
+    <div class="logo-card" style="background:var(--black);">
+      <div class="logo-card-symbol" style="background:var(--forest);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2C8 6 4 10 4 14c0 4 3.5 7 8 7s8-3 8-7c0-4-4-8-8-12z"/>
+          <path d="M12 2v19"/>
+          <line x1="5" y1="10" x2="19" y2="10" stroke="var(--lime)" stroke-dasharray="2 1.5" opacity="0.8"/>
+        </svg>
+      </div>
+      <div class="logo-card-variant">Icône seule — App Icon</div>
+    </div>
+  </div>
+
+  <h4 style="font-family:var(--font-display);font-weight:700;font-size:1.125rem;margin-bottom:var(--space-lg);">Usages</h4>
+  <div class="dodont-grid">
+    <div class="dodont-col dodont-do">
+      <h4>✅ Autorisé</h4>
+      <ul class="dodont-list">
+        <li>Utiliser les 5 variantes officielles</li>
+        <li>Respecter la zone d'exclusion (X = hauteur × 0.5)</li>
+        <li>Ratio 1:1 toujours respecté pour le symbole</li>
+        <li>Taille minimum 120px en digital mobile</li>
+      </ul>
+    </div>
+    <div class="dodont-col dodont-dont">
+      <h4>❌ Interdit</h4>
+      <ul class="dodont-list">
+        <li>Déformer ou pivoter le logo</li>
+        <li>Changer les couleurs hors variantes</li>
+        <li>Utiliser le symbole sans le squircle</li>
+        <li>Ajouter une ombre portée non officielle</li>
+        <li>Placer sur fond sans contraste WCAG AA</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 5. ESPACEMENT & GRILLE ═══ -->
+<section id="grille" class="section">
+  <div class="section-label">05</div>
+  <h2 class="section-title">Espacement & Grille</h2>
+  <p class="section-desc">Unité de base 4px. Grilles mobile (4 col.), tablette (8 col.), desktop (12 col.). Système de shadows et border-radius.</p>
+
+  <div class="card-row">
+    <div class="card">
+      <h5>📐 Unité de base</h5>
+      <p>4px. Tous les espacements, dimensions et rayons sont des multiples de 4.</p>
+    </div>
+    <div class="card">
+      <h5>📱 Grille Mobile</h5>
+      <p>4 colonnes, gutter 12px, margins 16px. Largeur 360–414px.</p>
+    </div>
+    <div class="card">
+      <h5>💻 Grille Desktop</h5>
+      <p>12 colonnes, gutter 24px, max-width 1280px centré.</p>
+    </div>
+    <div class="card">
+      <h5>🔲 Border Radius</h5>
+      <p>4 / 8 / 12 / 16 / 28 (squircle) / 9999px (full).</p>
+    </div>
+  </div>
+
+  <h4 style="font-family:var(--font-display);font-weight:700;font-size:1.125rem;margin-bottom:var(--space-lg);">Échelle d'espacement</h4>
+  <div class="space-demo">
+    <div class="space-row">
+      <span class="space-label">xs</span><span class="space-value">4px</span>
+      <div class="space-bar" style="width:4px;"></div>
+    </div>
+    <div class="space-row">
+      <span class="space-label">sm</span><span class="space-value">8px</span>
+      <div class="space-bar" style="width:8px;"></div>
+    </div>
+    <div class="space-row">
+      <span class="space-label">md</span><span class="space-value">12px</span>
+      <div class="space-bar" style="width:12px;"></div>
+    </div>
+    <div class="space-row">
+      <span class="space-label">lg</span><span class="space-value">16px</span>
+      <div class="space-bar" style="width:16px;"></div>
+    </div>
+    <div class="space-row">
+      <span class="space-label">xl</span><span class="space-value">24px</span>
+      <div class="space-bar" style="width:24px;"></div>
+    </div>
+    <div class="space-row">
+      <span class="space-label">2xl</span><span class="space-value">32px</span>
+      <div class="space-bar" style="width:32px;"></div>
+    </div>
+    <div class="space-row">
+      <span class="space-label">3xl</span><span class="space-value">48px</span>
+      <div class="space-bar" style="width:48px;"></div>
+    </div>
+    <div class="space-row">
+      <span class="space-label">4xl</span><span class="space-value">64px</span>
+      <div class="space-bar" style="width:64px;"></div>
+    </div>
+  </div>
+
+  <h4 style="font-family:var(--font-display);font-weight:700;font-size:1.125rem;margin-bottom:var(--space-lg);">Ombres & Glows</h4>
+
+  <div class="card-row">
+    <div class="card" style="box-shadow:0 1px 2px rgba(0,0,0,0.30);">
+      <h5>shadow-sm</h5>
+      <p>Boutons, inputs — relief minimal.</p>
+    </div>
+    <div class="card" style="box-shadow:0 4px 12px rgba(0,0,0,0.40);">
+      <h5>shadow-md</h5>
+      <p>Cartes, modals.</p>
+    </div>
+    <div class="card" style="box-shadow:0 0 20px rgba(212,255,80,0.15);">
+      <h5>glow-medium</h5>
+      <p>Boutons CTA, badges actifs.</p>
+    </div>
+    <div class="card" style="box-shadow:0 0 40px rgba(212,255,80,0.25),0 0 80px rgba(212,255,80,0.08);">
+      <h5>glow-intense</h5>
+      <p>Logo splash, diagnostic critique.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 6. COMPOSANTS UI ═══ -->
+<section id="composants" class="section">
+  <div class="section-label">06</div>
+  <h2 class="section-title">Composants UI</h2>
+  <p class="section-desc">Boutons, inputs, cartes, badges, chatbot et navigation. Tous les états documentés.</p>
+
+  <div class="comp-demo">
+    <h4>Boutons — Primary</h4>
+    <div class="btn-row">
+      <button class="btn btn-primary btn-sm">Small</button>
+      <button class="btn btn-primary btn-md">Medium</button>
+      <button class="btn btn-primary btn-lg">Large CTA</button>
+      <button class="btn btn-primary btn-md btn-disabled">Désactivé</button>
+    </div>
+  </div>
+
+  <div class="comp-demo">
+    <h4>Boutons — Secondary</h4>
+    <div class="btn-row">
+      <button class="btn btn-secondary btn-sm">Small</button>
+      <button class="btn btn-secondary btn-md">Medium</button>
+      <button class="btn btn-secondary btn-lg">Large</button>
+    </div>
+  </div>
+
+  <div class="comp-demo">
+    <h4>Boutons — Ghost & Danger</h4>
+    <div class="btn-row">
+      <button class="btn btn-ghost btn-md">Ghost</button>
+      <button class="btn btn-danger btn-md">Supprimer</button>
+    </div>
+  </div>
+
+  <div class="comp-demo">
+    <h4>Inputs</h4>
+    <div class="input-row">
+      <div>
+        <div class="input-label">Nom de la parcelle</div>
+        <input type="text" class="input-demo" placeholder="Ex: Parcelle Nord" style="width:100%;">
+      </div>
+      <div>
+        <div class="input-label">Description</div>
+        <textarea class="input-demo" placeholder="Décrivez les symptômes observés..." style="width:100%;min-height:80px;resize:vertical;"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="comp-demo">
+    <h4>Badges & Tags</h4>
+    <div class="badge-row">
+      <span class="badge badge-success">Succès</span>
+      <span class="badge badge-error">Erreur</span>
+      <span class="badge badge-warning">Attention</span>
+      <span class="badge badge-info">Info</span>
+      <span class="tag tag-maladie">🌾 Mildiou</span>
+      <span class="tag tag-culture">🌿 Blé</span>
+    </div>
+  </div>
+
+  <div class="comp-demo">
+    <h4>Cartes</h4>
+    <div class="card-row">
+      <div class="card">
+        <h5>Card Standard</h5>
+        <p>Glassmorphism avec backdrop-filter. Fond semi-transparent Forest Green × Slate.</p>
+      </div>
+      <div class="card card-stat">
+        <div class="card-stat-val">92%</div>
+        <div class="card-stat-lbl">Confiance IA</div>
+      </div>
+      <div class="card" style="border-color:rgba(255,180,67,0.25);background:rgba(255,180,67,0.06);">
+        <h5 style="color:var(--warning);">⚠ Card Alerte</h5>
+        <p>Bordure et fond sémantique Warning pour les alertes modérées.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="comp-demo">
+    <h4>Chatbot UI</h4>
+    <div class="chat-demo">
+      <div class="chat-msg ai">🤖 Bonjour ! Je suis votre assistant de diagnostic. Prenez une photo ou décrivez les symptômes.</div>
+      <div class="chat-msg user">Les feuilles ont des taches jaunes sur le bord.</div>
+      <div class="chat-msg ai">Je vois. Pouvez-vous préciser la culture concernée et depuis combien de temps ?</div>
+      <div class="chat-msg ai" style="max-width:60px;padding:10px 14px;">
+        <div class="typing-dots">
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 7. EFFETS VISUELS ═══ -->
+<section id="effets" class="section">
+  <div class="section-label">07</div>
+  <h2 class="section-title">Effets Visuels & Motion</h2>
+  <p class="section-desc">Glassmorphism, glows, grain, scanlines, animations et micro-interactions.</p>
+
+  <div class="card-row">
+    <div class="card">
+      <h5>🪟 Glassmorphism</h5>
+      <p>4 niveaux : Subtle (blur 8px), Standard (12px), Heavy (20px), Extreme (28px).</p>
+    </div>
+    <div class="card">
+      <h5>✨ Glow Lime</h5>
+      <p>3 intensités : subtle (10px), medium (20px), intense (40px). Max 1 élément intense à l'écran.</p>
+    </div>
+    <div class="card">
+      <h5>🎞️ Grain Overlay</h5>
+      <p>SVG noise à 3% d'opacité, position fixed, au-dessus de tout le contenu. Texture cinématique.</p>
+    </div>
+    <div class="card">
+      <h5>📡 Scanlines</h5>
+      <p>Lignes horizontales semi-transparentes sur les cartes de diagnostic uniquement.</p>
+    </div>
+  </div>
+
+  <h4 style="font-family:var(--font-display);font-weight:700;font-size:1.125rem;margin-bottom:var(--space-lg);margin-top:var(--space-xl);">Durées d'animation</h4>
+  <div class="card-row">
+    <div class="card card-stat">
+      <div class="card-stat-val" style="font-size:1.5rem;">150ms</div>
+      <div class="card-stat-lbl">Fast — Micro-interactions</div>
+    </div>
+    <div class="card card-stat">
+      <div class="card-stat-val" style="font-size:1.5rem;">300ms</div>
+      <div class="card-stat-lbl">Normal — Transitions</div>
+    </div>
+    <div class="card card-stat">
+      <div class="card-stat-val" style="font-size:1.5rem;">600ms</div>
+      <div class="card-stat-lbl">Slow — Hero / Splash</div>
+    </div>
+  </div>
+
+  <h4 style="font-family:var(--font-display);font-weight:700;font-size:1.125rem;margin-bottom:var(--space-lg);">Easings</h4>
+  <div class="code-block">
+<span class="comment">/* Easings officiels AgriScan */</span>
+<span class="punctuation">:</span><span class="property">root</span> <span class="punctuation">{</span>
+  <span class="property">--ease-out</span><span class="punctuation">:</span>   <span class="value">cubic-bezier</span><span class="punctuation">(</span>0.16<span class="punctuation">,</span> 1<span class="punctuation">,</span> 0.3<span class="punctuation">,</span> 1<span class="punctuation">);</span>   <span class="comment">/* Apparitions */</span>
+  <span class="property">--ease-in</span><span class="punctuation">:</span>    <span class="value">cubic-bezier</span><span class="punctuation">(</span>0.4<span class="punctuation">,</span> 0<span class="punctuation">,</span> 1<span class="punctuation">,</span> 1<span class="punctuation">);</span>      <span class="comment">/* Disparitions */</span>
+  <span class="property">--ease-in-out</span><span class="punctuation">:</span> <span class="value">cubic-bezier</span><span class="punctuation">(</span>0.65<span class="punctuation">,</span> 0<span class="punctuation">,</span> 0.35<span class="punctuation">,</span> 1<span class="punctuation">);</span> <span class="comment">/* Continus */</span>
+  <span class="property">--ease-spring</span><span class="punctuation">:</span> <span class="value">cubic-bezier</span><span class="punctuation">(</span>0.34<span class="punctuation">,</span> 1.56<span class="punctuation">,</span> 0.64<span class="punctuation">,</span> 1<span class="punctuation">);</span> <span class="comment">/* Press */</span>
+<span class="punctuation">}</span></div>
+</section>
+
+<!-- ═══ 8. ICONOGRAPHIE ═══ -->
+<section id="icones" class="section">
+  <div class="section-label">08</div>
+  <h2 class="section-title">Iconographie</h2>
+  <p class="section-desc">Librairie Lucide Icons. Stroke 1.5px standard, 2px emphasis. Couleur currentColor. Icônes custom pour le domaine agricole.</p>
+
+  <h4 style="font-family:var(--font-display);font-weight:700;font-size:1.125rem;margin-bottom:var(--space-lg);">Icônes Lucide — Mapping Standard</h4>
+  <div class="icon-grid">
+    <div class="icon-cell">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+      <span>dashboard</span>
+    </div>
+    <div class="icon-cell">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 012-2h2"/><path d="M17 3h2a2 2 0 012 2v2"/><path d="M21 17v2a2 2 0 01-2 2h-2"/><path d="M7 21H5a2 2 0 01-2-2v-2"/><line x1="7" y1="12" x2="17" y2="12"/></svg>
+      <span>scan</span>
+    </div>
+    <div class="icon-cell">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      <span>history</span>
+    </div>
+    <div class="icon-cell">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 00-4-4H9a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span>user</span>
+    </div>
+    <div class="icon-cell">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      <span>settings</span>
+    </div>
+    <div class="icon-cell">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      <span>arrow-left</span>
+    </div>
+    <div class="icon-cell">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      <span>x</span>
+    </div>
+    <div class="icon-cell">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <span>search</span>
+    </div>
+    <div class="icon-cell">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <span>alert</span>
+    </div>
+    <div class="icon-cell">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      <span>check</span>
+    </div>
+    <div class="icon-cell">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+      <span>camera</span>
+    </div>
+    <div class="icon-cell">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      <span>send</span>
+    </div>
+    <div class="icon-cell">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+      <span>sprout</span>
+    </div>
+    <div class="icon-cell">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+      <span>bell</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 9. ÉCRANS ═══ -->
+<section id="ecrans" class="section">
+  <div class="section-label">09</div>
+  <h2 class="section-title">Écrans de Référence</h2>
+  <p class="section-desc">Les 5 écrans clés de l'application AgriScan.ai — spécifications visuelles et notes UX.</p>
+
+  <div class="screen-grid">
+    <div class="screen-mock">
+      <div class="screen-header">
+        <div class="screen-dot"></div>
+        <div class="screen-dot"></div>
+        <div class="screen-dot"></div>
+        <div class="screen-title-bar">Splash</div>
+      </div>
+      <div class="screen-body" style="background:var(--black);justify-content:center;align-items:center;min-height:280px;">
+        <div class="hero-logo" style="width:56px;height:56px;margin:0;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:28px;height:28px;">
+            <path d="M12 2C8 6 4 10 4 14c0 4 3.5 7 8 7s8-3 8-7c0-4-4-8-8-12z"/>
+            <path d="M12 2v19"/>
+            <line x1="5" y1="10" x2="19" y2="10" stroke-dasharray="2 1.5" opacity="0.8"/>
+          </svg>
+        </div>
+        <div style="font-family:var(--font-display);font-weight:800;font-size:1rem;color:var(--cream);margin-top:12px;">AgriScan<span style="color:var(--lime);">.ai</span></div>
+      </div>
+      <div class="screen-label">Splash Screen</div>
+    </div>
+
+    <div class="screen-mock">
+      <div class="screen-header">
+        <div class="screen-dot"></div><div class="screen-dot"></div><div class="screen-dot"></div>
+        <div class="screen-title-bar">Onboarding 1/3</div>
+      </div>
+      <div class="screen-body" style="background:var(--black);min-height:280px;">
+        <div style="flex:1;display:flex;align-items:center;justify-content:center;">
+          <div style="width:100px;height:100px;background:var(--forest);border-radius:var(--radius-xl);display:flex;align-items:center;justify-content:center;border:1px solid rgba(249,249,242,0.06);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="1.5" style="width:40px;height:40px;"><path d="M12 2C8 6 4 10 4 14c0 4 3.5 7 8 7s8-3 8-7c0-4-4-8-8-12z"/><path d="M12 2v19"/><circle cx="9" cy="10" r="1.5" fill="var(--error)" stroke="none" opacity="0.6"/></svg>
+          </div>
+        </div>
+        <div style="font-family:var(--font-display);font-weight:800;font-size:1.5rem;color:var(--cream);line-height:1.1;">Vos cultures sont-elles en danger ?</div>
+        <div style="font-size:0.8125rem;color:rgba(249,249,242,0.40);">Chaque jour, des maladies menacent vos rendements.</div>
+        <div style="display:flex;gap:6px;justify-content:center;margin-top:8px;">
+          <div style="width:6px;height:6px;border-radius:50%;background:var(--lime);"></div>
+          <div style="width:6px;height:6px;border-radius:50%;background:rgba(249,249,242,0.15);"></div>
+          <div style="width:6px;height:6px;border-radius:50%;background:rgba(249,249,242,0.15);"></div>
+        </div>
+      </div>
+      <div class="screen-label">Onboarding</div>
+    </div>
+
+    <div class="screen-mock">
+      <div class="screen-header">
+        <div class="screen-dot"></div><div class="screen-dot"></div><div class="screen-dot"></div>
+        <div class="screen-title-bar">Dashboard</div>
+      </div>
+      <div class="screen-body" style="background:var(--black);min-height:280px;">
+        <div style="font-family:var(--font-display);font-weight:800;font-size:1.125rem;color:var(--cream);">Bonjour, Jean</div>
+        <div style="background:rgba(10,27,14,0.60);border:1px solid rgba(249,249,242,0.06);border-radius:8px;padding:12px;">
+          <div style="font-size:0.625rem;color:rgba(249,249,242,0.30);text-transform:uppercase;letter-spacing:.04em;">Cultures suivies</div>
+          <div style="display:flex;gap:16px;margin-top:8px;">
+            <div style="text-align:center;"><div style="font-family:var(--font-mono);font-weight:700;font-size:1.25rem;color:var(--lime);">12</div><div style="font-size:0.5625rem;color:rgba(249,249,242,0.25);">blé</div></div>
+            <div style="text-align:center;"><div style="font-family:var(--font-mono);font-weight:700;font-size:1.25rem;color:var(--lime);">8</div><div style="font-size:0.5625rem;color:rgba(249,249,242,0.25);">maïs</div></div>
+            <div style="text-align:center;"><div style="font-family:var(--font-mono);font-weight:700;font-size:1.25rem;color:var(--lime);">5</div><div style="font-size:0.5625rem;color:rgba(249,249,242,0.25);">soja</div></div>
+          </div>
+        </div>
+        <div style="background:rgba(255,180,67,0.06);border:1px solid rgba(255,180,67,0.20);border-radius:8px;padding:10px;display:flex;align-items:center;gap:8px;">
+          <span style="font-size:0.75rem;">⚠️</span>
+          <span style="font-size:0.75rem;color:var(--cream);">Rouille du blé détectée · Il y a 2h</span>
+        </div>
+      </div>
+      <div class="screen-tab-bar">
+        <div class="screen-tab active"></div>
+        <div class="screen-tab"></div>
+        <div class="screen-tab"></div>
+        <div class="screen-tab"></div>
+        <div class="screen-tab"></div>
+      </div>
+      <div class="screen-label">Home Dashboard</div>
+    </div>
+
+    <div class="screen-mock">
+      <div class="screen-header">
+        <div class="screen-dot"></div><div class="screen-dot"></div><div class="screen-dot"></div>
+        <div class="screen-title-bar">Chat Diagnostic</div>
+      </div>
+      <div class="screen-body" style="background:var(--black);min-height:280px;">
+        <div class="chat-msg ai" style="font-size:0.75rem;max-width:100%;">🤖 Bonjour ! Décrivez les symptômes ou prenez une photo.</div>
+        <div class="chat-msg user" style="font-size:0.75rem;max-width:80%;margin-left:auto;">Taches jaunes sur les feuilles</div>
+        <div class="chat-msg ai" style="font-size:0.75rem;max-width:100%;">Quelle culture est concernée ?</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <span style="font-size:0.625rem;padding:4px 10px;border:1px solid rgba(212,255,80,0.25);border-radius:999px;color:var(--lime);">Blé</span>
+          <span style="font-size:0.625rem;padding:4px 10px;border:1px solid rgba(212,255,80,0.25);border-radius:999px;color:var(--lime);">Maïs</span>
+          <span style="font-size:0.625rem;padding:4px 10px;border:1px solid rgba(212,255,80,0.25);border-radius:999px;color:var(--lime);">Soja</span>
+        </div>
+        <div class="chat-msg ai" style="font-size:0.75rem;max-width:50%;padding:8px 10px;">
+          <div class="typing-dots">
+            <div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>
+          </div>
+        </div>
+        <div style="margin-top:auto;background:var(--slate);border-radius:999px;padding:8px 14px;display:flex;align-items:center;gap:8px;">
+          <span style="font-size:0.75rem;color:rgba(249,249,242,0.30);flex:1;">Message...</span>
+          <span style="font-size:0.625rem;color:var(--lime);">➤</span>
+        </div>
+      </div>
+      <div class="screen-label">Chat Diagnostic</div>
+    </div>
+
+    <div class="screen-mock">
+      <div class="screen-header">
+        <div class="screen-dot"></div><div class="screen-dot"></div><div class="screen-dot"></div>
+        <div class="screen-title-bar">Résultat</div>
+      </div>
+      <div class="screen-body" style="background:var(--black);min-height:280px;">
+        <div style="background:var(--forest);border:1px solid rgba(212,255,80,0.15);border-radius:12px;height:100px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
+          <span style="color:rgba(249,249,242,0.10);font-size:2rem;">🌿</span>
+        </div>
+        <div style="font-size:0.5625rem;color:var(--error);text-transform:uppercase;letter-spacing:.08em;">⚠ Maladie détectée</div>
+        <div style="font-family:var(--font-display);font-weight:800;font-size:1.25rem;color:var(--cream);">Rouille jaune du blé</div>
+        <div style="display:flex;gap:6px;">
+          <span class="badge badge-warning">⚠ 75%</span>
+          <span class="badge badge-info" style="background:rgba(58,224,134,0.12);color:var(--success);">🌾 Blé</span>
+        </div>
+        <div style="background:rgba(10,27,14,0.60);border:1px solid rgba(249,249,242,0.06);border-radius:8px;padding:8px;">
+          <div style="font-family:var(--font-mono);font-size:0.625rem;color:rgba(249,249,242,0.30);">CONFIANCE IA</div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:4px;">
+            <div style="flex:1;height:4px;background:var(--slate);border-radius:2px;overflow:hidden;"><div style="width:92%;height:100%;background:var(--lime);border-radius:2px;"></div></div>
+            <span style="font-family:var(--font-mono);font-weight:700;font-size:0.75rem;color:var(--lime);">92%</span>
+          </div>
+        </div>
+        <div class="btn btn-primary btn-sm" style="align-self:stretch;">Voir les recommandations</div>
+      </div>
+      <div class="screen-label">Résultat Diagnostic</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 10. CSS TOKENS ═══ -->
+<section id="tokens" class="section">
+  <div class="section-label">10</div>
+  <h2 class="section-title">Variables CSS</h2>
+  <p class="section-desc">Design tokens complets prêts à l'emploi. Copiez ce bloc dans votre projet pour disposer de tout le design system AgriScan.</p>
+
+  <div class="code-block">
+<span class="comment">/* ══════════════════════════════════════════════════
+   AGRISCAN.AI — DESIGN TOKENS v1.0
+   Direction : SYNAPSE — Dark Tech Cinématique × Nature
+   ══════════════════════════════════════════════════ */</span>
+
+<span class="punctuation">:</span><span class="property">root</span> <span class="punctuation">{</span>
+  <span class="comment">/* ── Couleurs Principales ── */</span>
+  <span class="property">--color-black</span><span class="punctuation">:</span> <span class="value">#050D07</span><span class="punctuation">;</span>
+  <span class="property">--color-forest-green</span><span class="punctuation">:</span> <span class="value">#0A1B0E</span><span class="punctuation">;</span>
+  <span class="property">--color-cream</span><span class="punctuation">:</span> <span class="value">#F9F9F2</span><span class="punctuation">;</span>
+  <span class="property">--color-lime</span><span class="punctuation">:</span> <span class="value">#D4FF50</span><span class="punctuation">;</span>
+  <span class="property">--color-slate</span><span class="punctuation">:</span> <span class="value">#2D3A2F</span><span class="punctuation">;</span>
+
+  <span class="comment">/* ── Couleurs Sémantiques ── */</span>
+  <span class="property">--color-success</span><span class="punctuation">:</span> <span class="value">#3AE086</span><span class="punctuation">;</span>
+  <span class="property">--color-error</span><span class="punctuation">:</span> <span class="value">#FF4E5C</span><span class="punctuation">;</span>
+  <span class="property">--color-warning</span><span class="punctuation">:</span> <span class="value">#FFB443</span><span class="punctuation">;</span>
+  <span class="property">--color-info</span><span class="punctuation">:</span> <span class="value">#4DAAFF</span><span class="punctuation">;</span>
+
+  <span class="comment">/* ── Typographie ── */</span>
+  <span class="property">--font-display</span><span class="punctuation">:</span> <span class="string">'Plus Jakarta Sans'</span><span class="punctuation">,</span> <span class="value">sans-serif</span><span class="punctuation">;</span>
+  <span class="property">--font-body</span><span class="punctuation">:</span> <span class="string">'Inter'</span><span class="punctuation">,</span> <span class="value">sans-serif</span><span class="punctuation">;</span>
+  <span class="property">--font-mono</span><span class="punctuation">:</span> <span class="string">'JetBrains Mono'</span><span class="punctuation">,</span> <span class="value">monospace</span><span class="punctuation">;</span>
+
+  <span class="comment">/* ── Border Radius ── */</span>
+  <span class="property">--radius-sm</span><span class="punctuation">:</span> <span class="value">4px</span><span class="punctuation">;</span>
+  <span class="property">--radius-md</span><span class="punctuation">:</span> <span class="value">8px</span><span class="punctuation">;</span>
+  <span class="property">--radius-lg</span><span class="punctuation">:</span> <span class="value">12px</span><span class="punctuation">;</span>
+  <span class="property">--radius-xl</span><span class="punctuation">:</span> <span class="value">16px</span><span class="punctuation">;</span>
+  <span class="property">--radius-squircle</span><span class="punctuation">:</span> <span class="value">28px</span><span class="punctuation">;</span>
+  <span class="property">--radius-full</span><span class="punctuation">:</span> <span class="value">9999px</span><span class="punctuation">;</span>
+
+  <span class="comment">/* ── Espacement ── */</span>
+  <span class="property">--space-xs</span><span class="punctuation">:</span> <span class="value">4px</span><span class="punctuation">;</span>
+  <span class="property">--space-sm</span><span class="punctuation">:</span> <span class="value">8px</span><span class="punctuation">;</span>
+  <span class="property">--space-md</span><span class="punctuation">:</span> <span class="value">12px</span><span class="punctuation">;</span>
+  <span class="property">--space-lg</span><span class="punctuation">:</span> <span class="value">16px</span><span class="punctuation">;</span>
+  <span class="property">--space-xl</span><span class="punctuation">:</span> <span class="value">24px</span><span class="punctuation">;</span>
+  <span class="property">--space-2xl</span><span class="punctuation">:</span> <span class="value">32px</span><span class="punctuation">;</span>
+  <span class="property">--space-3xl</span><span class="punctuation">:</span> <span class="value">48px</span><span class="punctuation">;</span>
+  <span class="property">--space-4xl</span><span class="punctuation">:</span> <span class="value">64px</span><span class="punctuation">;</span>
+
+  <span class="comment">/* ── Animations ── */</span>
+  <span class="property">--duration-fast</span><span class="punctuation">:</span> <span class="value">150ms</span><span class="punctuation">;</span>
+  <span class="property">--duration-normal</span><span class="punctuation">:</span> <span class="value">300ms</span><span class="punctuation">;</span>
+  <span class="property">--duration-slow</span><span class="punctuation">:</span> <span class="value">600ms</span><span class="punctuation">;</span>
+  <span class="property">--ease-out</span><span class="punctuation">:</span> <span class="value">cubic-bezier</span><span class="punctuation">(</span>0.16<span class="punctuation">,</span> 1<span class="punctuation">,</span> 0.3<span class="punctuation">,</span> 1<span class="punctuation">);</span>
+  <span class="property">--ease-spring</span><span class="punctuation">:</span> <span class="value">cubic-bezier</span><span class="punctuation">(</span>0.34<span class="punctuation">,</span> 1.56<span class="punctuation">,</span> 0.64<span class="punctuation">,</span> 1<span class="punctuation">);</span>
+
+  <span class="comment">/* ── Glassmorphism ── */</span>
+  <span class="property">--glass-bg</span><span class="punctuation">:</span> <span class="value">rgba</span><span class="punctuation">(</span>10<span class="punctuation">,</span> 27<span class="punctuation">,</span> 14<span class="punctuation">,</span> 0.55<span class="punctuation">);</span>
+  <span class="property">--glass-blur</span><span class="punctuation">:</span> <span class="value">blur</span><span class="punctuation">(</span>16px<span class="punctuation">);</span>
+  <span class="property">--glass-border</span><span class="punctuation">:</span> <span class="value">1px solid rgba</span><span class="punctuation">(</span>249<span class="punctuation">,</span> 249<span class="punctuation">,</span> 242<span class="punctuation">,</span> 0.06<span class="punctuation">);</span>
+<span class="punctuation">}</span></div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="footer">
+  <div class="footer-logo">AgriScan<span>.ai</span></div>
+  <p class="footer-text">Charte Graphique v1.0 — Mai 2026 · Projet Bachelor 2025/2026 · Chambre d'Agriculture</p>
+  <p class="footer-text" style="margin-top:4px;">Direction SYNAPSE — Dark Tech Cinématique × Nature</p>
+</footer>
+
+<script>
+  // ═══ Active nav link on scroll ═══
+  const sections = document.querySelectorAll('.section, .hero');
+  const navLinks = document.querySelectorAll('.nav-link');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id || '';
+        navLinks.forEach(link => {
+          link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+        });
+        if (!id) {
+          navLinks.forEach(link => link.classList.remove('active'));
+        }
+      }
+    });
+  }, { rootMargin: '-40% 0px -55% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>
