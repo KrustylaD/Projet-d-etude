@@ -1920,7 +1920,14 @@ body {
   </div>
 
   <h4 style="font-family:var(--font-display);font-weight:700;font-size:1.125rem;margin-bottom:var(--space-lg);">Easings</h4>
-  <div class="code-block">
+  <div class="code-panel-header">
+    <span class="code-panel-label">CSS</span>
+    <button class="copy-btn" onclick="copyCode(this, 'code-block-easings')">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      Copier
+    </button>
+  </div>
+  <div class="code-block" id="code-block-easings">
 <span class="comment">/* Easings officiels AgriScan */</span>
 <span class="punctuation">:</span><span class="property">root</span> <span class="punctuation">{</span>
   <span class="property">--ease-out</span><span class="punctuation">:</span>   <span class="value">cubic-bezier</span><span class="punctuation">(</span>0.16<span class="punctuation">,</span> 1<span class="punctuation">,</span> 0.3<span class="punctuation">,</span> 1<span class="punctuation">);</span>   <span class="comment">/* Apparitions */</span>
@@ -2138,7 +2145,14 @@ body {
   <h2 class="section-title">Variables CSS</h2>
   <p class="section-desc">Design tokens complets prêts à l'emploi. Copiez ce bloc dans votre projet pour disposer de tout le design system AgriScan.</p>
 
-  <div class="code-block">
+  <div class="code-panel-header">
+    <span class="code-panel-label">CSS</span>
+    <button class="copy-btn" onclick="copyCode(this, 'code-block-tokens')">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      Copier
+    </button>
+  </div>
+  <div class="code-block" id="code-block-tokens">
 <span class="comment">/* ══════════════════════════════════════════════════
    AGRISCAN.AI — DESIGN TOKENS v1.0
    Direction : SYNAPSE — Dark Tech Cinématique × Nature
