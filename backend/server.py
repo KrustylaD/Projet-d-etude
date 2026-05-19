@@ -64,6 +64,7 @@ class DiagnosticCreate(BaseModel):
     culture: str
     symptoms: str
     location: Optional[str] = None
+    image_base64: Optional[str] = None
 
 class DiagnosticResponse(BaseModel):
     id: str
@@ -185,12 +186,70 @@ async def get_user(uid: str):
             phone_number=user.get("phone_number"),
             farm_name=user.get("farm_name"),
             location=user.get("location"),
+            photo_url=user.get("photo_url"),
             created_at=user["created_at"]
         )
     except HTTPException:
         raise
     except Exception as e:
         logger.error(f"Get user error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.patch("/users/{uid}")
+async def update_user(uid: str, user_update: UserUpdate):
+    """Mettre à jour le profil utilisateur"""
+    try:
+        update_data = {k: v for k, v in user_update.dict().items() if v is not None}
+        
+        if not update_data:
+            raise HTTPException(status_code=400, detail="No data to update")
+        
+        result = await db.users.update_one(
+            {"uid": uid},
+            {"$set": update_data}
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        user = await db.users.find_one({"uid": uid})
+        return UserResponse(
+            uid=user["uid"],
+            email=user["email"],
+            display_name=user["display_name"],
+            phone_number=user.get("phone_number"),
+            farm_name=user.get("farm_name"),
+            location=user.get("location"),
+            photo_url=user.get("photo_url"),
+            created_at=user["created_at"]
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Update user error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.patch("/users/{uid}/password")
+async def update_password(uid: str, password_update: PasswordUpdate):
+    """Changer le mot de passe"""
+    try:
+        user = await db.users.find_one({"uid": uid})
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        if user["password"] != password_update.old_password:
+            raise HTTPException(status_code=401, detail="Incorrect old password")
+        
+        result = await db.users.update_one(
+            {"uid": uid},
+            {"$set": {"password": password_update.new_password}}
+        )
+        
+        return {"message": "Password updated successfully"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Update password error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 # ============= DIAGNOSTIC ENDPOINTS =============
