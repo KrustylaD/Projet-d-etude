@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 64" fill="none">
+  <rect x="0" y="0" width="64" height="64" rx="28" fill="#0A1B0E"/>
+  <rect x="0" y="0" width="64" height="64" rx="28" stroke="#F9F9F2" stroke-opacity="0.08" stroke-width="1"/>
+
+  <g transform="translate(14, 14) scale(1.5)" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 2C8 6 4 10 4 14c0 4 3.5 7 8 7s8-3 8-7c0-4-4-8-8-12z" fill="none" stroke="#F9F9F2" stroke-width="1.5"/>
+    <path d="M12 2v19" fill="none" stroke="#F9F9F2" stroke-width="1.5"/>
+    <line x1="5" y1="10" x2="19" y2="10" stroke="#D4FF50" stroke-width="1.5" stroke-dasharray="2 1.5" opacity="0.6"/>
+    <line x1="6" y1="14" x2="18" y2="14" stroke="#D4FF50" stroke-width="1.5" stroke-dasharray="2 1.5" opacity="0.4"/>
+  </g>
+
+  <text x="76" y="42" font-family="'Plus Jakarta Sans','Inter',sans-serif" font-weight="800" font-size="23" fill="#F9F9F2" letter-spacing="-0.02em">AgriScan<tspan fill="#D4FF50">.ai</tspan></text>
+</svg>
