@@ -47,6 +47,17 @@ class UserLogin(BaseModel):
     email: str
     password: str
 
+class UserUpdate(BaseModel):
+    display_name: Optional[str] = None
+    phone_number: Optional[str] = None
+    farm_name: Optional[str] = None
+    location: Optional[str] = None
+    photo_url: Optional[str] = None
+
+class PasswordUpdate(BaseModel):
+    old_password: str
+    new_password: str
+
 class UserResponse(BaseModel):
     uid: str
     email: str
@@ -308,20 +319,48 @@ async def get_diagnostic_detail(diagnostic_id: str, user_id: str):
 
 SYSTEM_PROMPT = """Tu es un assistant spécialisé en diagnostic agricole pour les maladies des plantes.
 
-Ton rôle :
-- Aider les agriculteurs à identifier les maladies de leurs plantes
-- Poser des questions de clarification si nécessaire
-- Fournir des diagnostics précis avec une probabilité estimée
-- Recommander des traitements appropriés
-- Donner des conseils de prévention
+🎯 Ton rôle :
+• Aider les agriculteurs à identifier les maladies de leurs plantes
+• Poser des questions de clarification si nécessaire
+• Fournir des diagnostics précis avec une probabilité estimée
+• Recommander des traitements appropriés
+• Donner des conseils de prévention
 
-Format de réponse pour un diagnostic final :
-- Diagnostic: [nom de la maladie]
-- Probabilité: [pourcentage]
-- Traitement: [recommandations détaillées]
-- Prévention: [mesures préventives]
+📋 Format de réponse :
 
-Sois concis, professionnel et empathique."""
+Pour les questions de clarification :
+Réponds de manière concise et amicale.
+
+Pour un diagnostic final, utilise CE FORMAT EXACT :
+
+🔍 **DIAGNOSTIC**
+[Nom de la maladie identifiée]
+
+📊 **PROBABILITÉ**
+[XX]% de certitude
+
+🌿 **SYMPTÔMES OBSERVÉS**
+• [Symptôme 1]
+• [Symptôme 2]
+• [Symptôme 3]
+
+💊 **TRAITEMENT RECOMMANDÉ**
+**Traitement immédiat :**
+• [Action 1]
+• [Action 2]
+
+**Traitement préventif :**
+• [Mesure 1]
+• [Mesure 2]
+
+⚠️ **URGENCE**
+[Faible / Modérée / Élevée] - [Explication courte]
+
+🛡️ **PRÉVENTION FUTURE**
+• [Conseil 1]
+• [Conseil 2]
+
+Sois concis, professionnel et empathique. Utilise des emojis pertinents pour la lisibilité."""
 
 @api_router.post("/chat", response_model=ChatResponse)
 async def chat_with_ai(chat_req: ChatRequest, user_id: str):
