@@ -124,6 +124,7 @@ credentials.json
 *.pem
 *.key
 .credentials
+<<<<<<< HEAD
 -e 
 # Environment and credential files
 .env
@@ -133,3 +134,6 @@ credentials.json
 *.pem
 *.key
 .credentials
+=======
+graphify-out/
+>>>>>>> 0fd3ca7 (Add 'graphify-out/' to .gitignore to exclude generated output files)
