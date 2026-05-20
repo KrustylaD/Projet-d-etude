@@ -519,6 +519,9 @@ async def create_alert(alert: AlertCreate, user_id: str):
             "message": alert.message,
             "severity": alert.severity,
             "read": False,
+            "latitude": alert.latitude,
+            "longitude": alert.longitude,
+            "location_name": alert.location_name,
             "created_at": datetime.utcnow()
         }
         

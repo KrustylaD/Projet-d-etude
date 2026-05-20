@@ -7,25 +7,86 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   RefreshControl,
+  Alert as RNAlert,
 } from 'react-native';
 import { useAuthStore } from '../../src/store/authStore';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Alert as AlertType } from '../../src/types';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
+import { AlertsMap, MapAlert } from '../../src/components/AlertsMap';
+
+interface AlertItem {
+  id: string;
+  user_id: string;
+  type: string;
+  message: string;
+  severity: 'info' | 'warning' | 'critical' | string;
+  read: boolean;
+  latitude?: number | null;
+  longitude?: number | null;
+  location_name?: string | null;
+  created_at: string;
+}
+
+const DEMO_ALERTS: Array<Omit<AlertItem, 'id' | 'user_id' | 'read' | 'created_at'>> = [
+  {
+    type: 'maladie',
+    message: 'Mildiou détecté sur tomates - Parcelle Sud',
+    severity: 'critical',
+    latitude: 43.6047,
+    longitude: 1.4442,
+    location_name: 'Toulouse, Haute-Garonne',
+  },
+  {
+    type: 'météo',
+    message: 'Risque de gel cette nuit - Protégez les jeunes pousses',
+    severity: 'warning',
+    latitude: 45.7640,
+    longitude: 4.8357,
+    location_name: 'Lyon, Auvergne-Rhône-Alpes',
+  },
+  {
+    type: 'recommandation',
+    message: 'Période idéale pour la taille des oliviers',
+    severity: 'info',
+    latitude: 43.2965,
+    longitude: 5.3698,
+    location_name: 'Marseille, Bouches-du-Rhône',
+  },
+  {
+    type: 'maladie',
+    message: 'Pucerons signalés dans la région - Surveillez vos cultures',
+    severity: 'warning',
+    latitude: 48.5734,
+    longitude: 7.7521,
+    location_name: 'Strasbourg, Grand Est',
+  },
+  {
+    type: 'météo',
+    message: 'Forte chaleur prévue - Augmentez l\'irrigation',
+    severity: 'warning',
+    latitude: 44.8378,
+    longitude: -0.5792,
+    location_name: 'Bordeaux, Nouvelle-Aquitaine',
+  },
+];
 
 export default function AlertsScreen() {
   const { user } = useAuthStore();
-  const [alerts, setAlerts] = useState<AlertType[]>([]);
+  const [alerts, setAlerts] = useState<AlertItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
+  const [view, setView] = useState<'list' | 'map'>('list');
+  const [seeding, setSeeding] = useState(false);
 
   const fetchAlerts = async () => {
-    if (!user) return;
-
+    if (!user) {
+      setLoading(false);
+      return;
+    }
     try {
       const unreadParam = filter === 'unread' ? '?unread_only=true' : '';
       const response = await fetch(
@@ -43,6 +104,7 @@ export default function AlertsScreen() {
 
   useEffect(() => {
     fetchAlerts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, filter]);
 
   const onRefresh = () => {
@@ -56,15 +118,34 @@ export default function AlertsScreen() {
         `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/alerts/${alertId}/read?user_id=${user?.uid}`,
         { method: 'PATCH' }
       );
-      
-      // Update local state
       setAlerts((prev) =>
-        prev.map((alert) =>
-          alert.id === alertId ? { ...alert, read: true } : alert
-        )
+        prev.map((a) => (a.id === alertId ? { ...a, read: true } : a))
       );
     } catch (error) {
       console.error('Error marking alert as read:', error);
+    }
+  };
+
+  const seedDemoAlerts = async () => {
+    if (!user) return;
+    setSeeding(true);
+    try {
+      for (const demo of DEMO_ALERTS) {
+        await fetch(
+          `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/alerts?user_id=${user.uid}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(demo),
+          }
+        );
+      }
+      await fetchAlerts();
+    } catch (error) {
+      console.error('Error seeding alerts:', error);
+      RNAlert.alert('Erreur', 'Impossible de créer les alertes de démo');
+    } finally {
+      setSeeding(false);
     }
   };
 
@@ -116,6 +197,15 @@ export default function AlertsScreen() {
   }
 
   const unreadCount = alerts.filter((a) => !a.read).length;
+  const mapAlerts: MapAlert[] = alerts.map((a) => ({
+    id: a.id,
+    message: a.message,
+    severity: a.severity,
+    type: a.type,
+    latitude: a.latitude ?? undefined,
+    longitude: a.longitude ?? undefined,
+    location_name: a.location_name ?? undefined,
+  }));
 
   return (
     <LinearGradient colors={['#1a2f1a', '#0a1a0a', '#000000']} style={styles.container}>
@@ -127,101 +217,186 @@ export default function AlertsScreen() {
               <Text style={styles.headerSubtitle}>{unreadCount} non lues</Text>
             )}
           </View>
-          <Ionicons name="notifications" size={28} color="#4ade80" />
+          <View style={styles.headerActions}>
+            <TouchableOpacity
+              onPress={seedDemoAlerts}
+              disabled={seeding}
+              style={styles.seedButton}
+              activeOpacity={0.8}
+            >
+              {seeding ? (
+                <ActivityIndicator color="#4ade80" size="small" />
+              ) : (
+                <Ionicons name="add-circle" size={28} color="#4ade80" />
+              )}
+            </TouchableOpacity>
+          </View>
         </View>
 
-        {/* Filter Tabs */}
-        <View style={styles.filterTabs}>
+        {/* View toggle (List / Map) */}
+        <View style={styles.viewToggle}>
           <TouchableOpacity
-            style={[styles.tab, filter === 'all' && styles.tabActive]}
-            onPress={() => setFilter('all')}
+            style={[styles.toggleBtn, view === 'list' && styles.toggleBtnActive]}
+            onPress={() => setView('list')}
+            activeOpacity={0.8}
           >
-            <Text style={[styles.tabText, filter === 'all' && styles.tabTextActive]}>
-              Toutes
+            <Ionicons name="list" size={18} color={view === 'list' ? '#000' : '#a3a3a3'} />
+            <Text style={[styles.toggleText, view === 'list' && styles.toggleTextActive]}>
+              Liste
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.tab, filter === 'unread' && styles.tabActive]}
-            onPress={() => setFilter('unread')}
+            style={[styles.toggleBtn, view === 'map' && styles.toggleBtnActive]}
+            onPress={() => setView('map')}
+            activeOpacity={0.8}
           >
-            <Text style={[styles.tabText, filter === 'unread' && styles.tabTextActive]}>
-              Non lues {unreadCount > 0 && `(${unreadCount})`}
+            <Ionicons name="map" size={18} color={view === 'map' ? '#000' : '#a3a3a3'} />
+            <Text style={[styles.toggleText, view === 'map' && styles.toggleTextActive]}>
+              Carte
             </Text>
           </TouchableOpacity>
         </View>
 
-        <ScrollView
-          contentContainerStyle={styles.scrollContent}
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={onRefresh}
-              tintColor="#4ade80"
-            />
-          }
-        >
-          {alerts.length === 0 ? (
-            <View style={styles.emptyState}>
-              <Ionicons name="notifications-off-outline" size={64} color="#666" />
-              <Text style={styles.emptyText}>
-                {filter === 'unread' ? 'Aucune alerte non lue' : 'Aucune alerte'}
+        {view === 'list' && (
+          <View style={styles.filterTabs}>
+            <TouchableOpacity
+              style={[styles.tab, filter === 'all' && styles.tabActive]}
+              onPress={() => setFilter('all')}
+            >
+              <Text style={[styles.tabText, filter === 'all' && styles.tabTextActive]}>
+                Toutes
               </Text>
-            </View>
-          ) : (
-            alerts.map((alert) => (
-              <TouchableOpacity
-                key={alert.id}
-                style={[styles.alertCard, !alert.read && styles.alertCardUnread]}
-                onPress={() => !alert.read && markAsRead(alert.id)}
-                activeOpacity={0.7}
-              >
-                <View style={styles.alertHeader}>
-                  <View
-                    style={[
-                      styles.alertIconContainer,
-                      { backgroundColor: `${getSeverityColor(alert.severity)}20` },
-                    ]}
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.tab, filter === 'unread' && styles.tabActive]}
+              onPress={() => setFilter('unread')}
+            >
+              <Text style={[styles.tabText, filter === 'unread' && styles.tabTextActive]}>
+                Non lues {unreadCount > 0 && `(${unreadCount})`}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
+        {view === 'map' ? (
+          <View style={styles.mapContainer}>
+            {alerts.length === 0 ? (
+              <View style={styles.emptyState}>
+                <Ionicons name="map-outline" size={64} color="#666" />
+                <Text style={styles.emptyText}>Aucune alerte à afficher sur la carte</Text>
+                <TouchableOpacity
+                  style={styles.demoButton}
+                  onPress={seedDemoAlerts}
+                  disabled={seeding}
+                  activeOpacity={0.85}
+                >
+                  {seeding ? (
+                    <ActivityIndicator color="#000" />
+                  ) : (
+                    <>
+                      <Ionicons name="sparkles" size={18} color="#000" />
+                      <Text style={styles.demoButtonText}>Générer des alertes de démo</Text>
+                    </>
+                  )}
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <AlertsMap alerts={mapAlerts} />
+            )}
+          </View>
+        ) : (
+          <ScrollView
+            contentContainerStyle={styles.scrollContent}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+                tintColor="#4ade80"
+              />
+            }
+          >
+            {alerts.length === 0 ? (
+              <View style={styles.emptyState}>
+                <Ionicons name="notifications-off-outline" size={64} color="#666" />
+                <Text style={styles.emptyText}>
+                  {filter === 'unread' ? 'Aucune alerte non lue' : 'Aucune alerte'}
+                </Text>
+                {filter === 'all' && (
+                  <TouchableOpacity
+                    style={styles.demoButton}
+                    onPress={seedDemoAlerts}
+                    disabled={seeding}
+                    activeOpacity={0.85}
                   >
-                    <Ionicons
-                      name={getSeverityIcon(alert.severity)}
-                      size={24}
-                      color={getSeverityColor(alert.severity)}
-                    />
-                  </View>
-                  <View style={styles.alertContent}>
-                    <View style={styles.alertMeta}>
-                      <View style={styles.alertTypeContainer}>
-                        <Ionicons
-                          name={getTypeIcon(alert.type)}
-                          size={14}
-                          color="#4ade80"
-                        />
-                        <Text style={styles.alertType}>{alert.type}</Text>
-                      </View>
-                      <Text style={styles.alertDate}>
-                        {format(new Date(alert.created_at), 'dd MMM HH:mm', { locale: fr })}
-                      </Text>
+                    {seeding ? (
+                      <ActivityIndicator color="#000" />
+                    ) : (
+                      <>
+                        <Ionicons name="sparkles" size={18} color="#000" />
+                        <Text style={styles.demoButtonText}>Générer des alertes de démo</Text>
+                      </>
+                    )}
+                  </TouchableOpacity>
+                )}
+              </View>
+            ) : (
+              alerts.map((alert) => (
+                <TouchableOpacity
+                  key={alert.id}
+                  style={[styles.alertCard, !alert.read && styles.alertCardUnread]}
+                  onPress={() => !alert.read && markAsRead(alert.id)}
+                  activeOpacity={0.7}
+                >
+                  <View style={styles.alertHeader}>
+                    <View
+                      style={[
+                        styles.alertIconContainer,
+                        { backgroundColor: `${getSeverityColor(alert.severity)}20` },
+                      ]}
+                    >
+                      <Ionicons
+                        name={getSeverityIcon(alert.severity)}
+                        size={24}
+                        color={getSeverityColor(alert.severity)}
+                      />
                     </View>
-                    <Text style={styles.alertMessage}>{alert.message}</Text>
+                    <View style={styles.alertContent}>
+                      <View style={styles.alertMeta}>
+                        <View style={styles.alertTypeContainer}>
+                          <Ionicons
+                            name={getTypeIcon(alert.type)}
+                            size={14}
+                            color="#4ade80"
+                          />
+                          <Text style={styles.alertType}>{alert.type}</Text>
+                        </View>
+                        <Text style={styles.alertDate}>
+                          {format(new Date(alert.created_at), 'dd MMM HH:mm', { locale: fr })}
+                        </Text>
+                      </View>
+                      <Text style={styles.alertMessage}>{alert.message}</Text>
+                      {alert.location_name && (
+                        <View style={styles.locationRow}>
+                          <Ionicons name="location-outline" size={12} color="#4ade80" />
+                          <Text style={styles.locationText}>{alert.location_name}</Text>
+                        </View>
+                      )}
+                    </View>
                   </View>
-                </View>
-                {!alert.read && <View style={styles.unreadIndicator} />}
-              </TouchableOpacity>
-            ))
-          )}
-        </ScrollView>
+                  {!alert.read && <View style={styles.unreadIndicator} />}
+                </TouchableOpacity>
+              ))
+            )}
+          </ScrollView>
+        )}
       </SafeAreaView>
     </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  safeArea: {
-    flex: 1,
-  },
+  container: { flex: 1 },
+  safeArea: { flex: 1 },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -229,6 +404,11 @@ const styles = StyleSheet.create({
     padding: 20,
     borderBottomWidth: 1,
     borderBottomColor: '#1a1a1a',
+  },
+  headerActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
   headerTitle: {
     fontSize: 28,
@@ -240,6 +420,40 @@ const styles = StyleSheet.create({
     color: '#4ade80',
     marginTop: 4,
   },
+  seedButton: {
+    width: 36,
+    height: 36,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  viewToggle: {
+    flexDirection: 'row',
+    marginHorizontal: 20,
+    marginTop: 16,
+    backgroundColor: '#1a1a1a',
+    borderRadius: 12,
+    padding: 4,
+    borderWidth: 1,
+    borderColor: '#2a2a2a',
+  },
+  toggleBtn: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 6,
+    paddingVertical: 10,
+    borderRadius: 8,
+  },
+  toggleBtnActive: {
+    backgroundColor: '#4ade80',
+  },
+  toggleText: {
+    color: '#a3a3a3',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  toggleTextActive: { color: '#000' },
   filterTabs: {
     flexDirection: 'row',
     padding: 20,
@@ -265,13 +479,18 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#a3a3a3',
   },
-  tabTextActive: {
-    color: '#000',
-  },
+  tabTextActive: { color: '#000' },
   scrollContent: {
     padding: 20,
     paddingTop: 0,
     paddingBottom: 32,
+  },
+  mapContainer: {
+    flex: 1,
+    margin: 20,
+    marginTop: 16,
+    borderRadius: 12,
+    overflow: 'hidden',
   },
   loadingContainer: {
     flex: 1,
@@ -286,6 +505,22 @@ const styles = StyleSheet.create({
     color: '#666',
     fontSize: 16,
     marginTop: 16,
+    textAlign: 'center',
+  },
+  demoButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: '#4ade80',
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 24,
+    marginTop: 20,
+  },
+  demoButtonText: {
+    color: '#000',
+    fontWeight: '700',
+    fontSize: 14,
   },
   alertCard: {
     backgroundColor: '#1a1a1a',
@@ -311,9 +546,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginRight: 12,
   },
-  alertContent: {
-    flex: 1,
-  },
+  alertContent: { flex: 1 },
   alertMeta: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -339,6 +572,17 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: '#ffffff',
     lineHeight: 22,
+  },
+  locationRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    marginTop: 8,
+  },
+  locationText: {
+    fontSize: 12,
+    color: '#4ade80',
+    fontWeight: '500',
   },
   unreadIndicator: {
     position: 'absolute',

@@ -12,7 +12,11 @@
       "supportsTablet": true,
       "infoPlist": {
         "NSPhotoLibraryUsageDescription": "Choisir une photo de profil ou diagnostiquer une plante",
-        "NSCameraUsageDescription": "Prendre une photo de plante pour diagnostic"
+        "NSCameraUsageDescription": "Prendre une photo de plante pour diagnostic",
+        "NSLocationWhenInUseUsageDescription": "Géolocaliser les alertes phytosanitaires"
+      },
+      "config": {
+        "googleMapsApiKey": "AIzaSyD80APH7ceOjjSKfUeUvUcfryD4co-VDSM"
       }
     },
     "android": {
@@ -23,8 +27,15 @@
       "edgeToEdgeEnabled": true,
       "permissions": [
         "android.permission.READ_EXTERNAL_STORAGE",
-        "android.permission.CAMERA"
-      ]
+        "android.permission.CAMERA",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION"
+      ],
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyD80APH7ceOjjSKfUeUvUcfryD4co-VDSM"
+        }
+      }
     },
     "web": {
       "bundler": "metro",
