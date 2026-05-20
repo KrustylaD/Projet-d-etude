@@ -18,6 +18,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
+import { Colors } from '../src/constants/theme';
 
 export default function EditProfileScreen() {
   const router = useRouter();
@@ -114,7 +115,7 @@ export default function EditProfileScreen() {
           {/* Header */}
           <View style={styles.header}>
             <TouchableOpacity onPress={() => router.back()} style={styles.headerButton}>
-              <Ionicons name="close" size={28} color="#ffffff" />
+              <Ionicons name="close" size={28} color={Colors.cream} />
             </TouchableOpacity>
             <Text style={styles.headerTitle}>Modifier le profil</Text>
             <TouchableOpacity
@@ -123,7 +124,7 @@ export default function EditProfileScreen() {
               disabled={loading}
             >
               {loading ? (
-                <ActivityIndicator color="#4ade80" size="small" />
+                <ActivityIndicator color={Colors.lime} size="small" />
               ) : (
                 <Text style={styles.saveText}>Enregistrer</Text>
               )}
@@ -138,11 +139,11 @@ export default function EditProfileScreen() {
                   {photoUrl ? (
                     <Image source={{ uri: photoUrl }} style={styles.avatarImage} />
                   ) : (
-                    <Ionicons name="person" size={56} color="#4ade80" />
+                    <Ionicons name="person" size={56} color={Colors.lime} />
                   )}
                 </View>
                 <View style={styles.cameraOverlay}>
-                  <Ionicons name="camera" size={20} color="#000" />
+                  <Ionicons name="camera" size={20} color={Colors.black} />
                 </View>
               </TouchableOpacity>
               <Text style={styles.avatarHint}>Appuyer pour changer la photo</Text>
@@ -153,11 +154,11 @@ export default function EditProfileScreen() {
               <View style={styles.field}>
                 <Text style={styles.label}>Pseudo *</Text>
                 <View style={styles.inputWrapper}>
-                  <Ionicons name="person-outline" size={20} color="#a3a3a3" style={styles.inputIcon} />
+                  <Ionicons name="person-outline" size={20} color={Colors.creamLow} style={styles.inputIcon} />
                   <TextInput
                     style={styles.input}
                     placeholder="Votre pseudo"
-                    placeholderTextColor="#666"
+                    placeholderTextColor={Colors.cream50}
                     value={displayName}
                     onChangeText={setDisplayName}
                     maxLength={40}
@@ -168,11 +169,11 @@ export default function EditProfileScreen() {
               <View style={styles.field}>
                 <Text style={styles.label}>Téléphone</Text>
                 <View style={styles.inputWrapper}>
-                  <Ionicons name="call-outline" size={20} color="#a3a3a3" style={styles.inputIcon} />
+                  <Ionicons name="call-outline" size={20} color={Colors.creamLow} style={styles.inputIcon} />
                   <TextInput
                     style={styles.input}
                     placeholder="+33 6 12 34 56 78"
-                    placeholderTextColor="#666"
+                    placeholderTextColor={Colors.cream50}
                     value={phoneNumber}
                     onChangeText={setPhoneNumber}
                     keyboardType="phone-pad"
@@ -183,11 +184,11 @@ export default function EditProfileScreen() {
               <View style={styles.field}>
                 <Text style={styles.label}>Nom de la ferme</Text>
                 <View style={styles.inputWrapper}>
-                  <Ionicons name="home-outline" size={20} color="#a3a3a3" style={styles.inputIcon} />
+                  <Ionicons name="home-outline" size={20} color={Colors.creamLow} style={styles.inputIcon} />
                   <TextInput
                     style={styles.input}
                     placeholder="Ex: Ferme du Soleil"
-                    placeholderTextColor="#666"
+                    placeholderTextColor={Colors.cream50}
                     value={farmName}
                     onChangeText={setFarmName}
                     maxLength={60}
@@ -198,11 +199,11 @@ export default function EditProfileScreen() {
               <View style={styles.field}>
                 <Text style={styles.label}>Localisation</Text>
                 <View style={styles.inputWrapper}>
-                  <Ionicons name="location-outline" size={20} color="#a3a3a3" style={styles.inputIcon} />
+                  <Ionicons name="location-outline" size={20} color={Colors.creamLow} style={styles.inputIcon} />
                   <TextInput
                     style={styles.input}
                     placeholder="Ville, région"
-                    placeholderTextColor="#666"
+                    placeholderTextColor={Colors.cream50}
                     value={location}
                     onChangeText={setLocation}
                     maxLength={80}
@@ -213,7 +214,7 @@ export default function EditProfileScreen() {
               <View style={styles.field}>
                 <Text style={styles.label}>Email</Text>
                 <View style={[styles.inputWrapper, styles.inputDisabled]}>
-                  <Ionicons name="mail-outline" size={20} color="#666" style={styles.inputIcon} />
+                  <Ionicons name="mail-outline" size={20} color={Colors.cream50} style={styles.inputIcon} />
                   <TextInput
                     style={[styles.input, styles.inputDisabledText]}
                     value={user?.email}
@@ -232,10 +233,10 @@ export default function EditProfileScreen() {
               activeOpacity={0.85}
             >
               {loading ? (
-                <ActivityIndicator color="#000" />
+                <ActivityIndicator color={Colors.black} />
               ) : (
                 <>
-                  <Ionicons name="checkmark-circle" size={22} color="#000" />
+                  <Ionicons name="checkmark-circle" size={22} color={Colors.black} />
                   <Text style={styles.saveButtonText}>Enregistrer les modifications</Text>
                 </>
               )}
@@ -258,7 +259,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#1a1a1a',
+    borderBottomColor: Colors.card,
   },
   headerButton: {
     minWidth: 80,
@@ -268,12 +269,12 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#ffffff',
+    color: Colors.cream,
     flex: 1,
     textAlign: 'center',
   },
   saveText: {
-    color: '#4ade80',
+    color: Colors.lime,
     fontSize: 16,
     fontWeight: '700',
     textAlign: 'right',
@@ -293,9 +294,9 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     borderRadius: 60,
-    backgroundColor: '#1a1a1a',
+    backgroundColor: Colors.card,
     borderWidth: 3,
-    borderColor: '#4ade80',
+    borderColor: Colors.lime60,
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',
@@ -311,14 +312,14 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: '#4ade80',
+    backgroundColor: Colors.lime,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 3,
-    borderColor: '#0a1a0a',
+    borderColor: Colors.forest,
   },
   avatarHint: {
-    color: '#a3a3a3',
+    color: Colors.creamLow,
     fontSize: 13,
     marginTop: 12,
   },
@@ -329,7 +330,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   label: {
-    color: '#ffffff',
+    color: Colors.cream,
     fontSize: 14,
     fontWeight: '600',
     marginBottom: 8,
@@ -338,25 +339,25 @@ const styles = StyleSheet.create({
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#1a1a1a',
+    backgroundColor: Colors.card,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#2a2a2a',
+    borderColor: Colors.border,
     paddingHorizontal: 14,
   },
   inputIcon: { marginRight: 10 },
   input: {
     flex: 1,
-    color: '#ffffff',
+    color: Colors.cream,
     fontSize: 16,
     paddingVertical: 14,
   },
   inputDisabled: {
     opacity: 0.6,
   },
-  inputDisabledText: { color: '#a3a3a3' },
+  inputDisabledText: { color: Colors.creamLow },
   fieldHint: {
-    color: '#666',
+    color: Colors.cream50,
     fontSize: 12,
     marginTop: 6,
     marginLeft: 4,
@@ -366,14 +367,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    backgroundColor: '#4ade80',
+    backgroundColor: Colors.lime,
     borderRadius: 14,
     paddingVertical: 16,
     marginTop: 32,
   },
   saveButtonDisabled: { opacity: 0.6 },
   saveButtonText: {
-    color: '#000000',
+    color: Colors.black,
     fontSize: 16,
     fontWeight: '700',
   },

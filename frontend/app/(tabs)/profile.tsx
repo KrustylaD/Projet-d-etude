@@ -13,6 +13,7 @@ import { useAuthStore } from '../../src/store/authStore';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Colors } from '../../src/constants/theme';
 
 export default function ProfileScreen() {
   const router = useRouter();
@@ -51,18 +52,18 @@ export default function ProfileScreen() {
                 {user?.photo_url ? (
                   <Image source={{ uri: user.photo_url }} style={styles.avatarImage} />
                 ) : (
-                  <Ionicons name="person" size={48} color="#4ade80" />
+                  <Ionicons name="person" size={48} color={Colors.lime} />
                 )}
               </View>
               <View style={styles.editBadge}>
-                <Ionicons name="pencil" size={14} color="#000" />
+                <Ionicons name="pencil" size={14} color={Colors.black} />
               </View>
             </TouchableOpacity>
             <Text style={styles.userName}>{user?.display_name || 'Utilisateur'}</Text>
             <Text style={styles.userEmail}>{user?.email}</Text>
             {user?.farm_name && (
               <View style={styles.farmBadge}>
-                <Ionicons name="home" size={16} color="#4ade80" />
+                <Ionicons name="home" size={16} color={Colors.lime} />
                 <Text style={styles.farmName}>{user.farm_name}</Text>
               </View>
             )}
@@ -72,7 +73,7 @@ export default function ProfileScreen() {
               onPress={() => router.push('/edit-profile')}
               activeOpacity={0.85}
             >
-              <Ionicons name="create-outline" size={18} color="#4ade80" />
+              <Ionicons name="create-outline" size={18} color={Colors.lime} />
               <Text style={styles.editProfileButtonText}>Modifier le profil</Text>
             </TouchableOpacity>
           </View>
@@ -84,7 +85,7 @@ export default function ProfileScreen() {
             <View style={styles.infoCard}>
               <View style={styles.infoRow}>
                 <View style={styles.infoLabel}>
-                  <Ionicons name="mail-outline" size={20} color="#a3a3a3" />
+                  <Ionicons name="mail-outline" size={20} color={Colors.creamLow} />
                   <Text style={styles.infoLabelText}>Email</Text>
                 </View>
                 <Text style={styles.infoValue}>{user?.email}</Text>
@@ -93,7 +94,7 @@ export default function ProfileScreen() {
               {user?.phone_number && (
                 <View style={[styles.infoRow, styles.infoRowBorder]}>
                   <View style={styles.infoLabel}>
-                    <Ionicons name="call-outline" size={20} color="#a3a3a3" />
+                    <Ionicons name="call-outline" size={20} color={Colors.creamLow} />
                     <Text style={styles.infoLabelText}>Téléphone</Text>
                   </View>
                   <Text style={styles.infoValue}>{user.phone_number}</Text>
@@ -103,7 +104,7 @@ export default function ProfileScreen() {
               {user?.location && (
                 <View style={[styles.infoRow, styles.infoRowBorder]}>
                   <View style={styles.infoLabel}>
-                    <Ionicons name="location-outline" size={20} color="#a3a3a3" />
+                    <Ionicons name="location-outline" size={20} color={Colors.creamLow} />
                     <Text style={styles.infoLabelText}>Localisation</Text>
                   </View>
                   <Text style={styles.infoValue}>{user.location}</Text>
@@ -122,12 +123,12 @@ export default function ProfileScreen() {
                 onPress={() => router.push('/change-password')}
                 activeOpacity={0.7}
               >
-                <Ionicons name="key-outline" size={24} color="#4ade80" />
+                <Ionicons name="key-outline" size={24} color={Colors.lime} />
                 <View style={styles.menuItemContent}>
                   <Text style={styles.menuItemTitle}>Changer le mot de passe</Text>
                   <Text style={styles.menuItemSubtitle}>Modifier votre mot de passe actuel</Text>
                 </View>
-                <Ionicons name="chevron-forward" size={20} color="#666" />
+                <Ionicons name="chevron-forward" size={20} color={Colors.cream50} />
               </TouchableOpacity>
             </View>
           </View>
@@ -138,7 +139,7 @@ export default function ProfileScreen() {
 
             <View style={styles.menuCard}>
               <View style={styles.menuItem}>
-                <Ionicons name="leaf" size={24} color="#4ade80" />
+                <Ionicons name="leaf" size={24} color={Colors.lime} />
                 <View style={styles.menuItemContent}>
                   <Text style={styles.menuItemTitle}>AgriScan AI</Text>
                   <Text style={styles.menuItemSubtitle}>Version 1.0.0</Text>
@@ -151,7 +152,7 @@ export default function ProfileScreen() {
                   <Text style={styles.menuItemTitle}>Aide & Support</Text>
                   <Text style={styles.menuItemSubtitle}>Besoin d&apos;assistance ?</Text>
                 </View>
-                <Ionicons name="chevron-forward" size={20} color="#666" />
+                <Ionicons name="chevron-forward" size={20} color={Colors.cream50} />
               </View>
 
               <View style={[styles.menuItem, styles.menuItemBorder]}>
@@ -160,7 +161,7 @@ export default function ProfileScreen() {
                   <Text style={styles.menuItemTitle}>Confidentialité</Text>
                   <Text style={styles.menuItemSubtitle}>Politique de confidentialité</Text>
                 </View>
-                <Ionicons name="chevron-forward" size={20} color="#666" />
+                <Ionicons name="chevron-forward" size={20} color={Colors.cream50} />
               </View>
             </View>
           </View>
@@ -171,7 +172,7 @@ export default function ProfileScreen() {
             onPress={handleLogout}
             activeOpacity={0.8}
           >
-            <Ionicons name="log-out-outline" size={24} color="#ef4444" />
+            <Ionicons name="log-out-outline" size={24} color={Colors.error} />
             <Text style={styles.logoutButtonText}>Déconnexion</Text>
           </TouchableOpacity>
 
@@ -207,9 +208,9 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-    backgroundColor: '#1a1a1a',
+    backgroundColor: Colors.card,
     borderWidth: 3,
-    borderColor: '#4ade80',
+    borderColor: Colors.lime60,
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',
@@ -225,38 +226,38 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 15,
-    backgroundColor: '#4ade80',
+    backgroundColor: Colors.lime,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 3,
-    borderColor: '#0a1a0a',
+    borderColor: Colors.forest,
   },
   userName: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#ffffff',
+    color: Colors.cream,
     marginBottom: 4,
   },
   userEmail: {
     fontSize: 16,
-    color: '#a3a3a3',
+    color: Colors.creamLow,
   },
   farmBadge: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    backgroundColor: '#1a1a1a',
+    backgroundColor: Colors.card,
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
     marginTop: 12,
     borderWidth: 1,
-    borderColor: '#2a2a2a',
+    borderColor: Colors.border,
   },
   farmName: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#4ade80',
+    color: Colors.lime,
   },
   editProfileButton: {
     flexDirection: 'row',
@@ -266,13 +267,13 @@ const styles = StyleSheet.create({
     marginTop: 20,
     paddingHorizontal: 24,
     paddingVertical: 12,
-    backgroundColor: 'rgba(74, 222, 128, 0.08)',
+    backgroundColor: Colors.lime08,
     borderRadius: 24,
     borderWidth: 1,
-    borderColor: '#4ade80',
+    borderColor: Colors.lime60,
   },
   editProfileButtonText: {
-    color: '#4ade80',
+    color: Colors.lime,
     fontSize: 14,
     fontWeight: '700',
   },
@@ -282,22 +283,22 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#ffffff',
+    color: Colors.cream,
     marginBottom: 12,
   },
   infoCard: {
-    backgroundColor: '#1a1a1a',
+    backgroundColor: Colors.card,
     borderRadius: 16,
     padding: 16,
     borderWidth: 1,
-    borderColor: '#2a2a2a',
+    borderColor: Colors.border,
   },
   infoRow: {
     paddingVertical: 12,
   },
   infoRowBorder: {
     borderTopWidth: 1,
-    borderTopColor: '#2a2a2a',
+    borderTopColor: Colors.border,
   },
   infoLabel: {
     flexDirection: 'row',
@@ -307,20 +308,20 @@ const styles = StyleSheet.create({
   },
   infoLabelText: {
     fontSize: 14,
-    color: '#a3a3a3',
+    color: Colors.creamLow,
     fontWeight: '500',
   },
   infoValue: {
     fontSize: 16,
-    color: '#ffffff',
+    color: Colors.cream,
     paddingLeft: 28,
   },
   menuCard: {
-    backgroundColor: '#1a1a1a',
+    backgroundColor: Colors.card,
     borderRadius: 16,
     padding: 4,
     borderWidth: 1,
-    borderColor: '#2a2a2a',
+    borderColor: Colors.border,
   },
   menuItem: {
     flexDirection: 'row',
@@ -330,7 +331,7 @@ const styles = StyleSheet.create({
   },
   menuItemBorder: {
     borderTopWidth: 1,
-    borderTopColor: '#2a2a2a',
+    borderTopColor: Colors.border,
   },
   menuItemContent: {
     flex: 1,
@@ -338,34 +339,34 @@ const styles = StyleSheet.create({
   menuItemTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#ffffff',
+    color: Colors.cream,
     marginBottom: 2,
   },
   menuItemSubtitle: {
     fontSize: 14,
-    color: '#a3a3a3',
+    color: Colors.creamLow,
   },
   logoutButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 12,
-    backgroundColor: '#1a1a1a',
+    backgroundColor: Colors.error12,
     borderRadius: 16,
     padding: 18,
     marginTop: 16,
     borderWidth: 2,
-    borderColor: '#ef4444',
+    borderColor: Colors.error,
   },
   logoutButtonText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#ef4444',
+    color: Colors.error,
   },
   footerText: {
     textAlign: 'center',
     fontSize: 12,
-    color: '#666',
+    color: Colors.cream50,
     marginTop: 32,
   },
 });
