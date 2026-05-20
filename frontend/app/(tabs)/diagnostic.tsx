@@ -40,7 +40,7 @@ export default function DiagnosticScreen() {
   // Si un id est passé en paramètre, charger le diagnostic et son historique
   useEffect(() => {
     const id = params.id;
-    if (id && user && id !== diagnosticId) {
+    if (id && user) {
       loadExistingDiagnostic(id);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

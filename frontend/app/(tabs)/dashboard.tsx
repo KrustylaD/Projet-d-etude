@@ -65,10 +65,7 @@ export default function DashboardScreen() {
   };
 
   const openDiagnostic = (diagnostic: Diagnostic) => {
-    router.push({
-      pathname: '/(tabs)/diagnostic',
-      params: { id: diagnostic.id },
-    });
+    router.navigate(`/(tabs)/diagnostic?id=${diagnostic.id}`);
   };
 
   const confirmDelete = (diagnostic: Diagnostic) => {
