@@ -14,6 +14,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Stats, Diagnostic } from '../../src/types';
+import { Colors } from '../../src/constants/theme';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -24,7 +25,7 @@ export default function HomeScreen() {
 
   const fetchStats = async () => {
     if (!user) return;
-    
+
     try {
       const response = await fetch(
         `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/stats/${user.uid}`
@@ -50,10 +51,10 @@ export default function HomeScreen() {
 
   if (loading) {
     return (
-      <LinearGradient colors={['#1a2f1a', '#0a1a0a', '#000000']} style={styles.container}>
+      <LinearGradient colors={[Colors.forest, '#050D07']} style={styles.container}>
         <SafeAreaView style={styles.safeArea}>
           <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#4ade80" />
+            <ActivityIndicator size="large" color={Colors.lime} />
           </View>
         </SafeAreaView>
       </LinearGradient>
@@ -61,7 +62,7 @@ export default function HomeScreen() {
   }
 
   return (
-    <LinearGradient colors={['#1a2f1a', '#0a1a0a', '#000000']} style={styles.container}>
+    <LinearGradient colors={[Colors.forest, '#050D07']} style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
         <ScrollView
           contentContainerStyle={styles.scrollContent}
@@ -69,7 +70,7 @@ export default function HomeScreen() {
             <RefreshControl
               refreshing={refreshing}
               onRefresh={onRefresh}
-              tintColor="#4ade80"
+              tintColor={Colors.lime}
             />
           }
         >
@@ -81,7 +82,7 @@ export default function HomeScreen() {
                 <Text style={styles.farmName}>{user.farm_name}</Text>
               )}
             </View>
-            <Ionicons name="leaf" size={40} color="#4ade80" />
+            <Ionicons name="leaf" size={40} color={Colors.lime} />
           </View>
 
           {/* Quick Actions */}
@@ -92,13 +93,10 @@ export default function HomeScreen() {
                 style={styles.actionCard}
                 onPress={() => router.push('/(tabs)/diagnostic')}
               >
-                <LinearGradient
-                  colors={['#4ade80', '#22c55e']}
-                  style={styles.actionGradient}
-                >
-                  <Ionicons name="chatbubbles" size={32} color="#000" />
+                <View style={[styles.actionGradient, { backgroundColor: Colors.lime }]}>
+                  <Ionicons name="chatbubbles" size={32} color={Colors.black} />
                   <Text style={styles.actionText}>Nouveau{"\n"}Diagnostic</Text>
-                </LinearGradient>
+                </View>
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -106,7 +104,7 @@ export default function HomeScreen() {
                 onPress={() => router.push('/(tabs)/dashboard')}
               >
                 <View style={styles.actionCardSecondary}>
-                  <Ionicons name="stats-chart" size={32} color="#4ade80" />
+                  <Ionicons name="stats-chart" size={32} color={Colors.lime} />
                   <Text style={styles.actionTextSecondary}>Voir{"\n"}Statistiques</Text>
                 </View>
               </TouchableOpacity>
@@ -117,17 +115,19 @@ export default function HomeScreen() {
           {stats && (
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Aperçu</Text>
-              <View style={styles.statsGrid}>
-                <View style={styles.statCard}>
+              <View style={styles.statsBlock}>
+                <View style={styles.statItem}>
                   <Text style={styles.statValue}>{stats.total_diagnostics}</Text>
                   <Text style={styles.statLabel}>Diagnostics</Text>
                 </View>
-                <View style={styles.statCard}>
+                <View style={styles.statDivider} />
+                <View style={styles.statItem}>
                   <Text style={styles.statValue}>{stats.status_breakdown.en_cours}</Text>
                   <Text style={styles.statLabel}>En cours</Text>
                 </View>
-                <View style={styles.statCard}>
-                  <Text style={styles.statValue}>{stats.unread_alerts}</Text>
+                <View style={styles.statDivider} />
+                <View style={styles.statItem}>
+                  <Text style={[styles.statValue, { color: Colors.cream }]}>{stats.unread_alerts}</Text>
                   <Text style={styles.statLabel}>Alertes</Text>
                 </View>
               </View>
@@ -150,15 +150,15 @@ export default function HomeScreen() {
                   onPress={() => router.navigate(`/(tabs)/diagnostic?id=${diagnostic.id}`)}
                 >
                   <View style={styles.diagnosticHeader}>
-                    <Ionicons name="leaf-outline" size={24} color="#4ade80" />
+                    <Ionicons name="leaf-outline" size={24} color={Colors.lime} />
                     <View style={styles.diagnosticInfo}>
                       <Text style={styles.diagnosticCulture}>{diagnostic.culture}</Text>
                       <Text style={styles.diagnosticSymptoms} numberOfLines={1}>
                         {diagnostic.symptoms}
                       </Text>
                     </View>
-                    <View style={[styles.statusBadge, { backgroundColor: getStatusColor(diagnostic.status) }]}>
-                      <Text style={styles.statusText}>{diagnostic.status}</Text>
+                    <View style={[styles.statusBadge, { backgroundColor: getStatusBadge(diagnostic.status).bg }]}>
+                      <Text style={[styles.statusText, { color: getStatusBadge(diagnostic.status).text }]}>{diagnostic.status}</Text>
                     </View>
                   </View>
                 </TouchableOpacity>
@@ -171,16 +171,16 @@ export default function HomeScreen() {
   );
 }
 
-function getStatusColor(status: string): string {
+function getStatusBadge(status: string): { bg: string; text: string } {
   switch (status) {
-    case 'en cours':
-      return '#fbbf24';
     case 'traité':
-      return '#4ade80';
+      return { bg: Colors.lime15, text: Colors.lime };
+    case 'en cours':
+      return { bg: Colors.warning15, text: Colors.warning };
     case 'surveillance':
-      return '#60a5fa';
+      return { bg: Colors.info15, text: Colors.info };
     default:
-      return '#666';
+      return { bg: Colors.cream10, text: Colors.cream50 };
   }
 }
 
@@ -208,17 +208,17 @@ const styles = StyleSheet.create({
   },
   greeting: {
     fontSize: 16,
-    color: '#a3a3a3',
+    color: Colors.creamLow,
   },
   userName: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#ffffff',
+    color: Colors.cream,
     marginTop: 4,
   },
   farmName: {
     fontSize: 14,
-    color: '#4ade80',
+    color: Colors.lime,
     marginTop: 4,
   },
   section: {
@@ -233,12 +233,12 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#ffffff',
+    color: Colors.cream,
     marginBottom: 16,
   },
   seeAllText: {
     fontSize: 14,
-    color: '#4ade80',
+    color: Colors.lime,
     fontWeight: '600',
   },
   quickActions: {
@@ -259,56 +259,57 @@ const styles = StyleSheet.create({
   },
   actionCardSecondary: {
     flex: 1,
-    backgroundColor: '#1a1a1a',
+    backgroundColor: Colors.card,
     borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
     gap: 8,
     borderWidth: 1,
-    borderColor: '#2a2a2a',
+    borderColor: Colors.border,
   },
   actionText: {
-    color: '#000',
+    color: Colors.black,
     fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
   },
   actionTextSecondary: {
-    color: '#4ade80',
+    color: Colors.lime,
     fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
   },
-  statsGrid: {
+  statsBlock: {
     flexDirection: 'row',
-    gap: 12,
-  },
-  statCard: {
-    flex: 1,
-    backgroundColor: '#1a1a1a',
-    borderRadius: 12,
+    backgroundColor: Colors.card,
+    borderRadius: 16,
     padding: 16,
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#2a2a2a',
+  },
+  statItem: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  statDivider: {
+    width: 1,
+    height: 40,
+    backgroundColor: Colors.border,
   },
   statValue: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#4ade80',
+    color: Colors.lime,
   },
   statLabel: {
     fontSize: 12,
-    color: '#a3a3a3',
+    color: Colors.creamLow,
     marginTop: 4,
   },
   diagnosticCard: {
-    backgroundColor: '#1a1a1a',
+    backgroundColor: Colors.card,
     borderRadius: 12,
     padding: 16,
     marginBottom: 12,
-    borderWidth: 1,
-    borderColor: '#2a2a2a',
   },
   diagnosticHeader: {
     flexDirection: 'row',
@@ -321,11 +322,11 @@ const styles = StyleSheet.create({
   diagnosticCulture: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#ffffff',
+    color: Colors.cream,
   },
   diagnosticSymptoms: {
     fontSize: 14,
-    color: '#a3a3a3',
+    color: Colors.creamLow,
     marginTop: 2,
   },
   statusBadge: {
@@ -336,6 +337,5 @@ const styles = StyleSheet.create({
   statusText: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#000',
   },
 });
