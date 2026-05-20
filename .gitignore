@@ -136,4 +136,8 @@ credentials.json
 .credentials
 =======
 graphify-out/
+<<<<<<< HEAD
 >>>>>>> 0fd3ca7 (Add 'graphify-out/' to .gitignore to exclude generated output files)
+=======
+.metro-cache/
+>>>>>>> 93f3395 (Add '.metro-cache/' to .gitignore to exclude cache files)
