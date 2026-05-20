@@ -38,7 +38,7 @@ export default function ProfileScreen() {
   };
 
   return (
-    <LinearGradient colors={['#1a2f1a', '#0a1a0a', '#000000']} style={styles.container}>
+    <LinearGradient colors={[Colors.forest, Colors.black]} style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
         <ScrollView contentContainerStyle={styles.scrollContent}>
           {/* Profile Header */}

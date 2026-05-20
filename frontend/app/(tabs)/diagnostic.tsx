@@ -258,7 +258,7 @@ export default function DiagnosticScreen() {
 
   if (loadingHistory) {
     return (
-      <LinearGradient colors={['#1a2f1a', '#0a1a0a', '#000000']} style={styles.container}>
+      <LinearGradient colors={[Colors.forest, Colors.black]} style={styles.container}>
         <SafeAreaView style={styles.safeArea}>
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color={Colors.lime} />
@@ -271,7 +271,7 @@ export default function DiagnosticScreen() {
 
   if (showInitialForm) {
     return (
-      <LinearGradient colors={['#1a2f1a', '#0a1a0a', '#000000']} style={styles.container}>
+      <LinearGradient colors={[Colors.forest, Colors.black]} style={styles.container}>
         <SafeAreaView style={styles.safeArea}>
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -337,7 +337,7 @@ export default function DiagnosticScreen() {
   }
 
   return (
-    <LinearGradient colors={['#1a2f1a', '#0a1a0a', '#000000']} style={styles.container}>
+    <LinearGradient colors={[Colors.forest, Colors.black]} style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.chatHeader}>
           <TouchableOpacity onPress={startNewDiagnostic} style={styles.newChatButton}>

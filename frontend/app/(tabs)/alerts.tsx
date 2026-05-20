@@ -187,7 +187,7 @@ export default function AlertsScreen() {
 
   if (loading) {
     return (
-      <LinearGradient colors={['#1a2f1a', '#0a1a0a', '#000000']} style={styles.container}>
+      <LinearGradient colors={[Colors.forest, Colors.black]} style={styles.container}>
         <SafeAreaView style={styles.safeArea}>
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color={Colors.lime} />
@@ -209,7 +209,7 @@ export default function AlertsScreen() {
   }));
 
   return (
-    <LinearGradient colors={['#1a2f1a', '#0a1a0a', '#000000']} style={styles.container}>
+    <LinearGradient colors={[Colors.forest, Colors.black]} style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.header}>
           <View>
