@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -10,21 +10,23 @@ import {
   Platform,
   Alert,
   ActivityIndicator,
+  Image,
 } from 'react-native';
 import { useAuthStore } from '../../src/store/authStore';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Message } from '../../src/types';
-import { Colors, Typography, Spacing, BorderRadius } from '../../src/constants/theme';
 import { MarkdownMessage } from '../../src/components/MarkdownMessage';
+import * as ImagePicker from 'expo-image-picker';
 
 export default function DiagnosticScreen() {
   const { user } = useAuthStore();
   const scrollViewRef = useRef<ScrollView>(null);
-  
+
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
+  const [pendingImage, setPendingImage] = useState<string | null>(null); // base64 data URI
   const [culture, setCulture] = useState('');
   const [symptoms, setSymptoms] = useState('');
   const [diagnosticId, setDiagnosticId] = useState<string | null>(null);
@@ -53,15 +55,13 @@ export default function DiagnosticScreen() {
       const diagnostic = await response.json();
       setDiagnosticId(diagnostic.id);
       setShowInitialForm(false);
-      
-      // Ajouter un message d'accueil
+
       const welcomeMessage: Message = {
         role: 'assistant',
-        content: `Bonjour ! Je vais vous aider à diagnostiquer les problèmes de votre ${culture}.\n\nVous avez mentionné : "${symptoms}"\n\nPouvez-vous me donner plus de détails sur ces symptômes ?`,
+        content: `Bonjour ! Je vais vous aider à diagnostiquer les problèmes de votre **${culture}**.\n\nVous avez mentionné : *"${symptoms}"*\n\nPour un diagnostic plus précis, vous pouvez :\n- Décrire plus en détail les symptômes observés\n- 📸 **Joindre une photo** de la plante en cliquant sur l'icône appareil photo\n\nQue souhaitez-vous me partager ?`,
         created_at: new Date().toISOString(),
       };
       setMessages([welcomeMessage]);
-      
     } catch (error) {
       console.error('Error creating diagnostic:', error);
       Alert.alert('Erreur', 'Impossible de créer le diagnostic');
@@ -70,29 +70,102 @@ export default function DiagnosticScreen() {
     }
   };
 
+  const pickImageFromSource = async (source: 'camera' | 'library') => {
+    try {
+      if (source === 'camera') {
+        const { status, canAskAgain } = await ImagePicker.requestCameraPermissionsAsync();
+        if (status !== 'granted') {
+          if (!canAskAgain) {
+            Alert.alert(
+              'Permission requise',
+              "L'accès à la caméra est nécessaire. Activez-le dans les réglages."
+            );
+          }
+          return;
+        }
+        const result = await ImagePicker.launchCameraAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 0.5,
+          base64: true,
+        });
+        if (!result.canceled && result.assets[0]?.base64) {
+          setPendingImage(`data:image/jpeg;base64,${result.assets[0].base64}`);
+        }
+      } else {
+        const { status, canAskAgain } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== 'granted') {
+          if (!canAskAgain) {
+            Alert.alert(
+              'Permission requise',
+              "L'accès aux photos est nécessaire. Activez-le dans les réglages."
+            );
+          }
+          return;
+        }
+        const result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 0.5,
+          base64: true,
+        });
+        if (!result.canceled && result.assets[0]?.base64) {
+          setPendingImage(`data:image/jpeg;base64,${result.assets[0].base64}`);
+        }
+      }
+    } catch (error) {
+      console.error('Image picker error:', error);
+      Alert.alert('Erreur', "Impossible de sélectionner l'image");
+    }
+  };
+
+  const handleAttachPhoto = () => {
+    Alert.alert(
+      'Ajouter une photo',
+      'Choisissez la source de la photo',
+      [
+        { text: 'Annuler', style: 'cancel' },
+        { text: '📷 Caméra', onPress: () => pickImageFromSource('camera') },
+        { text: '🖼️ Galerie', onPress: () => pickImageFromSource('library') },
+      ]
+    );
+  };
+
   const sendMessage = async () => {
-    if (!inputText.trim() || !diagnosticId || !user) return;
+    if ((!inputText.trim() && !pendingImage) || !diagnosticId || !user) return;
+
+    const messageText = inputText.trim() || (pendingImage ? 'Analyse cette photo de ma plante.' : '');
 
     const userMessage: Message = {
       role: 'user',
-      content: inputText,
+      content: messageText,
+      image_base64: pendingImage || undefined,
       created_at: new Date().toISOString(),
     };
 
     setMessages((prev) => [...prev, userMessage]);
+    const imageToSend = pendingImage;
     setInputText('');
+    setPendingImage(null);
     setLoading(true);
 
     try {
+      const body: any = {
+        diagnostic_id: diagnosticId,
+        message: messageText,
+      };
+      if (imageToSend) {
+        body.image_base64 = imageToSend;
+      }
+
       const response = await fetch(
         `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/chat?user_id=${user.uid}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            diagnostic_id: diagnosticId,
-            message: inputText,
-          }),
+          body: JSON.stringify(body),
         }
       );
 
@@ -100,15 +173,13 @@ export default function DiagnosticScreen() {
 
       const aiMessage = await response.json();
       setMessages((prev) => [...prev, aiMessage]);
-      
-      // Scroll to bottom
+
       setTimeout(() => {
         scrollViewRef.current?.scrollToEnd({ animated: true });
       }, 100);
-      
     } catch (error) {
       console.error('Error sending message:', error);
-      Alert.alert('Erreur', 'Impossible d\'envoyer le message');
+      Alert.alert('Erreur', "Impossible d'envoyer le message");
     } finally {
       setLoading(false);
     }
@@ -121,6 +192,7 @@ export default function DiagnosticScreen() {
     setCulture('');
     setSymptoms('');
     setInputText('');
+    setPendingImage(null);
   };
 
   if (showInitialForm) {
@@ -160,6 +232,13 @@ export default function DiagnosticScreen() {
                   multiline
                   numberOfLines={4}
                 />
+
+                <View style={styles.tipCard}>
+                  <Ionicons name="camera" size={18} color="#4ade80" />
+                  <Text style={styles.tipText}>
+                    Vous pourrez joindre une photo de votre plante depuis le chat pour une analyse visuelle par l&apos;IA.
+                  </Text>
+                </View>
 
                 <TouchableOpacity
                   style={[styles.button, loading && styles.buttonDisabled]}
@@ -224,10 +303,19 @@ export default function DiagnosticScreen() {
                   />
                 )}
                 <View style={styles.messageContent}>
+                  {message.image_base64 && (
+                    <Image
+                      source={{ uri: message.image_base64 }}
+                      style={styles.messageImage}
+                      resizeMode="cover"
+                    />
+                  )}
                   {message.role === 'user' ? (
-                    <Text style={[styles.messageText, styles.userText]}>
-                      {message.content}
-                    </Text>
+                    message.content ? (
+                      <Text style={[styles.messageText, styles.userText]}>
+                        {message.content}
+                      </Text>
+                    ) : null
                   ) : (
                     <View style={styles.aiTextWrapper}>
                       <MarkdownMessage content={message.content} />
@@ -238,15 +326,51 @@ export default function DiagnosticScreen() {
             ))}
             {loading && (
               <View style={[styles.messageBubble, styles.aiBubble]}>
-                <ActivityIndicator size="small" color="#4ade80" />
+                <Ionicons name="leaf" size={20} color="#4ade80" style={styles.messageIcon} />
+                <View style={styles.aiTextWrapper}>
+                  <View style={styles.typingContainer}>
+                    <ActivityIndicator size="small" color="#4ade80" />
+                    <Text style={styles.typingText}>L&apos;IA analyse...</Text>
+                  </View>
+                </View>
               </View>
             )}
           </ScrollView>
 
+          {/* Image Preview */}
+          {pendingImage && (
+            <View style={styles.previewContainer}>
+              <Image source={{ uri: pendingImage }} style={styles.previewImage} />
+              <View style={styles.previewInfo}>
+                <Ionicons name="image" size={16} color="#4ade80" />
+                <Text style={styles.previewText}>Photo prête à envoyer</Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => setPendingImage(null)}
+                style={styles.previewRemove}
+                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              >
+                <Ionicons name="close-circle" size={24} color="#ef4444" />
+              </TouchableOpacity>
+            </View>
+          )}
+
           <View style={styles.inputContainer}>
+            <TouchableOpacity
+              style={styles.attachButton}
+              onPress={handleAttachPhoto}
+              disabled={loading}
+              activeOpacity={0.7}
+            >
+              <Ionicons
+                name="camera"
+                size={24}
+                color={pendingImage ? '#4ade80' : '#a3a3a3'}
+              />
+            </TouchableOpacity>
             <TextInput
               style={styles.messageInput}
-              placeholder="Posez votre question..."
+              placeholder={pendingImage ? 'Ajouter un message (optionnel)' : 'Posez votre question...'}
               placeholderTextColor="#666"
               value={inputText}
               onChangeText={setInputText}
@@ -254,11 +378,18 @@ export default function DiagnosticScreen() {
               maxLength={500}
             />
             <TouchableOpacity
-              style={[styles.sendButton, (!inputText.trim() || loading) && styles.sendButtonDisabled]}
+              style={[
+                styles.sendButton,
+                (!inputText.trim() && !pendingImage) || loading ? styles.sendButtonDisabled : null,
+              ]}
               onPress={sendMessage}
-              disabled={!inputText.trim() || loading}
+              disabled={(!inputText.trim() && !pendingImage) || loading}
             >
-              <Ionicons name="send" size={24} color={inputText.trim() && !loading ? '#000' : '#666'} />
+              <Ionicons
+                name="send"
+                size={22}
+                color={(inputText.trim() || pendingImage) && !loading ? '#000' : '#666'}
+              />
             </TouchableOpacity>
           </View>
         </KeyboardAvoidingView>
@@ -268,15 +399,9 @@ export default function DiagnosticScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  safeArea: {
-    flex: 1,
-  },
-  keyboardView: {
-    flex: 1,
-  },
+  container: { flex: 1 },
+  safeArea: { flex: 1 },
+  keyboardView: { flex: 1 },
   formContent: {
     padding: 24,
     paddingTop: 48,
@@ -297,9 +422,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
     textAlign: 'center',
   },
-  form: {
-    width: '100%',
-  },
+  form: { width: '100%' },
   label: {
     fontSize: 16,
     fontWeight: '600',
@@ -320,6 +443,23 @@ const styles = StyleSheet.create({
     height: 120,
     textAlignVertical: 'top',
   },
+  tipCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(74, 222, 128, 0.08)',
+    borderRadius: 10,
+    padding: 12,
+    gap: 10,
+    borderWidth: 1,
+    borderColor: '#1f3a1f',
+    marginBottom: 24,
+  },
+  tipText: {
+    color: '#a3a3a3',
+    fontSize: 13,
+    flex: 1,
+    lineHeight: 18,
+  },
   button: {
     backgroundColor: '#4ade80',
     borderRadius: 12,
@@ -330,9 +470,7 @@ const styles = StyleSheet.create({
     gap: 8,
     marginTop: 8,
   },
-  buttonDisabled: {
-    opacity: 0.6,
-  },
+  buttonDisabled: { opacity: 0.6 },
   buttonText: {
     color: '#000000',
     fontSize: 18,
@@ -366,9 +504,7 @@ const styles = StyleSheet.create({
     color: '#4ade80',
     marginTop: 2,
   },
-  chatContainer: {
-    flex: 1,
-  },
+  chatContainer: { flex: 1 },
   messagesContent: {
     padding: 16,
     paddingBottom: 8,
@@ -376,20 +512,21 @@ const styles = StyleSheet.create({
   messageBubble: {
     flexDirection: 'row',
     marginBottom: 16,
-    maxWidth: '85%',
+    maxWidth: '88%',
   },
-  userBubble: {
-    alignSelf: 'flex-end',
-  },
-  aiBubble: {
-    alignSelf: 'flex-start',
-  },
+  userBubble: { alignSelf: 'flex-end' },
+  aiBubble: { alignSelf: 'flex-start' },
   messageIcon: {
     marginRight: 8,
     marginTop: 2,
   },
-  messageContent: {
-    flex: 1,
+  messageContent: { flex: 1 },
+  messageImage: {
+    width: 220,
+    height: 165,
+    borderRadius: 12,
+    marginBottom: 6,
+    backgroundColor: '#1a1a1a',
   },
   messageText: {
     fontSize: 16,
@@ -403,16 +540,6 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 4,
     overflow: 'hidden',
   },
-  aiText: {
-    backgroundColor: '#1a1a1a',
-    color: '#ffffff',
-    padding: 12,
-    borderRadius: 16,
-    borderBottomLeftRadius: 4,
-    borderWidth: 1,
-    borderColor: '#2a2a2a',
-    overflow: 'hidden',
-  },
   aiTextWrapper: {
     backgroundColor: '#1a1a1a',
     paddingHorizontal: 14,
@@ -422,17 +549,71 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#2a2a2a',
   },
+  typingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingVertical: 4,
+  },
+  typingText: {
+    color: '#a3a3a3',
+    fontSize: 14,
+    fontStyle: 'italic',
+  },
+  previewContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#1a1a1a',
+    marginHorizontal: 16,
+    marginBottom: 8,
+    borderRadius: 12,
+    padding: 8,
+    borderWidth: 1,
+    borderColor: '#2a3a2a',
+  },
+  previewImage: {
+    width: 56,
+    height: 56,
+    borderRadius: 8,
+    marginRight: 12,
+  },
+  previewInfo: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  previewText: {
+    color: '#4ade80',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  previewRemove: {
+    padding: 4,
+  },
   inputContainer: {
     flexDirection: 'row',
-    padding: 16,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
     alignItems: 'flex-end',
+    gap: 6,
     borderTopWidth: 1,
     borderTopColor: '#1a1a1a',
+  },
+  attachButton: {
+    width: 44,
+    height: 44,
+    backgroundColor: '#1a1a1a',
+    borderRadius: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#2a2a2a',
   },
   messageInput: {
     flex: 1,
     backgroundColor: '#1a1a1a',
-    borderRadius: 24,
+    borderRadius: 22,
     paddingHorizontal: 16,
     paddingVertical: 12,
     color: '#ffffff',
@@ -442,13 +623,12 @@ const styles = StyleSheet.create({
     borderColor: '#2a2a2a',
   },
   sendButton: {
-    width: 48,
-    height: 48,
+    width: 44,
+    height: 44,
     backgroundColor: '#4ade80',
-    borderRadius: 24,
+    borderRadius: 22,
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: 8,
   },
   sendButtonDisabled: {
     backgroundColor: '#1a1a1a',

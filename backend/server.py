@@ -8,7 +8,7 @@ from pathlib import Path
 from pydantic import BaseModel, Field
 from typing import List, Optional
 from datetime import datetime
-from emergentintegrations.llm.chat import LlmChat, UserMessage
+from emergentintegrations.llm.chat import LlmChat, UserMessage, ImageContent
 import uuid
 
 ROOT_DIR = Path(__file__).parent
@@ -108,10 +108,12 @@ class AlertResponse(BaseModel):
 class ChatRequest(BaseModel):
     diagnostic_id: str
     message: str
+    image_base64: Optional[str] = None  # Image plante en base64 (sans préfixe data:)
 
 class ChatResponse(BaseModel):
     role: str
     content: str
+    image_base64: Optional[str] = None
     created_at: datetime
 
 # ============= AUTH ENDPOINTS =============
@@ -367,7 +369,7 @@ Sois concis, professionnel et empathique. Utilise des emojis pertinents pour la 
 
 @api_router.post("/chat", response_model=ChatResponse)
 async def chat_with_ai(chat_req: ChatRequest, user_id: str):
-    """Envoyer un message au chatbot IA et recevoir une réponse"""
+    """Envoyer un message au chatbot IA et recevoir une réponse (avec image optionnelle)"""
     try:
         # Vérifier que le diagnostic appartient à l'utilisateur
         diagnostic = await db.diagnostics.find_one({
@@ -378,16 +380,30 @@ async def chat_with_ai(chat_req: ChatRequest, user_id: str):
         if not diagnostic:
             raise HTTPException(status_code=404, detail="Diagnostic not found")
         
-        # Sauvegarder le message utilisateur
+        # Nettoyer le base64 (enlever le préfixe data:image/...;base64, si présent)
+        image_b64_clean = None
+        if chat_req.image_base64:
+            raw = chat_req.image_base64.strip()
+            if raw.startswith("data:"):
+                # data:image/jpeg;base64,XXXX
+                parts = raw.split(",", 1)
+                image_b64_clean = parts[1] if len(parts) == 2 else raw
+            else:
+                image_b64_clean = raw
+        
+        # Sauvegarder le message utilisateur (contenu enrichi si image)
+        user_content_stored = chat_req.message
+        if image_b64_clean:
+            # Marqueur pour pouvoir afficher la photo dans l'historique côté frontend
+            user_content_stored = f"{chat_req.message}\n\n[image_jointe]"
+        
         user_message_dict = {
             "role": "user",
-            "content": chat_req.message,
+            "content": user_content_stored,
+            "image_base64": image_b64_clean,  # stocké pour réaffichage
             "created_at": datetime.utcnow()
         }
         await db[f"messages_{chat_req.diagnostic_id}"].insert_one(user_message_dict)
-        
-        # Récupérer l'historique des messages
-        messages_history = await db[f"messages_{chat_req.diagnostic_id}"].find().sort("created_at", 1).to_list(100)
         
         # Appeler l'IA
         chat = LlmChat(
@@ -397,9 +413,28 @@ async def chat_with_ai(chat_req: ChatRequest, user_id: str):
         ).with_model("openai", "gpt-5.2")
         
         # Construire le contexte
-        context_message = f"Culture: {diagnostic['culture']}\nSymptômes: {diagnostic['symptoms']}\n\nQuestion: {chat_req.message}"
+        if image_b64_clean:
+            context_message = (
+                f"Culture: {diagnostic['culture']}\n"
+                f"Symptômes initialement décrits: {diagnostic['symptoms']}\n\n"
+                f"L'agriculteur a joint une photo de la plante. "
+                f"Analyse VISUELLEMENT la photo pour identifier les maladies, "
+                f"parasites, carences, anomalies visibles (taches, décolorations, déformations, etc.). "
+                f"Confronte ce que tu vois avec les symptômes décrits.\n\n"
+                f"Question / commentaire: {chat_req.message or '(aucun message texte)'}"
+            )
+            user_msg = UserMessage(
+                text=context_message,
+                file_contents=[ImageContent(image_base64=image_b64_clean)]
+            )
+        else:
+            context_message = (
+                f"Culture: {diagnostic['culture']}\n"
+                f"Symptômes: {diagnostic['symptoms']}\n\n"
+                f"Question: {chat_req.message}"
+            )
+            user_msg = UserMessage(text=context_message)
         
-        user_msg = UserMessage(text=context_message)
         ai_response = await chat.send_message(user_msg)
         
         # Sauvegarder la réponse IA

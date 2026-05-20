@@ -359,6 +359,21 @@ frontend:
         comment: "Composant MarkdownMessage réécrit avec react-native-markdown-display. Intégré dans diagnostic.tsx : messages assistant rendus en markdown (titres, gras, listes, etc.) avec palette verte. Messages user restent en texte simple."
 
 backend:
+  - task: "API Chat - Photo Vision Diagnosis"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "POST /api/chat enrichi : accepte un champ optionnel image_base64. Si présent, l'image est envoyée au LLM (gpt-5.2 vision) via ImageContent(emergentintegrations). Le prompt contextuel demande à l'IA d'analyser visuellement. L'image base64 est aussi persistée dans la collection messages_{diagnostic_id} pour réaffichage. ChatResponse étendu avec image_base64 optionnel."
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED (2026-05-19) — vision chat fully working (6/6 assertions). Test script: /app/backend_test_vision.py. Scenarios covered: (1) POST /api/chat with raw base64 image (generated 200x200 JPEG via PIL) returned 200 with 986-char French response explicitly referencing the photo/visual ('Je vois une image…','feuille','tache','visuel') — confirms gpt-5.2 vision was actually invoked via ImageContent. (2) POST /api/chat with 'data:image/jpeg;base64,…' prefix returns 200; backend strips the prefix correctly — MongoDB messages_{diag_id} stored value matches the raw base64 exactly (no 'data:' prefix). (3) Backwards-compat: POST /api/chat without image_base64 still returns rich 2302-char French response covering tomato diseases. (4) GET /api/messages/{diagnostic_id} returns user messages with the image_base64 field populated (2 user msgs with image, lengths 5388 chars), confirming ChatResponse model now correctly exposes image_base64. MongoDB persistence verified directly: user message doc in collection messages_{diag_id} contains image_base64 field with exact match to sent payload. Test creds: test_agriscan@example.com (UID d7859780-639c-47cd-b264-6a466bd8e9e9). Diagnostic id used: 8c6d0044-927d-4184-97d4-ae747ad9ae8a. Backend logs show 200 OK on all POST /api/chat calls."
+
   - task: "API User - Update Profile (PATCH /users/{uid})"
     implemented: true
     working: true
@@ -396,12 +411,29 @@ metadata:
   run_ui: false
 
 test_plan:
-  current_focus: []
+  current_focus:
+    - "API Chat - Photo Vision Diagnosis"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
 
 agent_communication:
+  - agent: "testing"
+    message: |
+      ✅ VISION CHAT BACKEND TESTING COMPLETE (2026-05-20) — 6/6 PASS
+      Task: "API Chat - Photo Vision Diagnosis" — marked working: true, needs_retesting: false.
+      Test script: /app/backend_test_vision.py (uses real external URL via EXPO_PUBLIC_BACKEND_URL).
+
+      Scenarios validated:
+        1. POST /api/chat with raw base64 image (PIL-generated 200x200 JPEG, ~5388 chars b64) → 200; gpt-5.2 vision actually invoked via ImageContent; AI response (986 chars FR) explicitly references the photo ("Je vois une image…", "feuille", "tache", "visuel").
+        2. POST /api/chat with "data:image/jpeg;base64,…" data-URI prefix → 200; backend correctly strips the prefix (verified in MongoDB messages_{diag_id}: stored image_base64 equals raw payload exactly, no "data:" prefix).
+        3. Backwards-compat: POST /api/chat without image_base64 → 200 with rich 2302-char FR response (mildiou/alternariose/etc.).
+        4. GET /api/messages/{diagnostic_id} → user messages come back with image_base64 populated (2 user msgs with image, lens 5388); ChatResponse model now correctly exposes image_base64.
+
+      MongoDB persistence verified directly on collection messages_{diag_id}: user-message doc contains image_base64 field with exact match to sent payload; AI-message docs do not contain image_base64 (expected).
+      Backend logs show 200 OK for every /api/chat invocation and LiteLLM provider=openai/model=gpt-5.2 calls succeeded. No regressions detected.
+      Test credentials still valid in /app/memory/test_credentials.md (UID d7859780-639c-47cd-b264-6a466bd8e9e9). No backend code changes were made.
+
   - agent: "main"
     message: |
       MVP AgriScan AI complet créé avec :

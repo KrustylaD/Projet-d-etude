@@ -25,6 +25,7 @@ export interface Diagnostic {
 export interface Message {
   role: 'user' | 'assistant' | 'diagnosis';
   content: string;
+  image_base64?: string;
   created_at: string;
 }
 
