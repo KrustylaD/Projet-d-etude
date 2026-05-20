@@ -16,6 +16,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { AlertsMap, MapAlert } from '../../src/components/AlertsMap';
+import { Colors } from '../../src/constants/theme';
 
 interface AlertItem {
   id: string;
@@ -163,11 +164,11 @@ export default function AlertsScreen() {
   const getSeverityColor = (severity: string) => {
     switch (severity) {
       case 'critical':
-        return '#ef4444';
+        return Colors.error;
       case 'warning':
-        return '#fbbf24';
+        return Colors.warning;
       default:
-        return '#60a5fa';
+        return Colors.info;
     }
   };
 
@@ -189,7 +190,7 @@ export default function AlertsScreen() {
       <LinearGradient colors={['#1a2f1a', '#0a1a0a', '#000000']} style={styles.container}>
         <SafeAreaView style={styles.safeArea}>
           <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#4ade80" />
+            <ActivityIndicator size="large" color={Colors.lime} />
           </View>
         </SafeAreaView>
       </LinearGradient>
@@ -225,9 +226,9 @@ export default function AlertsScreen() {
               activeOpacity={0.8}
             >
               {seeding ? (
-                <ActivityIndicator color="#4ade80" size="small" />
+                <ActivityIndicator color={Colors.lime} size="small" />
               ) : (
-                <Ionicons name="add-circle" size={28} color="#4ade80" />
+                <Ionicons name="add-circle" size={28} color={Colors.lime} />
               )}
             </TouchableOpacity>
           </View>
@@ -240,7 +241,7 @@ export default function AlertsScreen() {
             onPress={() => setView('list')}
             activeOpacity={0.8}
           >
-            <Ionicons name="list" size={18} color={view === 'list' ? '#000' : '#a3a3a3'} />
+            <Ionicons name="list" size={18} color={view === 'list' ? Colors.black : Colors.creamLow} />
             <Text style={[styles.toggleText, view === 'list' && styles.toggleTextActive]}>
               Liste
             </Text>
@@ -250,7 +251,7 @@ export default function AlertsScreen() {
             onPress={() => setView('map')}
             activeOpacity={0.8}
           >
-            <Ionicons name="map" size={18} color={view === 'map' ? '#000' : '#a3a3a3'} />
+            <Ionicons name="map" size={18} color={view === 'map' ? Colors.black : Colors.creamLow} />
             <Text style={[styles.toggleText, view === 'map' && styles.toggleTextActive]}>
               Carte
             </Text>
@@ -282,7 +283,7 @@ export default function AlertsScreen() {
           <View style={styles.mapContainer}>
             {alerts.length === 0 ? (
               <View style={styles.emptyState}>
-                <Ionicons name="map-outline" size={64} color="#666" />
+                <Ionicons name="map-outline" size={64} color={Colors.cream50} />
                 <Text style={styles.emptyText}>Aucune alerte à afficher sur la carte</Text>
                 <TouchableOpacity
                   style={styles.demoButton}
@@ -291,10 +292,10 @@ export default function AlertsScreen() {
                   activeOpacity={0.85}
                 >
                   {seeding ? (
-                    <ActivityIndicator color="#000" />
+                    <ActivityIndicator color={Colors.black} />
                   ) : (
                     <>
-                      <Ionicons name="sparkles" size={18} color="#000" />
+                      <Ionicons name="sparkles" size={18} color={Colors.black} />
                       <Text style={styles.demoButtonText}>Générer des alertes de démo</Text>
                     </>
                   )}
@@ -311,13 +312,13 @@ export default function AlertsScreen() {
               <RefreshControl
                 refreshing={refreshing}
                 onRefresh={onRefresh}
-                tintColor="#4ade80"
+                tintColor={Colors.lime}
               />
             }
           >
             {alerts.length === 0 ? (
               <View style={styles.emptyState}>
-                <Ionicons name="notifications-off-outline" size={64} color="#666" />
+                <Ionicons name="notifications-off-outline" size={64} color={Colors.cream50} />
                 <Text style={styles.emptyText}>
                   {filter === 'unread' ? 'Aucune alerte non lue' : 'Aucune alerte'}
                 </Text>
@@ -329,10 +330,10 @@ export default function AlertsScreen() {
                     activeOpacity={0.85}
                   >
                     {seeding ? (
-                      <ActivityIndicator color="#000" />
+                      <ActivityIndicator color={Colors.black} />
                     ) : (
                       <>
-                        <Ionicons name="sparkles" size={18} color="#000" />
+                        <Ionicons name="sparkles" size={18} color={Colors.black} />
                         <Text style={styles.demoButtonText}>Générer des alertes de démo</Text>
                       </>
                     )}
@@ -366,7 +367,7 @@ export default function AlertsScreen() {
                           <Ionicons
                             name={getTypeIcon(alert.type)}
                             size={14}
-                            color="#4ade80"
+                            color={Colors.lime}
                           />
                           <Text style={styles.alertType}>{alert.type}</Text>
                         </View>
@@ -377,7 +378,7 @@ export default function AlertsScreen() {
                       <Text style={styles.alertMessage}>{alert.message}</Text>
                       {alert.location_name && (
                         <View style={styles.locationRow}>
-                          <Ionicons name="location-outline" size={12} color="#4ade80" />
+                          <Ionicons name="location-outline" size={12} color={Colors.lime} />
                           <Text style={styles.locationText}>{alert.location_name}</Text>
                         </View>
                       )}
@@ -403,7 +404,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
     borderBottomWidth: 1,
-    borderBottomColor: '#1a1a1a',
+    borderBottomColor: Colors.card,
   },
   headerActions: {
     flexDirection: 'row',
@@ -413,11 +414,11 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#ffffff',
+    color: Colors.cream,
   },
   headerSubtitle: {
     fontSize: 14,
-    color: '#4ade80',
+    color: Colors.lime,
     marginTop: 4,
   },
   seedButton: {
@@ -430,11 +431,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginHorizontal: 20,
     marginTop: 16,
-    backgroundColor: '#1a1a1a',
+    backgroundColor: Colors.card,
     borderRadius: 12,
     padding: 4,
     borderWidth: 1,
-    borderColor: '#2a2a2a',
+    borderColor: Colors.border,
   },
   toggleBtn: {
     flex: 1,
@@ -446,14 +447,14 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   toggleBtnActive: {
-    backgroundColor: '#4ade80',
+    backgroundColor: Colors.lime,
   },
   toggleText: {
-    color: '#a3a3a3',
+    color: Colors.creamLow,
     fontSize: 14,
     fontWeight: '600',
   },
-  toggleTextActive: { color: '#000' },
+  toggleTextActive: { color: Colors.black },
   filterTabs: {
     flexDirection: 'row',
     padding: 20,
@@ -465,21 +466,21 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 12,
     borderRadius: 12,
-    backgroundColor: '#1a1a1a',
+    backgroundColor: Colors.card,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#2a2a2a',
+    borderColor: Colors.border,
   },
   tabActive: {
-    backgroundColor: '#4ade80',
-    borderColor: '#4ade80',
+    backgroundColor: Colors.lime,
+    borderColor: Colors.lime,
   },
   tabText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#a3a3a3',
+    color: Colors.creamLow,
   },
-  tabTextActive: { color: '#000' },
+  tabTextActive: { color: Colors.black },
   scrollContent: {
     padding: 20,
     paddingTop: 0,
@@ -502,7 +503,7 @@ const styles = StyleSheet.create({
     paddingVertical: 64,
   },
   emptyText: {
-    color: '#666',
+    color: Colors.cream50,
     fontSize: 16,
     marginTop: 16,
     textAlign: 'center',
@@ -511,27 +512,27 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    backgroundColor: '#4ade80',
+    backgroundColor: Colors.lime,
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderRadius: 24,
     marginTop: 20,
   },
   demoButtonText: {
-    color: '#000',
+    color: Colors.black,
     fontWeight: '700',
     fontSize: 14,
   },
   alertCard: {
-    backgroundColor: '#1a1a1a',
+    backgroundColor: Colors.card,
     borderRadius: 16,
     padding: 16,
     marginBottom: 12,
     borderWidth: 1,
-    borderColor: '#2a2a2a',
+    borderColor: Colors.border,
   },
   alertCardUnread: {
-    borderColor: '#4ade80',
+    borderColor: Colors.lime,
     borderWidth: 2,
   },
   alertHeader: {
@@ -561,16 +562,16 @@ const styles = StyleSheet.create({
   alertType: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#4ade80',
+    color: Colors.lime,
     textTransform: 'capitalize',
   },
   alertDate: {
     fontSize: 12,
-    color: '#666',
+    color: Colors.cream50,
   },
   alertMessage: {
     fontSize: 15,
-    color: '#ffffff',
+    color: Colors.cream,
     lineHeight: 22,
   },
   locationRow: {
@@ -581,7 +582,7 @@ const styles = StyleSheet.create({
   },
   locationText: {
     fontSize: 12,
-    color: '#4ade80',
+    color: Colors.lime,
     fontWeight: '500',
   },
   unreadIndicator: {
@@ -591,6 +592,6 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: '#4ade80',
+    backgroundColor: Colors.lime,
   },
 });
