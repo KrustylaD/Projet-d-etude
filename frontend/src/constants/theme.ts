@@ -30,6 +30,11 @@ export const Colors = {
   cream06: 'rgba(249, 249, 242, 0.06)',
   cream04: 'rgba(249, 249, 242, 0.04)',
 
+  // Aliases pour les ecrans
+  card: 'rgba(249, 249, 242, 0.04)',
+  border: 'rgba(249, 249, 242, 0.06)',
+  creamLow: 'rgba(249, 249, 242, 0.45)',
+
   // Opacités Lime
   lime60: 'rgba(212, 255, 80, 0.60)',
   lime50: 'rgba(212, 255, 80, 0.50)',
