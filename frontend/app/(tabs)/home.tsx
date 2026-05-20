@@ -144,7 +144,11 @@ export default function HomeScreen() {
                 </TouchableOpacity>
               </View>
               {stats.recent_diagnostics.slice(0, 3).map((diagnostic) => (
-                <View key={diagnostic.id} style={styles.diagnosticCard}>
+                <TouchableOpacity
+                  key={diagnostic.id}
+                  style={styles.diagnosticCard}
+                  onPress={() => router.navigate(`/(tabs)/diagnostic?id=${diagnostic.id}`)}
+                >
                   <View style={styles.diagnosticHeader}>
                     <Ionicons name="leaf-outline" size={24} color="#4ade80" />
                     <View style={styles.diagnosticInfo}>
@@ -157,7 +161,7 @@ export default function HomeScreen() {
                       <Text style={styles.statusText}>{diagnostic.status}</Text>
                     </View>
                   </View>
-                </View>
+                </TouchableOpacity>
               ))}
             </View>
           )}
