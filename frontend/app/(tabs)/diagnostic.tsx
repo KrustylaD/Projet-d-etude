@@ -18,6 +18,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Message } from '../../src/types';
 import { MarkdownMessage } from '../../src/components/MarkdownMessage';
+import { Colors } from '../../src/constants/theme';
 import * as ImagePicker from 'expo-image-picker';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 
@@ -260,7 +261,7 @@ export default function DiagnosticScreen() {
       <LinearGradient colors={['#1a2f1a', '#0a1a0a', '#000000']} style={styles.container}>
         <SafeAreaView style={styles.safeArea}>
           <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#4ade80" />
+            <ActivityIndicator size="large" color={Colors.lime} />
             <Text style={styles.loadingText}>Chargement de la conversation...</Text>
           </View>
         </SafeAreaView>
@@ -278,7 +279,7 @@ export default function DiagnosticScreen() {
           >
             <ScrollView contentContainerStyle={styles.formContent}>
               <View style={styles.formHeader}>
-                <Ionicons name="chatbubbles" size={60} color="#4ade80" />
+                <Ionicons name="chatbubbles" size={60} color={Colors.lime} />
                 <Text style={styles.formTitle}>Nouveau Diagnostic</Text>
                 <Text style={styles.formSubtitle}>
                   Décrivez les problèmes de votre culture
@@ -290,16 +291,16 @@ export default function DiagnosticScreen() {
                 <TextInput
                   style={styles.input}
                   placeholder="Ex: Tomates, Maïs, Blé..."
-                  placeholderTextColor="#666"
-                  value={culture}
-                  onChangeText={setCulture}
-                />
+                  placeholderTextColor={Colors.cream50}
+                   value={culture}
+                   onChangeText={setCulture}
+                 />
 
-                <Text style={styles.label}>Symptômes observés *</Text>
-                <TextInput
-                  style={[styles.input, styles.textArea]}
-                  placeholder="Décrivez les symptômes : taches, flétrissement, décoloration..."
-                  placeholderTextColor="#666"
+                 <Text style={styles.label}>Symptômes observés *</Text>
+                 <TextInput
+                   style={[styles.input, styles.textArea]}
+                   placeholder="Décrivez les symptômes : taches, flétrissement, décoloration..."
+                   placeholderTextColor={Colors.cream50}
                   value={symptoms}
                   onChangeText={setSymptoms}
                   multiline
@@ -307,7 +308,7 @@ export default function DiagnosticScreen() {
                 />
 
                 <View style={styles.tipCard}>
-                  <Ionicons name="camera" size={18} color="#4ade80" />
+                  <Ionicons name="camera" size={18} color={Colors.lime} />
                   <Text style={styles.tipText}>
                     Vous pourrez joindre une photo de votre plante depuis le chat pour une analyse visuelle par l&apos;IA.
                   </Text>
@@ -319,10 +320,10 @@ export default function DiagnosticScreen() {
                   disabled={loading}
                 >
                   {loading ? (
-                    <ActivityIndicator color="#000" />
-                  ) : (
-                    <>
-                      <Ionicons name="arrow-forward" size={20} color="#000" />
+                    <ActivityIndicator color={Colors.black} />
+                   ) : (
+                     <>
+                       <Ionicons name="arrow-forward" size={20} color={Colors.black} />
                       <Text style={styles.buttonText}>Commencer le diagnostic</Text>
                     </>
                   )}
@@ -340,7 +341,7 @@ export default function DiagnosticScreen() {
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.chatHeader}>
           <TouchableOpacity onPress={startNewDiagnostic} style={styles.newChatButton}>
-            <Ionicons name="add-circle-outline" size={24} color="#4ade80" />
+            <Ionicons name="add-circle-outline" size={24} color={Colors.lime} />
           </TouchableOpacity>
           <View style={styles.chatHeaderInfo}>
             <Text style={styles.chatTitle}>{culture}</Text>
@@ -371,38 +372,38 @@ export default function DiagnosticScreen() {
                   <Ionicons
                     name="leaf"
                     size={20}
-                    color="#4ade80"
-                    style={styles.messageIcon}
-                  />
-                )}
-                <View style={styles.messageContent}>
-                  {message.image_base64 && (
-                    <Image
-                      source={{ uri: message.image_base64 }}
-                      style={styles.messageImage}
-                      resizeMode="cover"
-                    />
-                  )}
-                  {message.role === 'user' ? (
-                    message.content ? (
-                      <Text style={[styles.messageText, styles.userText]}>
-                        {message.content}
-                      </Text>
-                    ) : null
-                  ) : (
-                    <View style={styles.aiTextWrapper}>
-                      <MarkdownMessage content={message.content} />
-                    </View>
-                  )}
-                </View>
-              </View>
-            ))}
-            {loading && (
-              <View style={[styles.messageBubble, styles.aiBubble]}>
-                <Ionicons name="leaf" size={20} color="#4ade80" style={styles.messageIcon} />
+                    color={Colors.lime}
+                     style={styles.messageIcon}
+                   />
+                 )}
+                 <View style={styles.messageContent}>
+                   {message.image_base64 && (
+                     <Image
+                       source={{ uri: message.image_base64 }}
+                       style={styles.messageImage}
+                       resizeMode="cover"
+                     />
+                   )}
+                   {message.role === 'user' ? (
+                     message.content ? (
+                       <Text style={[styles.messageText, styles.userText]}>
+                         {message.content}
+                       </Text>
+                     ) : null
+                   ) : (
+                     <View style={styles.aiTextWrapper}>
+                       <MarkdownMessage content={message.content} />
+                     </View>
+                   )}
+                 </View>
+               </View>
+             ))}
+             {loading && (
+               <View style={[styles.messageBubble, styles.aiBubble]}>
+                 <Ionicons name="leaf" size={20} color={Colors.lime} style={styles.messageIcon} />
                 <View style={styles.aiTextWrapper}>
                   <View style={styles.typingContainer}>
-                    <ActivityIndicator size="small" color="#4ade80" />
+                    <ActivityIndicator size="small" color={Colors.lime} />
                     <Text style={styles.typingText}>L&apos;IA analyse...</Text>
                   </View>
                 </View>
@@ -415,7 +416,7 @@ export default function DiagnosticScreen() {
             <View style={styles.previewContainer}>
               <Image source={{ uri: pendingImage }} style={styles.previewImage} />
               <View style={styles.previewInfo}>
-                <Ionicons name="image" size={16} color="#4ade80" />
+                <Ionicons name="image" size={16} color={Colors.lime} />
                 <Text style={styles.previewText}>Photo prête à envoyer</Text>
               </View>
               <TouchableOpacity
@@ -438,13 +439,13 @@ export default function DiagnosticScreen() {
               <Ionicons
                 name="camera"
                 size={24}
-                color={pendingImage ? '#4ade80' : '#a3a3a3'}
+                color={pendingImage ? Colors.lime : Colors.creamLow}
               />
             </TouchableOpacity>
             <TextInput
               style={styles.messageInput}
               placeholder={pendingImage ? 'Ajouter un message (optionnel)' : 'Posez votre question...'}
-              placeholderTextColor="#666"
+              placeholderTextColor={Colors.cream50}
               value={inputText}
               onChangeText={setInputText}
               multiline
@@ -461,7 +462,7 @@ export default function DiagnosticScreen() {
               <Ionicons
                 name="send"
                 size={22}
-                color={(inputText.trim() || pendingImage) && !loading ? '#000' : '#666'}
+                color={(inputText.trim() || pendingImage) && !loading ? Colors.black : Colors.cream50}
               />
             </TouchableOpacity>
           </View>
@@ -482,7 +483,7 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   loadingText: {
-    color: '#a3a3a3',
+    color: Colors.creamLow,
     fontSize: 14,
   },
   formContent: {
@@ -496,12 +497,12 @@ const styles = StyleSheet.create({
   formTitle: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#ffffff',
+    color: Colors.cream,
     marginTop: 16,
   },
   formSubtitle: {
     fontSize: 16,
-    color: '#a3a3a3',
+    color: Colors.creamLow,
     marginTop: 8,
     textAlign: 'center',
   },
@@ -509,17 +510,17 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#ffffff',
+    color: Colors.cream,
     marginBottom: 8,
   },
   input: {
-    backgroundColor: '#1a1a1a',
+    backgroundColor: Colors.card,
     borderRadius: 12,
     padding: 16,
-    color: '#ffffff',
+    color: Colors.cream,
     fontSize: 16,
     borderWidth: 1,
-    borderColor: '#2a2a2a',
+    borderColor: Colors.border,
     marginBottom: 24,
   },
   textArea: {
@@ -529,22 +530,22 @@ const styles = StyleSheet.create({
   tipCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(74, 222, 128, 0.08)',
+    backgroundColor: Colors.lime08,
     borderRadius: 10,
     padding: 12,
     gap: 10,
     borderWidth: 1,
-    borderColor: '#1f3a1f',
+    borderColor: Colors.border,
     marginBottom: 24,
   },
   tipText: {
-    color: '#a3a3a3',
+    color: Colors.creamLow,
     fontSize: 13,
     flex: 1,
     lineHeight: 18,
   },
   button: {
-    backgroundColor: '#4ade80',
+    backgroundColor: Colors.lime,
     borderRadius: 12,
     height: 56,
     flexDirection: 'row',
@@ -555,7 +556,7 @@ const styles = StyleSheet.create({
   },
   buttonDisabled: { opacity: 0.6 },
   buttonText: {
-    color: '#000000',
+    color: Colors.black,
     fontSize: 18,
     fontWeight: 'bold',
   },
@@ -565,7 +566,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#1a1a1a',
+    borderBottomColor: Colors.card,
   },
   newChatButton: {
     width: 40,
@@ -580,11 +581,11 @@ const styles = StyleSheet.create({
   chatTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#ffffff',
+    color: Colors.cream,
   },
   chatSubtitle: {
     fontSize: 14,
-    color: '#4ade80',
+    color: Colors.lime,
     marginTop: 2,
   },
   chatContainer: { flex: 1 },
@@ -609,28 +610,28 @@ const styles = StyleSheet.create({
     height: 165,
     borderRadius: 12,
     marginBottom: 6,
-    backgroundColor: '#1a1a1a',
+    backgroundColor: Colors.card,
   },
   messageText: {
     fontSize: 16,
     lineHeight: 22,
   },
   userText: {
-    backgroundColor: '#4ade80',
-    color: '#000000',
+    backgroundColor: Colors.lime,
+    color: Colors.black,
     padding: 12,
     borderRadius: 16,
     borderBottomRightRadius: 4,
     overflow: 'hidden',
   },
   aiTextWrapper: {
-    backgroundColor: '#1a1a1a',
+    backgroundColor: Colors.card,
     paddingHorizontal: 14,
     paddingVertical: 10,
     borderRadius: 16,
     borderBottomLeftRadius: 4,
     borderWidth: 1,
-    borderColor: '#2a2a2a',
+    borderColor: Colors.border,
   },
   typingContainer: {
     flexDirection: 'row',
@@ -639,20 +640,20 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   typingText: {
-    color: '#a3a3a3',
+    color: Colors.creamLow,
     fontSize: 14,
     fontStyle: 'italic',
   },
   previewContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#1a1a1a',
+    backgroundColor: Colors.card,
     marginHorizontal: 16,
     marginBottom: 8,
     borderRadius: 12,
     padding: 8,
     borderWidth: 1,
-    borderColor: '#2a3a2a',
+    borderColor: Colors.border,
   },
   previewImage: {
     width: 56,
@@ -667,7 +668,7 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   previewText: {
-    color: '#4ade80',
+    color: Colors.lime,
     fontSize: 14,
     fontWeight: '600',
   },
@@ -681,39 +682,39 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     gap: 6,
     borderTopWidth: 1,
-    borderTopColor: '#1a1a1a',
+    borderTopColor: Colors.card,
   },
   attachButton: {
     width: 44,
     height: 44,
-    backgroundColor: '#1a1a1a',
+    backgroundColor: Colors.card,
     borderRadius: 22,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#2a2a2a',
+    borderColor: Colors.border,
   },
   messageInput: {
     flex: 1,
-    backgroundColor: '#1a1a1a',
+    backgroundColor: Colors.card,
     borderRadius: 22,
     paddingHorizontal: 16,
     paddingVertical: 12,
-    color: '#ffffff',
+    color: Colors.cream,
     fontSize: 16,
     maxHeight: 100,
     borderWidth: 1,
-    borderColor: '#2a2a2a',
+    borderColor: Colors.border,
   },
   sendButton: {
     width: 44,
     height: 44,
-    backgroundColor: '#4ade80',
+    backgroundColor: Colors.lime,
     borderRadius: 22,
     justifyContent: 'center',
     alignItems: 'center',
   },
   sendButtonDisabled: {
-    backgroundColor: '#1a1a1a',
+    backgroundColor: Colors.card,
   },
 });
