@@ -9,6 +9,7 @@ import {
   RefreshControl,
   Alert,
 } from 'react-native';
+import { Colors } from '../../src/constants/theme';
 import { useAuthStore } from '../../src/store/authStore';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
@@ -151,7 +152,7 @@ export default function DashboardScreen() {
       <LinearGradient colors={['#1a2f1a', '#0a1a0a', '#000000']} style={styles.container}>
         <SafeAreaView style={styles.safeArea}>
           <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#4ade80" />
+            <ActivityIndicator size="large" color={Colors.lime} />
           </View>
         </SafeAreaView>
       </LinearGradient>
@@ -163,7 +164,7 @@ export default function DashboardScreen() {
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Dashboard</Text>
-          <Ionicons name="stats-chart" size={28} color="#4ade80" />
+          <Ionicons name="stats-chart" size={28} color={Colors.lime} />
         </View>
 
         <ScrollView
@@ -172,7 +173,7 @@ export default function DashboardScreen() {
             <RefreshControl
               refreshing={refreshing}
               onRefresh={onRefresh}
-              tintColor="#4ade80"
+              tintColor={Colors.lime}
             />
           }
         >
@@ -180,7 +181,7 @@ export default function DashboardScreen() {
           {stats && (
             <View style={styles.statsContainer}>
               <View style={styles.statCardLarge}>
-                <Ionicons name="analytics" size={32} color="#4ade80" />
+                <Ionicons name="analytics" size={32} color={Colors.lime} />
                 <Text style={styles.statValueLarge}>{stats.total_diagnostics}</Text>
                 <Text style={styles.statLabelLarge}>Total Diagnostics</Text>
               </View>
@@ -189,19 +190,19 @@ export default function DashboardScreen() {
                 <View style={styles.statCardSmall}>
                   <Text style={styles.statValueSmall}>{stats.status_breakdown.en_cours}</Text>
                   <Text style={styles.statLabelSmall}>En cours</Text>
-                  <View style={[styles.statusIndicator, { backgroundColor: '#fbbf24' }]} />
+                  <View style={[styles.statusIndicator, { backgroundColor: Colors.warning }]} />
                 </View>
 
                 <View style={styles.statCardSmall}>
                   <Text style={styles.statValueSmall}>{stats.status_breakdown.traité}</Text>
                   <Text style={styles.statLabelSmall}>Traités</Text>
-                  <View style={[styles.statusIndicator, { backgroundColor: '#4ade80' }]} />
+                  <View style={[styles.statusIndicator, { backgroundColor: Colors.lime }]} />
                 </View>
 
                 <View style={styles.statCardSmall}>
                   <Text style={styles.statValueSmall}>{stats.status_breakdown.surveillance}</Text>
                   <Text style={styles.statLabelSmall}>Surveillance</Text>
-                  <View style={[styles.statusIndicator, { backgroundColor: '#60a5fa' }]} />
+                  <View style={[styles.statusIndicator, { backgroundColor: Colors.info }]} />
                 </View>
               </View>
             </View>
@@ -250,7 +251,7 @@ export default function DashboardScreen() {
           <View style={styles.diagnosticsList}>
             {filteredDiagnostics.length === 0 ? (
               <View style={styles.emptyState}>
-                <Ionicons name="folder-open-outline" size={64} color="#666" />
+                <Ionicons name="folder-open-outline" size={64} color={Colors.cream50} />
                 <Text style={styles.emptyText}>Aucun diagnostic trouvé</Text>
               </View>
             ) : (
@@ -263,7 +264,7 @@ export default function DashboardScreen() {
                 >
                   <View style={styles.diagnosticCardHeader}>
                     <View style={styles.diagnosticIconContainer}>
-                      <Ionicons name="leaf" size={24} color="#4ade80" />
+                      <Ionicons name="leaf" size={24} color={Colors.lime} />
                     </View>
                     <View style={styles.diagnosticCardInfo}>
                       <Text style={styles.diagnosticCulture}>{diagnostic.culture}</Text>
@@ -278,16 +279,16 @@ export default function DashboardScreen() {
                       }}
                       style={[
                         styles.statusBadge,
-                        { backgroundColor: getStatusColor(diagnostic.status) },
+                        { backgroundColor: getStatusBadge(diagnostic.status).bg },
                       ]}
                       hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
                     >
                       {actioningId === diagnostic.id ? (
-                        <ActivityIndicator size="small" color="#000" />
+                        <ActivityIndicator size="small" color={getStatusBadge(diagnostic.status).text} />
                       ) : (
                         <>
-                          <Text style={styles.statusText}>{diagnostic.status}</Text>
-                          <Ionicons name="chevron-down" size={12} color="#000" />
+                          <Text style={[styles.statusText, { color: getStatusBadge(diagnostic.status).text }]}>{diagnostic.status}</Text>
+                          <Ionicons name="chevron-down" size={12} color={getStatusBadge(diagnostic.status).text} />
                         </>
                       )}
                     </TouchableOpacity>
@@ -300,7 +301,7 @@ export default function DashboardScreen() {
                   {diagnostic.diagnosis && (
                     <View style={styles.diagnosisContainer}>
                       <View style={styles.diagnosisHeader}>
-                        <Ionicons name="medical" size={16} color="#4ade80" />
+                        <Ionicons name="medical" size={16} color={Colors.lime} />
                         <Text style={styles.diagnosisLabel}>Diagnostic:</Text>
                       </View>
                       <Text style={styles.diagnosisText}>{diagnostic.diagnosis}</Text>
@@ -324,7 +325,7 @@ export default function DashboardScreen() {
 
                   {diagnostic.treatment && (
                     <View style={styles.treatmentContainer}>
-                      <Ionicons name="medical-outline" size={16} color="#60a5fa" />
+                      <Ionicons name="medical-outline" size={16} color={Colors.info} />
                       <Text style={styles.treatmentText} numberOfLines={2}>
                         {diagnostic.treatment}
                       </Text>
@@ -334,7 +335,7 @@ export default function DashboardScreen() {
                   {/* Footer actions */}
                   <View style={styles.cardActions}>
                     <View style={styles.continueHint}>
-                      <Ionicons name="chatbubble-ellipses-outline" size={14} color="#4ade80" />
+                      <Ionicons name="chatbubble-ellipses-outline" size={14} color={Colors.lime} />
                       <Text style={styles.continueHintText}>Toucher pour continuer la conversation</Text>
                     </View>
                     <TouchableOpacity
@@ -358,16 +359,16 @@ export default function DashboardScreen() {
   );
 }
 
-function getStatusColor(status: string): string {
+function getStatusBadge(status: string): { bg: string; text: string } {
   switch (status) {
-    case 'en cours':
-      return '#fbbf24';
     case 'traité':
-      return '#4ade80';
+      return { bg: Colors.lime15, text: Colors.lime };
+    case 'en cours':
+      return { bg: Colors.warning15, text: Colors.warning };
     case 'surveillance':
-      return '#60a5fa';
+      return { bg: Colors.info15, text: Colors.info };
     default:
-      return '#666';
+      return { bg: Colors.cream10, text: Colors.cream50 };
   }
 }
 
@@ -395,12 +396,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
     borderBottomWidth: 1,
-    borderBottomColor: '#1a1a1a',
+    borderBottomColor: Colors.card,
   },
   headerTitle: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#ffffff',
+    color: Colors.cream,
   },
   scrollContent: {
     paddingBottom: 32,
@@ -414,23 +415,23 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   statCardLarge: {
-    backgroundColor: '#1a1a1a',
+    backgroundColor: Colors.card,
     borderRadius: 16,
     padding: 24,
     alignItems: 'center',
     marginBottom: 16,
     borderWidth: 1,
-    borderColor: '#2a2a2a',
+    borderColor: Colors.border,
   },
   statValueLarge: {
     fontSize: 48,
     fontWeight: 'bold',
-    color: '#4ade80',
+    color: Colors.lime,
     marginTop: 12,
   },
   statLabelLarge: {
     fontSize: 16,
-    color: '#a3a3a3',
+    color: Colors.creamLow,
     marginTop: 8,
   },
   statsRow: {
@@ -439,21 +440,21 @@ const styles = StyleSheet.create({
   },
   statCardSmall: {
     flex: 1,
-    backgroundColor: '#1a1a1a',
+    backgroundColor: Colors.card,
     borderRadius: 12,
     padding: 16,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#2a2a2a',
+    borderColor: Colors.border,
   },
   statValueSmall: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#ffffff',
+    color: Colors.cream,
   },
   statLabelSmall: {
     fontSize: 12,
-    color: '#a3a3a3',
+    color: Colors.creamLow,
     marginTop: 4,
     textAlign: 'center',
   },
@@ -471,22 +472,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 20,
-    backgroundColor: '#1a1a1a',
+    backgroundColor: Colors.card,
     marginRight: 12,
     borderWidth: 1,
-    borderColor: '#2a2a2a',
+    borderColor: Colors.border,
   },
   filterButtonActive: {
-    backgroundColor: '#4ade80',
-    borderColor: '#4ade80',
+    backgroundColor: Colors.lime,
+    borderColor: Colors.lime,
   },
   filterText: {
-    color: '#a3a3a3',
+    color: Colors.creamLow,
     fontSize: 14,
     fontWeight: '600',
   },
   filterTextActive: {
-    color: '#000',
+    color: Colors.black,
   },
   diagnosticsList: {
     padding: 20,
@@ -497,17 +498,17 @@ const styles = StyleSheet.create({
     paddingVertical: 64,
   },
   emptyText: {
-    color: '#666',
+    color: Colors.cream50,
     fontSize: 16,
     marginTop: 16,
   },
   diagnosticCard: {
-    backgroundColor: '#1a1a1a',
+    backgroundColor: Colors.card,
     borderRadius: 16,
     padding: 16,
     marginBottom: 16,
     borderWidth: 1,
-    borderColor: '#2a2a2a',
+    borderColor: Colors.border,
   },
   diagnosticCardHeader: {
     flexDirection: 'row',
@@ -518,7 +519,7 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: '#0f2f0f',
+    backgroundColor: Colors.lime08,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
@@ -529,11 +530,11 @@ const styles = StyleSheet.create({
   diagnosticCulture: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#ffffff',
+    color: Colors.cream,
   },
   diagnosticDate: {
     fontSize: 12,
-    color: '#a3a3a3',
+    color: Colors.creamLow,
     marginTop: 2,
   },
   statusBadge: {
@@ -547,7 +548,7 @@ const styles = StyleSheet.create({
   statusText: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#000',
+    color: Colors.black,
   },
   cardActions: {
     flexDirection: 'row',
@@ -556,7 +557,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
     paddingTop: 12,
     borderTopWidth: 1,
-    borderTopColor: '#2a2a2a',
+    borderTopColor: Colors.border,
   },
   continueHint: {
     flexDirection: 'row',
@@ -565,7 +566,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   continueHintText: {
-    color: '#4ade80',
+    color: Colors.lime,
     fontSize: 12,
     fontWeight: '500',
   },
@@ -573,25 +574,25 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+    backgroundColor: Colors.error12,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: 'rgba(239, 68, 68, 0.3)',
+    borderColor: Colors.error15,
   },
   diagnosticSymptoms: {
     fontSize: 14,
-    color: '#a3a3a3',
+    color: Colors.creamLow,
     lineHeight: 20,
     marginBottom: 12,
   },
   diagnosisContainer: {
-    backgroundColor: '#0f2f0f',
+    backgroundColor: Colors.lime08,
     borderRadius: 12,
     padding: 12,
     marginBottom: 12,
     borderWidth: 1,
-    borderColor: '#1a4a1a',
+    borderColor: Colors.border,
   },
   diagnosisHeader: {
     flexDirection: 'row',
@@ -601,12 +602,12 @@ const styles = StyleSheet.create({
   diagnosisLabel: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#4ade80',
+    color: Colors.lime,
     marginLeft: 6,
   },
   diagnosisText: {
     fontSize: 14,
-    color: '#ffffff',
+    color: Colors.cream,
     lineHeight: 20,
   },
   probabilityContainer: {
@@ -618,35 +619,35 @@ const styles = StyleSheet.create({
   probabilityBar: {
     flex: 1,
     height: 6,
-    backgroundColor: '#1a1a1a',
+    backgroundColor: Colors.card,
     borderRadius: 3,
     overflow: 'hidden',
   },
   probabilityFill: {
     height: '100%',
-    backgroundColor: '#4ade80',
+    backgroundColor: Colors.lime,
   },
   probabilityText: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#4ade80',
+    color: Colors.lime,
     minWidth: 40,
     textAlign: 'right',
   },
   treatmentContainer: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    backgroundColor: '#0a1f2f',
+    backgroundColor: Colors.info10,
     borderRadius: 12,
     padding: 12,
     gap: 8,
     borderWidth: 1,
-    borderColor: '#1a3a4a',
+    borderColor: Colors.border,
   },
   treatmentText: {
     flex: 1,
     fontSize: 14,
-    color: '#60a5fa',
+    color: Colors.info,
     lineHeight: 20,
   },
 });
