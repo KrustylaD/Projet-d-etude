@@ -326,6 +326,55 @@ async def get_diagnostic_detail(diagnostic_id: str, user_id: str):
         logger.error(f"Get diagnostic detail error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+@api_router.patch("/diagnostics/{diagnostic_id}/status", response_model=DiagnosticResponse)
+async def update_diagnostic_status(diagnostic_id: str, user_id: str, status: str):
+    """Changer le statut d'un diagnostic (en cours / traité / surveillance)"""
+    try:
+        if status not in ("en cours", "traité", "surveillance"):
+            raise HTTPException(status_code=400, detail="Invalid status value")
+
+        result = await db.diagnostics.update_one(
+            {"id": diagnostic_id, "user_id": user_id},
+            {"$set": {"status": status, "updated_at": datetime.utcnow()}}
+        )
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Diagnostic not found")
+
+        diagnostic = await db.diagnostics.find_one({"id": diagnostic_id, "user_id": user_id})
+        return DiagnosticResponse(**diagnostic)
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Update diagnostic status error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.delete("/diagnostics/{diagnostic_id}")
+async def delete_diagnostic(diagnostic_id: str, user_id: str):
+    """Supprimer un diagnostic et l'historique de chat associé"""
+    try:
+        # Vérifier propriété
+        diagnostic = await db.diagnostics.find_one({"id": diagnostic_id, "user_id": user_id})
+        if not diagnostic:
+            raise HTTPException(status_code=404, detail="Diagnostic not found")
+
+        # Supprimer le diagnostic
+        await db.diagnostics.delete_one({"id": diagnostic_id, "user_id": user_id})
+
+        # Supprimer la collection des messages associés
+        messages_col_name = f"messages_{diagnostic_id}"
+        try:
+            await db.drop_collection(messages_col_name)
+        except Exception as drop_err:
+            # On log mais on ne fait pas échouer la suppression du diagnostic
+            logger.warning(f"Could not drop {messages_col_name}: {drop_err}")
+
+        return {"message": "Diagnostic deleted successfully", "id": diagnostic_id}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Delete diagnostic error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 # ============= CHAT / AI ENDPOINTS =============
 
 SYSTEM_PROMPT = """Tu es un assistant spécialisé en diagnostic agricole pour les maladies des plantes.

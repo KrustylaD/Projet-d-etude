@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   RefreshControl,
+  Alert,
 } from 'react-native';
 import { useAuthStore } from '../../src/store/authStore';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -15,14 +16,19 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Stats, Diagnostic } from '../../src/types';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
+import { useRouter } from 'expo-router';
+
+type DiagnosticStatus = 'en cours' | 'traité' | 'surveillance';
 
 export default function DashboardScreen() {
   const { user } = useAuthStore();
+  const router = useRouter();
   const [stats, setStats] = useState<Stats | null>(null);
   const [diagnostics, setDiagnostics] = useState<Diagnostic[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [filter, setFilter] = useState<'all' | 'en cours' | 'traité' | 'surveillance'>('all');
+  const [filter, setFilter] = useState<'all' | DiagnosticStatus>('all');
+  const [actioningId, setActioningId] = useState<string | null>(null);
 
   const fetchData = async () => {
     if (!user) return;
@@ -56,6 +62,87 @@ export default function DashboardScreen() {
   const onRefresh = () => {
     setRefreshing(true);
     fetchData();
+  };
+
+  const openDiagnostic = (diagnostic: Diagnostic) => {
+    router.push({
+      pathname: '/(tabs)/diagnostic',
+      params: { id: diagnostic.id },
+    });
+  };
+
+  const confirmDelete = (diagnostic: Diagnostic) => {
+    Alert.alert(
+      'Supprimer ce diagnostic ?',
+      `Le diagnostic de "${diagnostic.culture}" et tout son historique de conversation seront définitivement supprimés.`,
+      [
+        { text: 'Annuler', style: 'cancel' },
+        {
+          text: 'Supprimer',
+          style: 'destructive',
+          onPress: () => deleteDiagnostic(diagnostic.id),
+        },
+      ]
+    );
+  };
+
+  const deleteDiagnostic = async (id: string) => {
+    if (!user) return;
+    setActioningId(id);
+    try {
+      const resp = await fetch(
+        `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/diagnostics/${id}?user_id=${user.uid}`,
+        { method: 'DELETE' }
+      );
+      if (!resp.ok) throw new Error('Suppression échouée');
+      setDiagnostics((prev) => prev.filter((d) => d.id !== id));
+      // Refresh stats
+      fetchData();
+    } catch (err) {
+      console.error('Delete error', err);
+      Alert.alert('Erreur', 'Impossible de supprimer ce diagnostic');
+    } finally {
+      setActioningId(null);
+    }
+  };
+
+  const openStatusMenu = (diagnostic: Diagnostic) => {
+    const options: DiagnosticStatus[] = ['en cours', 'traité', 'surveillance'];
+    Alert.alert(
+      'Changer le statut',
+      `Statut actuel : ${diagnostic.status}`,
+      [
+        ...options
+          .filter((s) => s !== diagnostic.status)
+          .map((s) => ({
+            text: statusLabel(s),
+            onPress: () => updateStatus(diagnostic.id, s),
+          })),
+        { text: 'Annuler', style: 'cancel' as const },
+      ]
+    );
+  };
+
+  const updateStatus = async (id: string, status: DiagnosticStatus) => {
+    if (!user) return;
+    setActioningId(id);
+    try {
+      const resp = await fetch(
+        `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/diagnostics/${id}/status?user_id=${user.uid}&status=${encodeURIComponent(status)}`,
+        { method: 'PATCH' }
+      );
+      if (!resp.ok) throw new Error('Update échoué');
+      const updated = await resp.json();
+      setDiagnostics((prev) =>
+        prev.map((d) => (d.id === id ? { ...d, status: updated.status } : d))
+      );
+      fetchData();
+    } catch (err) {
+      console.error('Status update error', err);
+      Alert.alert('Erreur', 'Impossible de changer le statut');
+    } finally {
+      setActioningId(null);
+    }
   };
 
   const filteredDiagnostics = diagnostics.filter(
@@ -171,7 +258,12 @@ export default function DashboardScreen() {
               </View>
             ) : (
               filteredDiagnostics.map((diagnostic) => (
-                <View key={diagnostic.id} style={styles.diagnosticCard}>
+                <TouchableOpacity
+                  key={diagnostic.id}
+                  style={styles.diagnosticCard}
+                  onPress={() => openDiagnostic(diagnostic)}
+                  activeOpacity={0.85}
+                >
                   <View style={styles.diagnosticCardHeader}>
                     <View style={styles.diagnosticIconContainer}>
                       <Ionicons name="leaf" size={24} color="#4ade80" />
@@ -182,14 +274,26 @@ export default function DashboardScreen() {
                         {format(new Date(diagnostic.created_at), 'PPP', { locale: fr })}
                       </Text>
                     </View>
-                    <View
+                    <TouchableOpacity
+                      onPress={(e) => {
+                        e.stopPropagation?.();
+                        openStatusMenu(diagnostic);
+                      }}
                       style={[
                         styles.statusBadge,
                         { backgroundColor: getStatusColor(diagnostic.status) },
                       ]}
+                      hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
                     >
-                      <Text style={styles.statusText}>{diagnostic.status}</Text>
-                    </View>
+                      {actioningId === diagnostic.id ? (
+                        <ActivityIndicator size="small" color="#000" />
+                      ) : (
+                        <>
+                          <Text style={styles.statusText}>{diagnostic.status}</Text>
+                          <Ionicons name="chevron-down" size={12} color="#000" />
+                        </>
+                      )}
+                    </TouchableOpacity>
                   </View>
 
                   <Text style={styles.diagnosticSymptoms} numberOfLines={2}>
@@ -229,7 +333,25 @@ export default function DashboardScreen() {
                       </Text>
                     </View>
                   )}
-                </View>
+
+                  {/* Footer actions */}
+                  <View style={styles.cardActions}>
+                    <View style={styles.continueHint}>
+                      <Ionicons name="chatbubble-ellipses-outline" size={14} color="#4ade80" />
+                      <Text style={styles.continueHintText}>Toucher pour continuer la conversation</Text>
+                    </View>
+                    <TouchableOpacity
+                      onPress={(e) => {
+                        e.stopPropagation?.();
+                        confirmDelete(diagnostic);
+                      }}
+                      style={styles.deleteButton}
+                      hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                    >
+                      <Ionicons name="trash-outline" size={18} color="#ef4444" />
+                    </TouchableOpacity>
+                  </View>
+                </TouchableOpacity>
               ))
             )}
           </View>
@@ -249,6 +371,17 @@ function getStatusColor(status: string): string {
       return '#60a5fa';
     default:
       return '#666';
+  }
+}
+
+function statusLabel(status: DiagnosticStatus): string {
+  switch (status) {
+    case 'en cours':
+      return '🟡 En cours';
+    case 'traité':
+      return '🟢 Traité';
+    case 'surveillance':
+      return '🔵 Mettre en surveillance';
   }
 }
 
@@ -407,6 +540,9 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   statusBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 12,
@@ -415,6 +551,36 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '600',
     color: '#000',
+  },
+  cardActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 12,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: '#2a2a2a',
+  },
+  continueHint: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    flex: 1,
+  },
+  continueHintText: {
+    color: '#4ade80',
+    fontSize: 12,
+    fontWeight: '500',
+  },
+  deleteButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(239, 68, 68, 0.3)',
   },
   diagnosticSymptoms: {
     fontSize: 14,

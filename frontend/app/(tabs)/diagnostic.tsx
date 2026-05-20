@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -19,9 +19,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Message } from '../../src/types';
 import { MarkdownMessage } from '../../src/components/MarkdownMessage';
 import * as ImagePicker from 'expo-image-picker';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 
 export default function DiagnosticScreen() {
   const { user } = useAuthStore();
+  const router = useRouter();
+  const params = useLocalSearchParams<{ id?: string }>();
   const scrollViewRef = useRef<ScrollView>(null);
 
   const [messages, setMessages] = useState<Message[]>([]);
@@ -31,7 +34,60 @@ export default function DiagnosticScreen() {
   const [symptoms, setSymptoms] = useState('');
   const [diagnosticId, setDiagnosticId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [loadingHistory, setLoadingHistory] = useState(false);
   const [showInitialForm, setShowInitialForm] = useState(true);
+
+  // Si un id est passé en paramètre, charger le diagnostic et son historique
+  useEffect(() => {
+    const id = params.id;
+    if (id && user && id !== diagnosticId) {
+      loadExistingDiagnostic(id);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params.id, user]);
+
+  const loadExistingDiagnostic = async (id: string) => {
+    if (!user) return;
+    setLoadingHistory(true);
+    try {
+      // Charger le diagnostic
+      const diagResp = await fetch(
+        `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/diagnostics/${id}/detail?user_id=${user.uid}`
+      );
+      if (!diagResp.ok) throw new Error('Diagnostic introuvable');
+      const diagnostic = await diagResp.json();
+
+      // Charger les messages
+      const msgsResp = await fetch(
+        `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/messages/${id}?user_id=${user.uid}`
+      );
+      const msgs = msgsResp.ok ? await msgsResp.json() : [];
+
+      setCulture(diagnostic.culture);
+      setSymptoms(diagnostic.symptoms);
+      setDiagnosticId(id);
+
+      // S'il n'y a aucun message historique, ajouter un message d'accueil
+      if (msgs.length === 0) {
+        setMessages([
+          {
+            role: 'assistant',
+            content: `Reprise du diagnostic pour **${diagnostic.culture}**.\n\nSymptômes initialement décrits : *"${diagnostic.symptoms}"*\n\nComment puis-je vous aider à poursuivre ?`,
+            created_at: new Date().toISOString(),
+          },
+        ]);
+      } else {
+        setMessages(msgs);
+      }
+
+      setShowInitialForm(false);
+    } catch (error) {
+      console.error('Error loading diagnostic:', error);
+      Alert.alert('Erreur', 'Impossible de charger ce diagnostic');
+    } finally {
+      setLoadingHistory(false);
+    }
+  };
 
   const createDiagnostic = async () => {
     if (!culture.trim() || !symptoms.trim()) {
@@ -193,7 +249,24 @@ export default function DiagnosticScreen() {
     setSymptoms('');
     setInputText('');
     setPendingImage(null);
+    // Effacer le paramètre URL si présent (sinon useEffect rechargerait)
+    if (params.id) {
+      router.setParams({ id: '' });
+    }
   };
+
+  if (loadingHistory) {
+    return (
+      <LinearGradient colors={['#1a2f1a', '#0a1a0a', '#000000']} style={styles.container}>
+        <SafeAreaView style={styles.safeArea}>
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#4ade80" />
+            <Text style={styles.loadingText}>Chargement de la conversation...</Text>
+          </View>
+        </SafeAreaView>
+      </LinearGradient>
+    );
+  }
 
   if (showInitialForm) {
     return (
@@ -402,6 +475,16 @@ const styles = StyleSheet.create({
   container: { flex: 1 },
   safeArea: { flex: 1 },
   keyboardView: { flex: 1 },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 16,
+  },
+  loadingText: {
+    color: '#a3a3a3',
+    fontSize: 14,
+  },
   formContent: {
     padding: 24,
     paddingTop: 48,

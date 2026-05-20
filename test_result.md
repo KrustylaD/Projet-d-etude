@@ -359,6 +359,18 @@ frontend:
         comment: "Composant MarkdownMessage réécrit avec react-native-markdown-display. Intégré dans diagnostic.tsx : messages assistant rendus en markdown (titres, gras, listes, etc.) avec palette verte. Messages user restent en texte simple."
 
 backend:
+  - task: "API Diagnostics - Delete & Status Management"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Nouveaux endpoints : DELETE /api/diagnostics/{id}?user_id=X (supprime le diagnostic + drop la collection messages_{id}) et PATCH /api/diagnostics/{id}/status?user_id=X&status=Y (change le statut parmi 'en cours' | 'traité' | 'surveillance'). Validation 400 pour status invalide, 404 si diagnostic introuvable."
+
   - task: "API Alerts - Geolocation Support"
     implemented: true
     working: true
@@ -471,7 +483,8 @@ metadata:
   run_ui: false
 
 test_plan:
-  current_focus: []
+  current_focus:
+    - "API Diagnostics - Delete & Status Management"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
