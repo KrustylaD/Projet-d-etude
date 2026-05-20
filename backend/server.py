@@ -95,6 +95,9 @@ class AlertCreate(BaseModel):
     type: str  # "maladie", "météo", "recommandation", "système"
     message: str
     severity: str  # "info", "warning", "critical"
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
+    location_name: Optional[str] = None
 
 class AlertResponse(BaseModel):
     id: str
@@ -103,6 +106,9 @@ class AlertResponse(BaseModel):
     message: str
     severity: str
     read: bool
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
+    location_name: Optional[str] = None
     created_at: datetime
 
 class ChatRequest(BaseModel):

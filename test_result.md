@@ -361,11 +361,11 @@ frontend:
 backend:
   - task: "API Alerts - Geolocation Support"
     implemented: true
-    working: false
+    working: true
     file: "/app/backend/server.py"
-    stuck_count: 1
+    stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
@@ -406,6 +406,18 @@ backend:
                 created_at: datetime
 
           No other endpoint changes needed — the insert dict at lines 515-525 and the AlertResponse(**alert_dict) construction will then work correctly. The existing GET /api/alerts/{user_id} will also start returning the new fields automatically once AlertResponse is updated. I did NOT modify server.py (out of scope for testing agent).
+      - working: true
+        agent: "testing"
+        comment: |
+          ✅ RE-TESTED (2026-05-20) — Fix verified, 16/16 assertions passed.
+          Test script: /app/backend_test_alerts_geo.py
+          Main agent updated AlertCreate (lines 94-100) and AlertResponse (lines 102-112) in /app/backend/server.py with Optional[float] latitude/longitude and Optional[str] location_name (defaults None). All 5 verification scenarios from review request pass:
+            1. Login with /app/memory/test_credentials.md (test_agriscan@example.com) → 200, UID d7859780-639c-47cd-b264-6a466bd8e9e9.
+            2. POST /api/alerts with {"type":"maladie","message":"Mildiou","severity":"critical","latitude":43.6047,"longitude":1.4442,"location_name":"Toulouse"} → 200, response correctly contains latitude=43.6047, longitude=1.4442, location_name="Toulouse".
+            3. POST /api/alerts WITHOUT location fields (backwards compat with body {"type":"système","message":"Test sans localisation","severity":"info"}) → 200, response has latitude=null, longitude=null, location_name=null.
+            4. GET /api/alerts/{user_id} → 200, returns 2 alerts; both alerts have correct location fields (the Toulouse one with all geo values populated, the systeme one with nulls).
+            5. No 500 errors — backend logs show 200 OK on all POST /api/alerts calls.
+          Stuck_count reset to 0, working=true, needs_retesting=false.
 
   - task: "API Chat - Photo Vision Diagnosis"
     implemented: true
@@ -459,13 +471,27 @@ metadata:
   run_ui: false
 
 test_plan:
-  current_focus:
-    - "API Alerts - Geolocation Support"
+  current_focus: []
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
 
 agent_communication:
+  - agent: "testing"
+    message: |
+      ✅ ALERTS GEOLOCATION RE-TEST COMPLETE (2026-05-20) — 16/16 ASSERTIONS PASSED
+      Task: "API Alerts - Geolocation Support" — marked working: true, needs_retesting: false, stuck_count reset to 0.
+      Test script: /app/backend_test_alerts_geo.py
+
+      Verified all 5 review-request assertions:
+        1. Login with /app/memory/test_credentials.md (test_agriscan@example.com / testpassword123) → 200, UID d7859780-639c-47cd-b264-6a466bd8e9e9.
+        2. POST /api/alerts with body {"type":"maladie","message":"Mildiou","severity":"critical","latitude":43.6047,"longitude":1.4442,"location_name":"Toulouse"} → 200; response contains latitude=43.6047, longitude=1.4442, location_name="Toulouse".
+        3. POST /api/alerts WITHOUT location (backwards-compat) → 200; latitude/longitude/location_name all null.
+        4. GET /api/alerts/{user_id} → 200; both alerts present with correct location fields (Toulouse one populated, système one null).
+        5. No 500 errors — backend logs confirm all POST /api/alerts now return 200 OK.
+
+      Main agent's fix to AlertCreate (lines 94-100) and AlertResponse (lines 102-112) with Optional[float]/Optional[str] defaults=None is correct and complete. No regressions detected on existing alert endpoints. All backend tasks are now working.
+
   - agent: "testing"
     message: |
       ❌ ALERTS GEOLOCATION BACKEND TESTING (2026-05-20) — CRITICAL FAILURE, 2/10 assertions passed

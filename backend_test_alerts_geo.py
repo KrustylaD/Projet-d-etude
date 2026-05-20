@@ -1,142 +1,107 @@
-"""
-Test script for Alerts Geolocation Support
-- POST /api/alerts with latitude/longitude/location_name
-- POST /api/alerts without location fields (backwards compat)
-- GET /api/alerts/{user_id} returns location fields when set
-"""
-import os
+"""Re-test POST /api/alerts with geolocation fields."""
+import sys
 import requests
-import json
 from pathlib import Path
 
-# Read external backend URL from frontend .env
-BACKEND_URL = None
-env_file = Path("/app/frontend/.env")
-for line in env_file.read_text().splitlines():
+env_path = Path("/app/frontend/.env")
+backend_url = None
+for line in env_path.read_text().splitlines():
     if line.startswith("EXPO_PUBLIC_BACKEND_URL="):
-        BACKEND_URL = line.split("=", 1)[1].strip().strip('"')
+        backend_url = line.split("=", 1)[1].strip().strip('"').strip("'")
         break
+if not backend_url:
+    print("ERROR: EXPO_PUBLIC_BACKEND_URL not found")
+    sys.exit(1)
 
-API = f"{BACKEND_URL}/api"
-print(f"Using backend: {API}")
+API = f"{backend_url}/api"
+print(f"Testing against: {API}")
 
-USER_ID = "d7859780-639c-47cd-b264-6a466bd8e9e9"
 EMAIL = "test_agriscan@example.com"
 PASSWORD = "testpassword123"
 
 results = []
+def check(name, cond, detail=""):
+    status = "PASS" if cond else "FAIL"
+    results.append((name, cond, detail))
+    print(f"  [{status}] {name} {detail if not cond else ''}")
 
-def record(name, ok, details=""):
-    results.append((name, ok, details))
-    status = "PASS" if ok else "FAIL"
-    print(f"[{status}] {name} - {details}")
-
-# 0. Verify user exists / login
+# 1. Login
+print("\n1) Login")
 r = requests.post(f"{API}/auth/login", json={"email": EMAIL, "password": PASSWORD}, timeout=30)
+check("Login 200", r.status_code == 200, f"got {r.status_code}: {r.text[:200]}")
 if r.status_code != 200:
-    print(f"Login failed: {r.status_code} {r.text}")
-    raise SystemExit(1)
-user = r.json()
-uid = user["uid"]
-print(f"Logged in. UID: {uid}")
-record("Auth login (precheck)", uid == USER_ID, f"uid={uid}")
+    sys.exit(1)
+uid = r.json()["uid"]
+print(f"  UID: {uid}")
 
-# 1. POST /api/alerts WITH location fields
-body_with_loc = {
+# 2. POST alert WITH location
+print("\n2) POST /api/alerts WITH location")
+body_with = {
     "type": "maladie",
-    "message": "Mildiou détecté sur tomates - Toulouse",
+    "message": "Mildiou",
     "severity": "critical",
     "latitude": 43.6047,
     "longitude": 1.4442,
     "location_name": "Toulouse"
 }
-r = requests.post(f"{API}/alerts?user_id={uid}", json=body_with_loc, timeout=30)
-print(f"\nPOST /alerts (with loc) -> {r.status_code}")
-print(f"Body: {r.text[:500]}")
-
+r = requests.post(f"{API}/alerts?user_id={uid}", json=body_with, timeout=30)
+check("POST with location 200", r.status_code == 200, f"got {r.status_code}: {r.text[:300]}")
+alert_with_id = None
 if r.status_code == 200:
-    data = r.json()
-    record("POST /api/alerts returns 200 (with location)", True, f"id={data.get('id')}")
-    # Check fields
-    has_lat = data.get("latitude") == 43.6047
-    has_lon = data.get("longitude") == 1.4442
-    has_name = data.get("location_name") == "Toulouse"
-    record("Response contains latitude=43.6047", has_lat, f"got={data.get('latitude')}")
-    record("Response contains longitude=1.4442", has_lon, f"got={data.get('longitude')}")
-    record("Response contains location_name=Toulouse", has_name, f"got={data.get('location_name')}")
-    alert_with_loc_id = data.get("id")
-else:
-    record("POST /api/alerts returns 200 (with location)", False, f"status={r.status_code} body={r.text[:300]}")
-    record("Response contains latitude=43.6047", False, "request failed")
-    record("Response contains longitude=1.4442", False, "request failed")
-    record("Response contains location_name=Toulouse", False, "request failed")
-    alert_with_loc_id = None
+    j = r.json()
+    alert_with_id = j.get("id")
+    check("latitude=43.6047", j.get("latitude") == 43.6047, f"got {j.get('latitude')}")
+    check("longitude=1.4442", j.get("longitude") == 1.4442, f"got {j.get('longitude')}")
+    check("location_name='Toulouse'", j.get("location_name") == "Toulouse", f"got {j.get('location_name')}")
 
-# 2. POST /api/alerts WITHOUT location fields (backwards compat)
-body_no_loc = {
-    "type": "météo",
-    "message": "Risque de gel ce soir",
-    "severity": "warning"
+# 3. POST alert WITHOUT location (backwards compat)
+print("\n3) POST /api/alerts WITHOUT location")
+body_without = {
+    "type": "système",
+    "message": "Test sans localisation",
+    "severity": "info"
 }
-r = requests.post(f"{API}/alerts?user_id={uid}", json=body_no_loc, timeout=30)
-print(f"\nPOST /alerts (no loc) -> {r.status_code}")
-print(f"Body: {r.text[:500]}")
-
+r = requests.post(f"{API}/alerts?user_id={uid}", json=body_without, timeout=30)
+check("POST without location 200", r.status_code == 200, f"got {r.status_code}: {r.text[:300]}")
+alert_without_id = None
 if r.status_code == 200:
-    data = r.json()
-    record("POST /api/alerts returns 200 (no location)", True, f"id={data.get('id')}")
-    lat_null = data.get("latitude") is None
-    lon_null = data.get("longitude") is None
-    name_null = data.get("location_name") is None
-    record("Response latitude is null when omitted", lat_null, f"got={data.get('latitude')}")
-    record("Response longitude is null when omitted", lon_null, f"got={data.get('longitude')}")
-    record("Response location_name is null when omitted", name_null, f"got={data.get('location_name')}")
-    alert_no_loc_id = data.get("id")
-else:
-    record("POST /api/alerts returns 200 (no location)", False, f"status={r.status_code} body={r.text[:300]}")
-    record("Response latitude is null when omitted", False, "request failed")
-    record("Response longitude is null when omitted", False, "request failed")
-    record("Response location_name is null when omitted", False, "request failed")
-    alert_no_loc_id = None
+    j = r.json()
+    alert_without_id = j.get("id")
+    check("latitude is None", j.get("latitude") is None, f"got {j.get('latitude')}")
+    check("longitude is None", j.get("longitude") is None, f"got {j.get('longitude')}")
+    check("location_name is None", j.get("location_name") is None, f"got {j.get('location_name')}")
 
-# 3. GET /api/alerts/{user_id}
+# 4. GET alerts
+print("\n4) GET /api/alerts/{uid}")
 r = requests.get(f"{API}/alerts/{uid}", timeout=30)
-print(f"\nGET /alerts/{uid} -> {r.status_code}")
+check("GET alerts 200", r.status_code == 200, f"got {r.status_code}")
 if r.status_code == 200:
     alerts = r.json()
-    print(f"Got {len(alerts)} alerts")
-    record("GET /api/alerts returns 200", True, f"count={len(alerts)}")
-    # Find the alerts we just created
-    if alert_with_loc_id:
-        found = next((a for a in alerts if a.get("id") == alert_with_loc_id), None)
-        if found:
-            ok = (found.get("latitude") == 43.6047
-                  and found.get("longitude") == 1.4442
-                  and found.get("location_name") == "Toulouse")
-            record("GET alerts includes location fields for geo-tagged alert", ok,
-                   f"lat={found.get('latitude')} lon={found.get('longitude')} name={found.get('location_name')}")
-        else:
-            record("GET alerts includes location fields for geo-tagged alert", False, "alert not found in list")
-    if alert_no_loc_id:
-        found = next((a for a in alerts if a.get("id") == alert_no_loc_id), None)
-        if found:
-            ok = (found.get("latitude") is None
-                  and found.get("longitude") is None
-                  and found.get("location_name") is None)
-            record("GET alerts: location fields null for non-geo alert", ok,
-                   f"lat={found.get('latitude')} lon={found.get('longitude')} name={found.get('location_name')}")
-        else:
-            record("GET alerts: location fields null for non-geo alert", False, "alert not found")
-else:
-    record("GET /api/alerts returns 200", False, f"status={r.status_code}")
+    print(f"  Retrieved {len(alerts)} alerts")
+    by_id = {a["id"]: a for a in alerts}
+    if alert_with_id and alert_with_id in by_id:
+        a = by_id[alert_with_id]
+        check("GET: with-loc has lat 43.6047", a.get("latitude") == 43.6047, f"got {a.get('latitude')}")
+        check("GET: with-loc has lng 1.4442", a.get("longitude") == 1.4442, f"got {a.get('longitude')}")
+        check("GET: with-loc has location_name Toulouse", a.get("location_name") == "Toulouse", f"got {a.get('location_name')}")
+    else:
+        check("GET: with-loc alert present", False, "not found in list")
+    if alert_without_id and alert_without_id in by_id:
+        a = by_id[alert_without_id]
+        check("GET: without-loc has lat=None", a.get("latitude") is None, f"got {a.get('latitude')}")
+        check("GET: without-loc has lng=None", a.get("longitude") is None, f"got {a.get('longitude')}")
+        check("GET: without-loc has location_name=None", a.get("location_name") is None, f"got {a.get('location_name')}")
+    else:
+        check("GET: without-loc alert present", False, "not found in list")
 
-# Summary
 print("\n" + "=" * 60)
-print("SUMMARY")
-print("=" * 60)
 passed = sum(1 for _, ok, _ in results if ok)
 total = len(results)
-for name, ok, details in results:
-    status = "PASS" if ok else "FAIL"
-    print(f"  [{status}] {name}")
-print(f"\n{passed}/{total} assertions passed")
+print(f"RESULT: {passed}/{total} assertions passed")
+if passed != total:
+    print("\nFAILURES:")
+    for name, ok, det in results:
+        if not ok:
+            print(f"  - {name}: {det}")
+    sys.exit(1)
+print("ALL ASSERTIONS PASSED")
