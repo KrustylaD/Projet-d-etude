@@ -147,7 +147,7 @@ export default function ProfileScreen() {
               </View>
 
               <View style={[styles.menuItem, styles.menuItemBorder]}>
-                <Ionicons name="information-circle-outline" size={24} color="#60a5fa" />
+                <Ionicons name="information-circle-outline" size={24} color={Colors.info} />
                 <View style={styles.menuItemContent}>
                   <Text style={styles.menuItemTitle}>Aide & Support</Text>
                   <Text style={styles.menuItemSubtitle}>Besoin d&apos;assistance ?</Text>
@@ -156,7 +156,7 @@ export default function ProfileScreen() {
               </View>
 
               <View style={[styles.menuItem, styles.menuItemBorder]}>
-                <Ionicons name="shield-checkmark-outline" size={24} color="#fbbf24" />
+                <Ionicons name="shield-checkmark-outline" size={24} color={Colors.warning} />
                 <View style={styles.menuItemContent}>
                   <Text style={styles.menuItemTitle}>Confidentialité</Text>
                   <Text style={styles.menuItemSubtitle}>Politique de confidentialité</Text>

@@ -346,7 +346,7 @@ export default function DashboardScreen() {
                       style={styles.deleteButton}
                       hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
                     >
-                      <Ionicons name="trash-outline" size={18} color="#ef4444" />
+                      <Ionicons name="trash-outline" size={18} color={Colors.error} />
                     </TouchableOpacity>
                   </View>
                 </TouchableOpacity>

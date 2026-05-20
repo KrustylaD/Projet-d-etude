@@ -51,7 +51,7 @@ export default function HomeScreen() {
 
   if (loading) {
     return (
-      <LinearGradient colors={[Colors.forest, '#050D07']} style={styles.container}>
+      <LinearGradient colors={[Colors.forest, Colors.black]} style={styles.container}>
         <SafeAreaView style={styles.safeArea}>
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color={Colors.lime} />
@@ -62,7 +62,7 @@ export default function HomeScreen() {
   }
 
   return (
-    <LinearGradient colors={[Colors.forest, '#050D07']} style={styles.container}>
+    <LinearGradient colors={[Colors.forest, Colors.black]} style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
         <ScrollView
           contentContainerStyle={styles.scrollContent}
@@ -131,11 +131,14 @@ export default function HomeScreen() {
                   <Text style={styles.statLabel}>Alertes</Text>
                 </View>
               </View>
+              <View style={{ height: 4, backgroundColor: Colors.cream06, borderRadius: 2, marginTop: 12 }}>
+                <View style={{ width: '60%', height: '100%', backgroundColor: Colors.lime, borderRadius: 2 }} />
+              </View>
             </View>
           )}
 
           {/* Recent Diagnostics */}
-          {stats && stats.recent_diagnostics.length > 0 && (
+          {(stats?.recent_diagnostics?.length ?? 0) > 0 && (
             <View style={styles.section}>
               <View style={styles.sectionHeader}>
                 <Text style={styles.sectionTitle}>Diagnostics récents</Text>
@@ -143,7 +146,7 @@ export default function HomeScreen() {
                   <Text style={styles.seeAllText}>Tout voir</Text>
                 </TouchableOpacity>
               </View>
-              {stats.recent_diagnostics.slice(0, 3).map((diagnostic) => (
+              {stats!.recent_diagnostics.slice(0, 3).map((diagnostic) => (
                 <TouchableOpacity
                   key={diagnostic.id}
                   style={styles.diagnosticCard}
@@ -234,7 +237,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: Colors.cream,
-    marginBottom: 16,
   },
   seeAllText: {
     fontSize: 14,

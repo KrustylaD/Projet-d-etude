@@ -424,7 +424,7 @@ export default function DiagnosticScreen() {
                 style={styles.previewRemove}
                 hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
               >
-                <Ionicons name="close-circle" size={24} color="#ef4444" />
+                <Ionicons name="close-circle" size={24} color={Colors.error} />
               </TouchableOpacity>
             </View>
           )}
