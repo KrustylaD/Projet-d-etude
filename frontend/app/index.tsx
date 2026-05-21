@@ -26,7 +26,7 @@ export default function Index() {
     }, 1500);
 
     return () => clearTimeout(timer);
-  }, [isAuthenticated]);
+  }, [isAuthenticated, router]);
 
   return (
     <LinearGradient

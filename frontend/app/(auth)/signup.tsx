@@ -143,7 +143,7 @@ export default function SignupScreen() {
                   {isLoading ? (
                     <ActivityIndicator color="#000" />
                   ) : (
-                    <Text style={styles.buttonText}>S'inscrire</Text>
+                    <Text style={styles.buttonText}>S&apos;inscrire</Text>
                   )}
                 </TouchableOpacity>
 

@@ -1,6 +1,4 @@
 import { Stack } from 'expo-router';
-import { useAuthStore } from '../src/store/authStore';
-import { useEffect } from 'react';
 
 export default function RootLayout() {
   return (

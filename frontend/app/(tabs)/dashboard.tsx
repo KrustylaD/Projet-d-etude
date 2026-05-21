@@ -51,6 +51,7 @@ export default function DashboardScreen() {
       setDiagnostics(diagnosticsData);
     } catch (error) {
       console.error('Error fetching data:', error);
+      Alert.alert('Erreur', 'Impossible de charger le tableau de bord');
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -59,6 +60,7 @@ export default function DashboardScreen() {
 
   useEffect(() => {
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const onRefresh = () => {

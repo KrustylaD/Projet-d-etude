@@ -33,13 +33,10 @@ export default function EditProfileScreen() {
 
   const pickImage = async () => {
     try {
-      // Vérification des permissions
       const { status: existingStatus } = await ImagePicker.getMediaLibraryPermissionsAsync();
-      let finalStatus = existingStatus;
 
       if (existingStatus !== 'granted') {
         const { status, canAskAgain } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        finalStatus = status;
 
         if (status !== 'granted') {
           if (!canAskAgain) {
@@ -221,7 +218,7 @@ export default function EditProfileScreen() {
                     editable={false}
                   />
                 </View>
-                <Text style={styles.fieldHint}>L'email ne peut pas être modifié</Text>
+                <Text style={styles.fieldHint}>L&apos;email ne peut pas être modifié</Text>
               </View>
             </View>
 

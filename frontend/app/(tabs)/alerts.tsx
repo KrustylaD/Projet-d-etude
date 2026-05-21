@@ -33,7 +33,7 @@ interface AlertItem {
   created_at: string;
 }
 
-const DEMO_ALERTS: Array<Omit<AlertItem, 'id' | 'user_id' | 'read' | 'created_at'>> = [
+const DEMO_ALERTS: Omit<AlertItem, 'id' | 'user_id' | 'read' | 'created_at'>[] = [
   {
     type: 'maladie',
     message: 'Mildiou détecté sur tomates - Parcelle Sud',
@@ -100,6 +100,7 @@ export default function AlertsScreen() {
       setAlerts(data);
     } catch (error) {
       console.error('Error fetching alerts:', error);
+      RNAlert.alert('Erreur', 'Impossible de charger les alertes');
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -127,6 +128,7 @@ export default function AlertsScreen() {
       );
     } catch (error) {
       console.error('Error marking alert as read:', error);
+      RNAlert.alert('Erreur', 'Impossible de marquer l\'alerte comme lue');
     }
   };
 

@@ -105,7 +105,7 @@ export default function LoginScreen() {
                 disabled={isLoading}
               >
                 <Text style={styles.linkText}>
-                  Pas de compte ? <Text style={styles.linkTextBold}>S'inscrire</Text>
+                   Pas de compte ? <Text style={styles.linkTextBold}>S&apos;inscrire</Text>
                 </Text>
               </TouchableOpacity>
             </View>

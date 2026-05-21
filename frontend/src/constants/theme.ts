@@ -73,7 +73,7 @@ export const Colors = {
 export const Typography = {
   // Font Families
   display: 'System', // Plus Jakarta Sans not available, using system bold
-  body: 'System',
+  bodyFamily: 'System',
   mono: 'Courier', // JetBrains Mono alternative
 
   // Font Weights
