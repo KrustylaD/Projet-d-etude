@@ -18,6 +18,7 @@ import { Stats, Diagnostic } from '../../src/types';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { useRouter } from 'expo-router';
+import { AsynconfBanner } from '../../src/components/AsynconfBanner';
 
 type DiagnosticStatus = 'en cours' | 'traité' | 'surveillance';
 
@@ -151,6 +152,7 @@ export default function DashboardScreen() {
     return (
       <LinearGradient colors={[Colors.forest, Colors.black]} style={styles.container}>
         <SafeAreaView style={styles.safeArea}>
+          <AsynconfBanner />
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color={Colors.lime} />
           </View>
@@ -166,6 +168,8 @@ export default function DashboardScreen() {
           <Text style={styles.headerTitle}>Dashboard</Text>
           <Ionicons name="stats-chart" size={28} color={Colors.lime} />
         </View>
+
+        <AsynconfBanner />
 
         <ScrollView
           contentContainerStyle={styles.scrollContent}

@@ -18,6 +18,7 @@ import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { AlertsMap, MapAlert } from '../../src/components/AlertsMap';
 import { Colors } from '../../src/constants/theme';
+import { AsynconfBanner } from '../../src/components/AsynconfBanner';
 
 interface AlertItem {
   id: string;
@@ -191,6 +192,7 @@ export default function AlertsScreen() {
     return (
       <LinearGradient colors={[Colors.forest, Colors.black]} style={styles.container}>
         <SafeAreaView style={styles.safeArea}>
+          <AsynconfBanner />
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color={Colors.lime} />
           </View>
@@ -235,6 +237,8 @@ export default function AlertsScreen() {
             </TouchableOpacity>
           </View>
         </View>
+
+        <AsynconfBanner />
 
         {/* View toggle (List / Map) */}
         <View style={styles.viewToggle}>

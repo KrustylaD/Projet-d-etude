@@ -15,6 +15,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Stats, Diagnostic } from '../../src/types';
 import { Colors } from '../../src/constants/theme';
+import { AsynconfBanner } from '../../src/components/AsynconfBanner';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -53,6 +54,7 @@ export default function HomeScreen() {
     return (
       <LinearGradient colors={[Colors.forest, Colors.black]} style={styles.container}>
         <SafeAreaView style={styles.safeArea}>
+          <AsynconfBanner />
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color={Colors.lime} />
           </View>
@@ -64,6 +66,7 @@ export default function HomeScreen() {
   return (
     <LinearGradient colors={[Colors.forest, Colors.black]} style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
+        <AsynconfBanner />
         <ScrollView
           contentContainerStyle={styles.scrollContent}
           refreshControl={

@@ -19,6 +19,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Message } from '../../src/types';
 import { MarkdownMessage } from '../../src/components/MarkdownMessage';
 import { Colors } from '../../src/constants/theme';
+import { AsynconfBanner } from '../../src/components/AsynconfBanner';
 import * as ImagePicker from 'expo-image-picker';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 
@@ -260,6 +261,7 @@ export default function DiagnosticScreen() {
     return (
       <LinearGradient colors={[Colors.forest, Colors.black]} style={styles.container}>
         <SafeAreaView style={styles.safeArea}>
+          <AsynconfBanner />
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color={Colors.lime} />
             <Text style={styles.loadingText}>Chargement de la conversation...</Text>
@@ -273,6 +275,7 @@ export default function DiagnosticScreen() {
     return (
       <LinearGradient colors={[Colors.forest, Colors.black]} style={styles.container}>
         <SafeAreaView style={styles.safeArea}>
+          <AsynconfBanner />
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             style={styles.keyboardView}
@@ -339,6 +342,7 @@ export default function DiagnosticScreen() {
   return (
     <LinearGradient colors={[Colors.forest, Colors.black]} style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
+        <AsynconfBanner />
         <View style={styles.chatHeader}>
           <TouchableOpacity onPress={startNewDiagnostic} style={styles.newChatButton}>
             <Ionicons name="add-circle-outline" size={24} color={Colors.lime} />
