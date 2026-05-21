@@ -7,13 +7,14 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   RefreshControl,
+  Alert,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuthStore } from '../../src/store/authStore';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Stats, Diagnostic } from '../../src/types';
+import { Stats } from '../../src/types';
 import { Colors } from '../../src/constants/theme';
 import { AsynconfBanner } from '../../src/components/AsynconfBanner';
 
@@ -23,6 +24,7 @@ export default function HomeScreen() {
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [recentAlerts, setRecentAlerts] = useState<any[]>([]);
 
   const fetchStats = async () => {
     if (!user) return;
@@ -35,14 +37,32 @@ export default function HomeScreen() {
       setStats(data);
     } catch (error) {
       console.error('Error fetching stats:', error);
+      Alert.alert('Erreur', 'Impossible de charger les données');
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
   };
 
+  const fetchRecentAlerts = async () => {
+    if (!user) return;
+    try {
+      const response = await fetch(
+        `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/alerts/${user.uid}`
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setRecentAlerts(data.slice(0, 3));
+      }
+    } catch (error) {
+      console.error('Error fetching recent alerts:', error);
+    }
+  };
+
   useEffect(() => {
     fetchStats();
+    fetchRecentAlerts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const onRefresh = () => {
@@ -119,20 +139,20 @@ export default function HomeScreen() {
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Aperçu</Text>
               <View style={styles.statsBlock}>
-                <View style={styles.statItem}>
+                <TouchableOpacity style={styles.statItem} onPress={() => router.push('/(tabs)/diagnostic')}>
                   <Text style={styles.statValue}>{stats.total_diagnostics}</Text>
                   <Text style={styles.statLabel}>Diagnostics</Text>
-                </View>
+                </TouchableOpacity>
                 <View style={styles.statDivider} />
-                <View style={styles.statItem}>
+                <TouchableOpacity style={styles.statItem} onPress={() => router.push('/(tabs)/diagnostic')}>
                   <Text style={styles.statValue}>{stats.status_breakdown.en_cours}</Text>
                   <Text style={styles.statLabel}>En cours</Text>
-                </View>
+                </TouchableOpacity>
                 <View style={styles.statDivider} />
-                <View style={styles.statItem}>
+                <TouchableOpacity style={styles.statItem} onPress={() => router.push('/(tabs)/alerts')}>
                   <Text style={[styles.statValue, { color: Colors.cream }]}>{stats.unread_alerts}</Text>
                   <Text style={styles.statLabel}>Alertes</Text>
-                </View>
+                </TouchableOpacity>
               </View>
               <View style={{ height: 4, backgroundColor: Colors.cream06, borderRadius: 2, marginTop: 12 }}>
                 <View style={{ width: '60%', height: '100%', backgroundColor: Colors.lime, borderRadius: 2 }} />
@@ -166,6 +186,40 @@ export default function HomeScreen() {
                     <View style={[styles.statusBadge, { backgroundColor: getStatusBadge(diagnostic.status).bg }]}>
                       <Text style={[styles.statusText, { color: getStatusBadge(diagnostic.status).text }]}>{diagnostic.status}</Text>
                     </View>
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
+
+          {/* Recent Alerts */}
+          {recentAlerts.length > 0 && (
+            <View style={styles.section}>
+              <View style={styles.sectionHeader}>
+                <Text style={styles.sectionTitle}>Alertes récentes</Text>
+                <TouchableOpacity onPress={() => router.push('/(tabs)/alerts')}>
+                  <Text style={styles.seeAllText}>Tout voir</Text>
+                </TouchableOpacity>
+              </View>
+              {recentAlerts.map((alert: any) => (
+                <TouchableOpacity
+                  key={alert.id}
+                  style={styles.diagnosticCard}
+                  onPress={() => router.push('/(tabs)/alerts')}
+                >
+                  <View style={styles.diagnosticHeader}>
+                    <Ionicons name="notifications-outline" size={24} color={Colors.warning} />
+                    <View style={styles.diagnosticInfo}>
+                      <Text style={styles.diagnosticCulture}>{alert.type}</Text>
+                      <Text style={styles.diagnosticSymptoms} numberOfLines={1}>
+                        {alert.message}
+                      </Text>
+                    </View>
+                    {!alert.read && (
+                      <View style={[styles.statusBadge, { backgroundColor: Colors.warning15 }]}>
+                        <Text style={[styles.statusText, { color: Colors.warning }]}>Nouveau</Text>
+                      </View>
+                    )}
                   </View>
                 </TouchableOpacity>
               ))}
