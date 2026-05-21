@@ -169,6 +169,14 @@ export default function HomeScreen() {
             </View>
           )}
         </ScrollView>
+        <TouchableOpacity
+          style={styles.footerLegal}
+          onPress={() => router.push('/legal-notices')}
+          activeOpacity={0.7}
+        >
+          <Ionicons name="shield-checkmark-outline" size={12} color={Colors.cream50} />
+          <Text style={styles.footerLegalText}>Mentions legales</Text>
+        </TouchableOpacity>
       </SafeAreaView>
     </LinearGradient>
   );
@@ -339,5 +347,18 @@ const styles = StyleSheet.create({
   statusText: {
     fontSize: 12,
     fontWeight: '600',
+  },
+  footerLegal: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 6,
+    paddingVertical: 12,
+    borderTopWidth: 1,
+    borderTopColor: Colors.border,
+  },
+  footerLegalText: {
+    fontSize: 11,
+    color: Colors.cream50,
   },
 });

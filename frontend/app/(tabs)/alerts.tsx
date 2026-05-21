@@ -10,6 +10,7 @@ import {
   Alert as RNAlert,
 } from 'react-native';
 import { useAuthStore } from '../../src/store/authStore';
+import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -75,6 +76,7 @@ const DEMO_ALERTS: Array<Omit<AlertItem, 'id' | 'user_id' | 'read' | 'created_at
 ];
 
 export default function AlertsScreen() {
+  const router = useRouter();
   const { user } = useAuthStore();
   const [alerts, setAlerts] = useState<AlertItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -390,6 +392,14 @@ export default function AlertsScreen() {
             )}
           </ScrollView>
         )}
+        <TouchableOpacity
+          style={styles.footerLegal}
+          onPress={() => router.push('/legal-notices')}
+          activeOpacity={0.7}
+        >
+          <Ionicons name="shield-checkmark-outline" size={12} color={Colors.cream50} />
+          <Text style={styles.footerLegalText}>Mentions legales</Text>
+        </TouchableOpacity>
       </SafeAreaView>
     </LinearGradient>
   );
@@ -593,5 +603,18 @@ const styles = StyleSheet.create({
     height: 8,
     borderRadius: 4,
     backgroundColor: Colors.lime,
+  },
+  footerLegal: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 6,
+    paddingVertical: 12,
+    borderTopWidth: 1,
+    borderTopColor: Colors.border,
+  },
+  footerLegalText: {
+    fontSize: 11,
+    color: Colors.cream50,
   },
 });

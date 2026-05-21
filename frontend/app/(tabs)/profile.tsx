@@ -146,23 +146,44 @@ export default function ProfileScreen() {
                 </View>
               </View>
 
-              <View style={[styles.menuItem, styles.menuItemBorder]}>
+              <TouchableOpacity
+                style={[styles.menuItem, styles.menuItemBorder]}
+                onPress={() => router.push('/help-support')}
+                activeOpacity={0.7}
+              >
                 <Ionicons name="information-circle-outline" size={24} color={Colors.info} />
                 <View style={styles.menuItemContent}>
                   <Text style={styles.menuItemTitle}>Aide & Support</Text>
                   <Text style={styles.menuItemSubtitle}>Besoin d&apos;assistance ?</Text>
                 </View>
                 <Ionicons name="chevron-forward" size={20} color={Colors.cream50} />
-              </View>
+              </TouchableOpacity>
 
-              <View style={[styles.menuItem, styles.menuItemBorder]}>
+              <TouchableOpacity
+                style={[styles.menuItem, styles.menuItemBorder]}
+                onPress={() => router.push('/legal-notices')}
+                activeOpacity={0.7}
+              >
                 <Ionicons name="shield-checkmark-outline" size={24} color={Colors.warning} />
                 <View style={styles.menuItemContent}>
                   <Text style={styles.menuItemTitle}>Confidentialité</Text>
                   <Text style={styles.menuItemSubtitle}>Politique de confidentialité</Text>
                 </View>
                 <Ionicons name="chevron-forward" size={20} color={Colors.cream50} />
-              </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.menuItem, styles.menuItemBorder]}
+                onPress={() => router.push('/legal-notices')}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="document-text-outline" size={24} color={Colors.creamLow} />
+                <View style={styles.menuItemContent}>
+                  <Text style={styles.menuItemTitle}>Mentions légales</Text>
+                  <Text style={styles.menuItemSubtitle}>Informations légales</Text>
+                </View>
+                <Ionicons name="chevron-forward" size={20} color={Colors.cream50} />
+              </TouchableOpacity>
             </View>
           </View>
 
