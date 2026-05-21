@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Alert,
   Image,
+  Linking,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuthStore } from '../../src/store/authStore';
@@ -183,6 +184,19 @@ export default function ProfileScreen() {
                   <Text style={styles.menuItemSubtitle}>Informations légales</Text>
                 </View>
                 <Ionicons name="chevron-forward" size={20} color={Colors.cream50} />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.asynconfItem}
+                onPress={() => Linking.openURL('https://app.itsasync.fr/conference')}
+                activeOpacity={0.85}
+              >
+                <Ionicons name="ticket-outline" size={24} color="#FFFFFF" />
+                <View style={styles.menuItemContent}>
+                  <Text style={styles.asynconfTitle}>Asynconf 2026</Text>
+                  <Text style={styles.asynconfSubtitle}>Reservez votre place</Text>
+                </View>
+                <Ionicons name="open-outline" size={18} color="#FFFFFF" />
               </TouchableOpacity>
             </View>
           </View>
@@ -383,6 +397,28 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: Colors.error,
+  },
+  asynconfItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    gap: 12,
+    borderTopWidth: 1,
+    borderTopColor: Colors.border,
+    backgroundColor: '#3B82F6',
+    borderRadius: 12,
+    marginTop: 4,
+  },
+  asynconfTitle: {
+    fontSize: 16,
+    fontWeight: '800',
+    color: '#FFFFFF',
+    marginBottom: 2,
+  },
+  asynconfSubtitle: {
+    fontSize: 13,
+    color: 'rgba(255, 255, 255, 0.8)',
+    fontWeight: '500',
   },
   footerText: {
     textAlign: 'center',
