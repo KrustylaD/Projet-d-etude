@@ -5,7 +5,49 @@ export interface User {
   phone_number?: string;
   farm_name?: string;
   location?: string;
+  photo_url?: string;
+  role?: string;
   created_at: string;
+}
+
+export interface AdminUser {
+  uid: string;
+  email: string;
+  display_name: string;
+  phone_number?: string;
+  farm_name?: string;
+  location?: string;
+  photo_url?: string;
+  role: string;
+  created_at: string;
+  diagnostic_count: number;
+}
+
+export interface AdminStatsOverview {
+  total_users: number;
+  total_diagnostics: number;
+  total_messages: number;
+  total_alerts: number;
+}
+
+export interface AdminDiagnosticItem {
+  id: string;
+  user_id: string;
+  user_email: string;
+  user_display_name: string;
+  culture: string;
+  symptoms: string;
+  location?: string;
+  status: string;
+  created_at: string;
+  updated_at?: string;
+}
+
+export interface AdminUsersResponse {
+  total: number;
+  limit: number;
+  offset: number;
+  users: AdminUser[];
 }
 
 export interface Diagnostic {
