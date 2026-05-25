@@ -138,7 +138,7 @@ export default function ProfileScreen() {
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>À propos</Text>
 
-            <View style={styles.menuCard}>
+          <View style={styles.menuCard}>
               <View style={styles.menuItem}>
                 <Ionicons name="leaf" size={24} color={Colors.lime} />
                 <View style={styles.menuItemContent}>
@@ -149,12 +149,38 @@ export default function ProfileScreen() {
 
               <TouchableOpacity
                 style={[styles.menuItem, styles.menuItemBorder]}
+                onPress={() => router.push('/capteurs')}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="hardware-chip-outline" size={24} color={Colors.success} />
+                <View style={styles.menuItemContent}>
+                  <Text style={styles.menuItemTitle}>Capteurs IoT</Text>
+                  <Text style={styles.menuItemSubtitle}>Température, humidité, sol</Text>
+                </View>
+                <Ionicons name="chevron-forward" size={20} color={Colors.cream50} />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.menuItem, styles.menuItemBorder]}
+                onPress={() => router.push('/backoffice')}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="shield-checkmark-outline" size={24} color={Colors.warning} />
+                <View style={styles.menuItemContent}>
+                  <Text style={styles.menuItemTitle}>Administration</Text>
+                  <Text style={styles.menuItemSubtitle}>Gestion utilisateurs &amp; IA</Text>
+                </View>
+                <Ionicons name="chevron-forward" size={20} color={Colors.cream50} />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.menuItem, styles.menuItemBorder]}
                 onPress={() => router.push('/help-support')}
                 activeOpacity={0.7}
               >
                 <Ionicons name="information-circle-outline" size={24} color={Colors.info} />
                 <View style={styles.menuItemContent}>
-                  <Text style={styles.menuItemTitle}>Aide & Support</Text>
+                  <Text style={styles.menuItemTitle}>Aide &amp; Support</Text>
                   <Text style={styles.menuItemSubtitle}>Besoin d&apos;assistance ?</Text>
                 </View>
                 <Ionicons name="chevron-forward" size={20} color={Colors.cream50} />
