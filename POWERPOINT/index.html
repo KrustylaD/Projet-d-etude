@@ -597,7 +597,7 @@ body{font-family:var(--font-body);background:var(--bg-primary);color:var(--text-
 .slide-nocode .nc-list{list-style:none;display:flex;flex-direction:column;gap:clamp(0.2rem,0.5vh,0.4rem);
   margin-bottom:clamp(0.4rem,0.8vh,0.6rem)}
 .slide-nocode .nc-list li{font-family:var(--font-body);font-weight:400;
-  font-size:clamp(0.6rem,0.9vw,0.75rem);color:rgba(249,249,242,0.65);line-height:1.4;
+  font-size:clamp(0.6rem,1.1vw,0.75rem);color:rgba(249,249,242,0.65);line-height:1.4;
   padding-left:clamp(0.6rem,1vw,0.8rem);position:relative}
 .slide-nocode .nc-list li::before{content:'→';position:absolute;left:0;color:var(--accent);
   font-size:clamp(0.55rem,0.8vw,0.65rem)}
@@ -605,7 +605,7 @@ body{font-family:var(--font-body);background:var(--bg-primary);color:var(--text-
   border:1px solid rgba(212,255,80,0.15);border-radius:clamp(5px,0.7vw,8px);
   padding:clamp(0.5rem,1vw,0.8rem);text-align:center}
 .slide-nocode .nc-callout p{font-family:var(--font-body);font-weight:500;font-style:italic;
-  font-size:clamp(0.6rem,0.95vw,0.8rem);color:rgba(249,249,242,0.7);line-height:1.5}
+  font-size:clamp(0.6rem,1.1vw,0.8rem);color:rgba(249,249,242,0.7);line-height:1.5}
 
 @media(max-width:650px){.slide-nocode .nc-grid{grid-template-columns:1fr}}
 
@@ -618,25 +618,25 @@ body{font-family:var(--font-body);background:var(--bg-primary);color:var(--text-
 .arch-layer{width:100%;background:var(--bg-cards);border-radius:clamp(5px,0.7vw,8px);
   padding:clamp(0.5rem,1vw,0.9rem);position:relative}
 .arch-layer .arch-stack{flex-wrap:wrap;gap:clamp(0.2rem,0.4vw,0.4rem)}
-.arch-chip{font-size:clamp(0.42rem,0.65vw,0.55rem);padding:clamp(2px,0.3vw,4px) clamp(4px,0.7vw,7px)}
+.arch-chip{font-size:clamp(0.5rem,0.8vw,0.65rem);padding:clamp(2px,0.3vw,4px) clamp(4px,0.7vw,7px)}
 .arch-layer.front{border:1px solid rgba(212,255,80,0.1)}
 .arch-layer.back{border:1px solid rgba(77,170,255,0.12)}
 .arch-layer.ai{border:1px solid rgba(58,224,134,0.15);box-shadow:0 0 20px rgba(58,224,134,0.06)}
 .arch-layer-label{font-family:var(--font-body);font-weight:500;
-  font-size:clamp(0.5rem,0.7vw,0.6rem);text-transform:uppercase;letter-spacing:0.08em;
+  font-size:clamp(0.6rem,0.85vw,0.7rem);text-transform:uppercase;letter-spacing:0.08em;
   margin-bottom:clamp(0.15rem,0.3vh,0.3rem)}
 .arch-layer-label.front{color:var(--accent)}
 .arch-layer-label.back{color:var(--info)}
 .arch-layer-label.ai{color:var(--success)}
 .arch-stack{display:flex;gap:clamp(0.3rem,0.6vw,0.5rem);flex-wrap:wrap;justify-content:center}
 .arch-chip{font-family:var(--font-mono);font-weight:700;
-  font-size:clamp(0.48rem,0.75vw,0.6rem);color:rgba(249,249,242,0.7);
+  font-size:clamp(0.55rem,0.85vw,0.7rem);color:rgba(249,249,242,0.7);
   background:rgba(249,249,242,0.04);border:1px solid rgba(249,249,242,0.06);
   border-radius:4px;padding:clamp(3px,0.4vw,5px) clamp(6px,0.9vw,8px)}
 .arch-arrow{text-align:center;padding:clamp(0.1rem,0.2vh,0.2rem) 0}
 .arch-arrow-svg{width:clamp(16px,3vw,28px);height:clamp(20px,3.5vw,32px);display:block;margin:0 auto}
 .arch-arrow-label{font-family:var(--font-body);font-weight:400;
-  font-size:clamp(0.45rem,0.65vw,0.55rem);color:rgba(249,249,242,0.25);
+  font-size:clamp(0.5rem,0.75vw,0.65rem);color:rgba(249,249,242,0.25);
   margin-top:clamp(0.05rem,0.1vh,0.1rem)}
 
 /* ===========================================
@@ -654,13 +654,13 @@ body{font-family:var(--font-body);background:var(--bg-primary);color:var(--text-
 .slide-stack .s-card.warn{border-left:2px solid var(--warning)}
 .slide-stack .s-card.success{border-left:2px solid var(--success)}
 .slide-stack .s-tech{font-family:var(--font-mono);font-weight:700;
-  font-size:clamp(0.7rem,1.1vw,0.9rem);margin-bottom:clamp(0.1rem,0.3vh,0.25rem)}
+  font-size:clamp(0.8rem,1.2vw,1rem);margin-bottom:clamp(0.1rem,0.3vh,0.25rem)}
 .slide-stack .s-tech.lime{color:var(--accent)}
 .slide-stack .s-tech.info{color:var(--info)}
 .slide-stack .s-tech.warn{color:var(--warning)}
 .slide-stack .s-tech.success{color:var(--success)}
 .slide-stack .s-desc{font-family:var(--font-body);font-weight:400;
-  font-size:clamp(0.5rem,0.75vw,0.65rem);color:rgba(249,249,242,0.5);line-height:1.3;
+  font-size:clamp(0.6rem,0.9vw,0.75rem);color:rgba(249,249,242,0.5);line-height:1.3;
   margin-bottom:clamp(0.2rem,0.4vh,0.35rem)}
 .slide-stack .stack-bar{margin-top:clamp(0.3rem,0.8vh,0.6rem)}
 .slide-stack .stack-bar-text{font-family:var(--font-body);font-weight:400;
@@ -686,21 +686,21 @@ body{font-family:var(--font-body);background:var(--bg-primary);color:var(--text-
 .slide-challenges .ch-card.err{border:1px solid rgba(255,78,92,0.15)}
 .slide-challenges .ch-card.info{border:1px solid rgba(77,170,255,0.15)}
 .slide-challenges .ch-header{font-family:var(--font-mono);font-weight:700;
-  font-size:clamp(0.48rem,0.7vw,0.6rem);text-transform:uppercase;letter-spacing:0.06em;
+  font-size:clamp(0.55rem,0.8vw,0.7rem);text-transform:uppercase;letter-spacing:0.06em;
   margin-bottom:clamp(0.15rem,0.3vh,0.3rem)}
 .slide-challenges .ch-header.warn{color:var(--warning)}
 .slide-challenges .ch-header.err{color:var(--error)}
 .slide-challenges .ch-header.info{color:var(--info)}
 .slide-challenges .ch-title{font-family:var(--font-body);font-weight:600;
-  font-size:clamp(0.7rem,1.1vw,0.9rem);color:var(--text-primary);margin-bottom:clamp(0.2rem,0.4vh,0.4rem)}
+  font-size:clamp(0.8rem,1.2vw,1rem);color:var(--text-primary);margin-bottom:clamp(0.2rem,0.4vh,0.4rem)}
 .slide-challenges .ch-sep{height:1px;width:30px;background:var(--accent);margin-bottom:clamp(0.2rem,0.4vh,0.4rem)}
 .slide-challenges .ch-solution-label{font-family:var(--font-mono);font-weight:700;
   font-size:clamp(0.45rem,0.65vw,0.55rem);color:var(--accent);margin-bottom:clamp(0.1rem,0.3vh,0.25rem)}
 .slide-challenges .ch-solution-text{font-family:var(--font-body);font-weight:400;
-  font-size:clamp(0.52rem,0.8vw,0.68rem);color:rgba(249,249,242,0.6);line-height:1.45;
+  font-size:clamp(0.6rem,0.9vw,0.75rem);color:rgba(249,249,242,0.6);line-height:1.45;
   margin-bottom:clamp(0.2rem,0.5vh,0.4rem)}
 .slide-challenges .ch-result{font-family:var(--font-body);font-weight:500;
-  font-size:clamp(0.55rem,0.8vw,0.68rem);color:var(--success)}
+  font-size:clamp(0.65rem,0.95vw,0.8rem);color:var(--success)}
 
 @media(max-width:750px){.slide-challenges .ch-grid{grid-template-columns:1fr}}
 
@@ -847,6 +847,29 @@ body.edit-active .slide{cursor:text}
 .auto-toggle{bottom:clamp(32px,4vh,48px);left:clamp(12px,2vw,24px)}
 .auto-toggle.active{border-color:var(--accent);background:rgba(212,255,80,0.14);opacity:0.7}
 
+/* ===========================================
+   NEW SLIDES 10-11 — Migration & DeepSeek
+   =========================================== */
+.migration-flow{display:flex;align-items:center;justify-content:center;gap:clamp(0.5rem,1.5vw,1.5rem);flex-wrap:wrap;margin-top:clamp(0.5rem,1.5vh,1rem)}
+.mig-step{flex:1;min-width:clamp(140px,20vw,240px);text-align:center;padding:clamp(0.6rem,1.2vw,1rem);background:var(--bg-cards);border:1px solid rgba(212,255,80,0.08);border-radius:clamp(6px,0.8vw,10px)}
+.mig-num{width:clamp(28px,3vw,40px);height:clamp(28px,3vw,40px);border-radius:50%;background:rgba(212,255,80,0.1);border:1px solid rgba(212,255,80,0.2);display:flex;align-items:center;justify-content:center;margin:0 auto clamp(0.3rem,0.6vh,0.5rem);font-family:var(--font-mono);font-weight:800;font-size:clamp(0.8rem,1.4vw,1.1rem);color:var(--accent)}
+.mig-step h4{font-family:var(--font-display);font-weight:600;font-size:clamp(0.7rem,1.2vw,0.95rem);color:var(--text-primary);margin-bottom:clamp(0.15rem,0.3vh,0.3rem)}
+.mig-step p{font-family:var(--font-body);font-weight:400;font-size:clamp(0.5rem,0.75vw,0.65rem);color:var(--text-muted);line-height:1.4}
+.mig-arrow{font-size:clamp(1rem,2vw,1.8rem);color:var(--accent);opacity:0.4;flex-shrink:0}
+.local-layer{border:1px solid rgba(245,158,11,0.2);box-shadow:0 0 20px rgba(245,158,11,0.06)}
+.local-layer .arch-layer-label{color:#f59e0b}
+/* DeepSeek slide */
+.ds-grid{display:flex;align-items:center;justify-content:center;gap:clamp(0.8rem,2vw,1.5rem);margin-top:clamp(0.5rem,1.5vh,1rem);flex-wrap:wrap}
+.ds-card{flex:1;min-width:clamp(180px,28vw,320px);background:var(--bg-cards);border:1px solid rgba(212,255,80,0.08);border-radius:clamp(6px,0.8vw,10px);padding:clamp(0.7rem,1.5vw,1.2rem);text-align:center}
+.ds-card.highlight{border-color:var(--accent);box-shadow:0 0 30px var(--accent-glow)}
+.ds-card h4{font-family:var(--font-display);font-weight:700;font-size:clamp(0.75rem,1.3vw,1.05rem);color:var(--text-primary);margin-bottom:clamp(0.2rem,0.4vh,0.4rem)}
+.ds-card p{font-family:var(--font-body);font-weight:400;font-size:clamp(0.55rem,0.85vw,0.7rem);color:var(--text-muted);line-height:1.4}
+.ds-arrow{font-size:clamp(1.2rem,2.5vw,2rem);color:var(--accent);opacity:0.5;flex-shrink:0}
+.ds-benefits{display:flex;gap:clamp(0.4rem,1vw,0.8rem);justify-content:center;margin-top:clamp(0.5rem,1.2vh,0.8rem);flex-wrap:wrap}
+.ds-benefits span{font-family:var(--font-mono);font-weight:700;font-size:clamp(0.5rem,0.75vw,0.65rem);padding:clamp(3px,0.4vw,6px) clamp(8px,1vw,12px);background:rgba(212,255,80,0.06);border:1px solid rgba(212,255,80,0.12);border-radius:999px;color:var(--accent)}
+.slide-dark{background:linear-gradient(135deg,#030A05,#0A1B0E)}
+.gradient-text{background:linear-gradient(135deg,var(--accent),#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
 /* Accent button */
 .btn-accent{
   display:inline-block;text-decoration:none;
@@ -898,7 +921,7 @@ body.edit-active .slide{cursor:text}
 <!-- Slide counter -->
 <button class="slide-nav-btn prev" id="slidePrev" aria-label="Slide précédente">‹</button>
 <button class="slide-nav-btn next" id="slideNext" aria-label="Slide suivante">›</button>
-<div class="slide-counter" id="slideCounter">01 / 16</div>
+<div class="slide-counter" id="slideCounter">01 / 18</div>
 
 <!-- ===========================================
      SLIDE 1 — COVER : CODE ORGANIQUE
@@ -1162,7 +1185,7 @@ body.edit-active .slide{cursor:text}
   <div class="shape shape-b parallax" style="width:clamp(100px,18vw,220px);height:clamp(100px,18vw,220px);top:8%;right:10%"></div>
   <div class="slide-content">
     <h2 class="reveal" contenteditable="false" style="font-family:var(--font-display);font-weight:800;font-size:var(--h2-size);color:var(--text-primary);text-align:center;margin-bottom:clamp(0.1rem,0.4vh,0.3rem)">Une approche moderne du développement</h2>
-    <p class="reveal d1" contenteditable="false" style="font-family:var(--font-body);font-weight:400;font-size:clamp(0.65rem,1vw,0.8rem);color:var(--text-muted);text-align:center;margin-bottom:clamp(0.4rem,1vh,0.8rem)">No/Low-Code + Agents IA — le meilleur des deux mondes</p>
+    <p class="reveal d1" contenteditable="false" style="font-family:var(--font-body);font-weight:400;font-size:clamp(0.75rem,1.1vw,0.9rem);color:var(--text-muted);text-align:center;margin-bottom:clamp(0.4rem,1vh,0.8rem)">No/Low-Code + Agents IA — le meilleur des deux mondes</p>
     <div class="nc-grid">
       <div class="nc-card emerg reveal d2" contenteditable="false">
         <div class="nc-label emerg">⚡ PLATEFORME EMERGENT</div>
@@ -1183,8 +1206,17 @@ body.edit-active .slide{cursor:text}
           <li>Mise à jour auto des diagnostics</li>
         </ul>
       </div>
-      <div class="nc-callout reveal d3" contenteditable="false">
-        <p>💡 Emergent fournit le socle. Les agents IA apportent l'intelligence. Ce n'est pas du no-code basique — c'est une architecture hybride moderne.</p>
+      <div class="nc-card emerg reveal d3" contenteditable="false" style="--i:2">
+        <div class="nc-label emerg">🔄 MIGRATION LOCALE</div>
+        <ul class="nc-list">
+          <li>Face aux restrictions de crédits Emergent, le code a été exporté</li>
+          <li>Adapté pour fonctionner en local avec DeepSeek</li>
+          <li>Garantissant la continuité sans interruption de service</li>
+          <li>FastAPI · Motor · MongoDB en local</li>
+        </ul>
+      </div>
+      <div class="nc-callout reveal d4" contenteditable="false">
+        <p>💡 Emergent fournit le socle. Les agents IA apportent l'intelligence. Ce n'est pas du no-code basique — c'est une architecture hybride moderne, et sa migration vers une exécution locale.</p>
       </div>
     </div>
   </div>
@@ -1239,6 +1271,20 @@ body.edit-active .slide{cursor:text}
           <span class="arch-chip">🔄 Réponses structurées · Auto-update</span>
         </div>
       </div>
+
+      <div class="arch-arrow reveal d6">
+        <svg class="arch-arrow-svg" viewBox="0 0 24 28"><defs><linearGradient id="a3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f59e0b" stop-opacity="0.3"/><stop offset="100%" stop-color="#f59e0b" stop-opacity="0.8"/></linearGradient></defs><path d="M12 0 L12 22 M6 16 L12 24 L18 16" fill="none" stroke="url(#a3)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="stroke-dasharray:40;animation:drawArrow 1s ease-in-out 0.3s forwards"/></svg>
+        <div class="arch-arrow-label">Export · DeepSeek</div>
+      </div>
+
+      <div class="arch-layer local-layer reveal d7" contenteditable="false">
+        <div class="arch-layer-label">BACKEND LOCAL</div>
+        <div class="arch-stack">
+          <span class="arch-chip">⚡ FastAPI · Motor · MongoDB</span>
+          <span class="arch-chip">🧠 DeepSeek intégré</span>
+          <span class="arch-chip">🔒 100% local — zéro dépendance cloud</span>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -1257,6 +1303,7 @@ body.edit-active .slide{cursor:text}
   <div class="slide-content">
     <div class="focus-label lime reveal" contenteditable="false" style="text-align:center">COMPÉTENCES DÉMONTRÉES</div>
     <h2 class="reveal d1" contenteditable="false" style="font-family:var(--font-display);font-weight:800;font-size:var(--h2-size);color:var(--text-primary);text-align:center;margin-bottom:clamp(0.3rem,1vh,0.6rem)">Stack Front-End — Technologies maîtrisées</h2>
+    <p class="reveal d2" contenteditable="false" style="font-family:var(--font-body);font-weight:400;font-size:clamp(0.65rem,1vw,0.8rem);color:var(--text-muted);text-align:center;margin-bottom:clamp(0.4rem,1vh,0.8rem)">Technologies choisies par la plateforme Emergent pour le développement</p>
     <div class="stack-grid">
       <div class="s-card lime reveal d1" contenteditable="false">
         <div class="s-tech lime">React 19</div>
@@ -1304,6 +1351,7 @@ body.edit-active .slide{cursor:text}
   <div class="shape shape-a parallax" style="width:clamp(140px,25vw,300px);height:clamp(140px,25vw,300px);bottom:-8%;left:50%;transform:translateX(-50%)"></div>
   <div class="slide-content">
     <h2 class="reveal" contenteditable="false" style="font-family:var(--font-display);font-weight:800;font-size:var(--h2-size);color:var(--text-primary);text-align:center;margin-bottom:clamp(0.3rem,1vh,0.6rem)">Défis techniques surmontés</h2>
+    <p class="reveal d1" contenteditable="false" style="font-family:var(--font-body);font-weight:400;font-size:clamp(0.65rem,1vw,0.8rem);color:var(--text-muted);text-align:center;margin-bottom:clamp(0.4rem,1vh,0.8rem)">Cross-platform, latence IA, et crise de crédits cloud</p>
     <div class="ch-grid">
       <div class="ch-card warn reveal d1" contenteditable="false">
         <div class="ch-header warn">⚠️ DÉFI 01</div>
@@ -1321,13 +1369,13 @@ body.edit-active .slide{cursor:text}
         <div class="ch-solution-text">Streaming des réponses IA pour éviter les temps de chargement bloquants. Parsing automatique des réponses structurées pour mise à jour du dossier.</div>
         <div class="ch-result">✅ Expérience fluide — diagnostic en < 5 secondes</div>
       </div>
-      <div class="ch-card info reveal d3" contenteditable="false">
-        <div class="ch-header info">⚠️ DÉFI 03</div>
-        <div class="ch-title">Sécuriser les données sans backend custom</div>
+      <div class="ch-card err reveal d3" contenteditable="false">
+        <div class="ch-header err">⚠️ DÉFI 03</div>
+        <div class="ch-title">Crédits Emergent Épuisés</div>
         <div class="ch-sep"></div>
         <div class="ch-solution-label">SOLUTION</div>
-        <div class="ch-solution-text">SecureStore (natif) + AsyncStorage (web). Tokens JWT gérés côté FastAPI. Architecture Emergent pour l'isolation des environnements.</div>
-        <div class="ch-result">✅ Auth sécurisée · Données isolées par utilisateur</div>
+        <div class="ch-solution-text">La plateforme no-code Emergent a imposé des limites strictes de crédits, rendant la facturation intenable et forçant l'export du code pour une exécution locale.</div>
+        <div class="ch-result">✅ Migration réussie vers DeepSeek local</div>
       </div>
     </div>
   </div>
@@ -1338,9 +1386,75 @@ body.edit-active .slide{cursor:text}
 
 
 <!-- ===========================================
-     SLIDE 10 — IMPACT & MÉTRIQUES
+     SLIDE 10 — MIGRATION EMERGENT → LOCAL
      =========================================== -->
-<section class="slide slide-impact" data-index="10" id="slide-10">
+<section class="slide slide-dark" data-index="10" id="slide-10">
+  <div class="noise"></div>
+  <div class="dot-grid"></div>
+  <div class="shape shape-a parallax" style="width:clamp(120px,22vw,280px);height:clamp(120px,22vw,280px);top:5%;left:5%"></div>
+  <div class="shape shape-b parallax" style="width:clamp(80px,14vw,180px);height:clamp(80px,14vw,180px);bottom:10%;right:10%"></div>
+  <div class="slide-content">
+    <div class="tag reveal" contenteditable="false" style="color:var(--accent);border:1px solid rgba(212,255,80,0.2);background:rgba(212,255,80,0.06);margin-bottom:clamp(0.3rem,0.6vh,0.5rem);text-align:center;display:inline-block;align-self:center">Pivot Stratégique</div>
+    <h2 class="reveal d1" contenteditable="false" style="font-family:var(--font-display);font-weight:800;font-size:var(--h2-size);color:var(--text-primary);text-align:center;margin-bottom:clamp(0.2rem,0.5vh,0.4rem)">Migration <span class="gradient-text">Emergent → Local</span></h2>
+    <p class="reveal d2" contenteditable="false" style="font-family:var(--font-body);font-weight:500;font-size:clamp(0.75rem,1.2vw,0.95rem);color:var(--text-secondary);text-align:center;margin-bottom:clamp(0.4rem,1vh,0.8rem)">Du no-code à la maîtrise totale</p>
+    <div class="migration-flow">
+      <div class="mig-step reveal d3">
+        <div class="mig-num">1</div>
+        <h4>Export du Code</h4>
+        <p>Récupération de l'intégralité du backend depuis Emergent</p>
+      </div>
+      <div class="mig-arrow reveal d4">→</div>
+      <div class="mig-step reveal d4">
+        <div class="mig-num">2</div>
+        <h4>Adaptation Locale</h4>
+        <p>FastAPI, Motor, MongoDB en local — plus de dépendance cloud</p>
+      </div>
+      <div class="mig-arrow reveal d5">→</div>
+      <div class="mig-step reveal d5">
+        <div class="mig-num">3</div>
+        <h4>Autonomie Totale</h4>
+        <p>Contrôle complet, coûts maîtrisés, roadmap libre</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 11 — DEEPSEEK
+     =========================================== -->
+<section class="slide" data-index="11" id="slide-11">
+  <div class="noise"></div>
+  <div class="dot-grid"></div>
+  <div class="glitch-overlay"></div>
+  <div class="shape shape-c parallax" style="width:clamp(100px,18vw,220px);height:clamp(100px,18vw,220px);top:10%;right:8%"></div>
+  <div class="shape shape-b parallax" style="width:clamp(60px,10vw,140px);height:clamp(60px,10vw,140px);bottom:12%;left:6%"></div>
+  <div class="slide-content">
+    <div class="tag reveal" contenteditable="false" style="color:var(--success);border:1px solid rgba(58,224,134,0.2);background:rgba(58,224,134,0.06);margin-bottom:clamp(0.3rem,0.6vh,0.5rem);text-align:center;display:inline-block;align-self:center">Code & Inférence</div>
+    <h2 class="reveal d1" contenteditable="false" style="font-family:var(--font-display);font-weight:800;font-size:var(--h2-size);color:var(--text-primary);text-align:center;margin-bottom:clamp(0.2rem,0.5vh,0.4rem)">DeepSeek <span class="gradient-text">Continue</span></h2>
+    <p class="reveal d2" contenteditable="false" style="font-family:var(--font-body);font-weight:500;font-size:clamp(0.75rem,1.2vw,0.95rem);color:var(--text-secondary);text-align:center;margin-bottom:clamp(0.4rem,1vh,0.8rem)">DeepSeek pour le code, Llama 70B pour les diagnostics</p>
+    <div class="ds-grid">
+      <div class="ds-card reveal d3">
+        <h4>🧠 DeepSeek-V4</h4>
+        <p>Modèle utilisé pour la génération de code et l'assistance au développement</p>
+      </div>
+      <div class="ds-arrow reveal d4">→</div>
+      <div class="ds-card highlight reveal d4">
+        <h4>⚡ Llama 70B</h4>
+        <p>Modèle d'inférence pour les diagnostics cultures — analyse pathologie végétale</p>
+      </div>
+    </div>
+    <div class="ds-benefits reveal d5">
+      <span>Génération de code</span>
+      <span>Inférence diagnostique</span>
+      <span>100% local</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 12 — IMPACT & MÉTRIQUES
+     =========================================== -->
+<section class="slide slide-impact" data-index="12" id="slide-12">
   <div class="noise"></div>
   <div class="shape shape-b parallax" style="width:clamp(160px,30vw,350px);height:clamp(160px,30vw,350px);top:-12%;left:50%;transform:translateX(-50%)"></div>
   <div class="slide-content">
@@ -1368,13 +1482,18 @@ body.edit-active .slide{cursor:text}
       </div>
       <div class="met-card reveal d4" contenteditable="false">
         <div class="met-number lime" data-target="100" data-suffix="%">100%</div>
-        <div class="met-label">No/Low-Code</div>
-        <div class="met-sublabel">Emergent · Zéro infra manuelle</div>
+        <div class="met-label">DeepSeek Ready</div>
+        <div class="met-sublabel">Migration locale effectuée</div>
       </div>
       <div class="met-card reveal d5" contenteditable="false">
         <div class="met-number cream">∞</div>
         <div class="met-label">Scalabilité</div>
         <div class="met-sublabel">Architecture cloud-ready</div>
+      </div>
+      <div class="met-card reveal d5" contenteditable="false">
+        <div class="met-number warn" data-target="70" data-suffix="%">70%</div>
+        <div class="met-label">Coûts en Moins</div>
+        <div class="met-sublabel">DeepSeek vs Emergent</div>
       </div>
     </div>
     <div class="divider reveal d5" style="margin:clamp(0.3rem,0.8vh,0.6rem) 0"></div>
@@ -1383,52 +1502,9 @@ body.edit-active .slide{cursor:text}
 </section>
 
 <!-- ===========================================
-     SLIDE 11 — CONCLUSION / REMERCIEMENTS
-     =========================================== -->
-<section class="slide" data-index="11" id="slide-11" style="background:var(--gradient-hero);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center">
-  <div class="noise"></div>
-  <div class="slide-organic-glow" style="position:absolute;bottom:0;left:0;right:0;height:clamp(120px,30vh,300px);background:linear-gradient(to top,rgba(212,255,80,0.04),transparent);z-index:0;pointer-events:none"></div>
-  <div style="position:relative;z-index:3;text-align:center;max-width:min(90vw,1000px);padding:var(--slide-padding);width:100%">
-    <!-- Logo + punchline -->
-    <div class="reveal d1" style="margin-bottom:clamp(0.6rem,1.5vh,1rem)">
-      <h1 contenteditable="false" style="font-family:var(--font-display);font-weight:800;font-size:clamp(1.8rem,5.5vw,3.5rem);color:var(--text-primary);line-height:1.1">
-        AgriScan<span style="color:var(--accent)"> AI</span>
-      </h1>
-    </div>
-    <div class="reveal d2" contenteditable="false" style="font-family:var(--font-display);font-weight:600;font-size:clamp(1rem,2.8vw,1.8rem);color:var(--text-secondary);margin-bottom:clamp(1rem,3vh,2rem)">
-      Du diagnostic agricole à l'application déployée en production
-    </div>
-
-    <!-- 3 cards -->
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(0.5rem,1.2vw,1rem);max-width:min(90vw,800px);margin:0 auto clamp(1rem,2.5vh,1.8rem)">
-      <div class="tilt-card reveal d3" contenteditable="false" style="text-align:left;padding:clamp(0.5rem,1vw,0.8rem);cursor:default">
-        <div style="font-family:var(--font-mono);font-weight:700;font-size:clamp(0.45rem,0.65vw,0.55rem);color:var(--accent);margin-bottom:clamp(0.2rem,0.4vh,0.3rem)">01 · NO/LOW-CODE</div>
-        <div style="font-family:var(--font-body);font-weight:600;font-size:clamp(0.7rem,1.1vw,0.9rem);color:var(--text-primary);margin-bottom:clamp(0.15rem,0.3vh,0.25rem)">Bolt.new + Lovable</div>
-        <div style="font-family:var(--font-body);font-weight:400;font-size:clamp(0.5rem,0.75vw,0.6rem);color:var(--text-muted);line-height:1.45">Prototypage rapide et itérations produit sans dette technique</div>
-      </div>
-      <div class="tilt-card reveal d4" contenteditable="false" style="text-align:left;padding:clamp(0.5rem,1vw,0.8rem);cursor:default">
-        <div style="font-family:var(--font-mono);font-weight:700;font-size:clamp(0.45rem,0.65vw,0.55rem);color:var(--success);margin-bottom:clamp(0.2rem,0.4vh,0.3rem)">02 · INTELLIGENCE ARTIFICIELLE</div>
-        <div style="font-family:var(--font-body);font-weight:600;font-size:clamp(0.7rem,1.1vw,0.9rem);color:var(--text-primary);margin-bottom:clamp(0.15rem,0.3vh,0.25rem)">3 agents IA spécialisés</div>
-        <div style="font-family:var(--font-body);font-weight:400;font-size:clamp(0.5rem,0.75vw,0.6rem);color:var(--text-muted);line-height:1.45">Diagnostic, génération de rapports, recommandations — orchestrés</div>
-      </div>
-      <div class="tilt-card reveal d5" contenteditable="false" style="text-align:left;padding:clamp(0.5rem,1vw,0.8rem);cursor:default">
-        <div style="font-family:var(--font-mono);font-weight:700;font-size:clamp(0.45rem,0.65vw,0.55rem);color:var(--info);margin-bottom:clamp(0.2rem,0.4vh,0.3rem)">03 · VISION PRODUIT</div>
-        <div style="font-family:var(--font-body);font-weight:600;font-size:clamp(0.7rem,1.1vw,0.9rem);color:var(--text-primary);margin-bottom:clamp(0.15rem,0.3vh,0.25rem)">Mobile + Web en production</div>
-        <div style="font-family:var(--font-body);font-weight:400;font-size:clamp(0.5rem,0.75vw,0.6rem);color:var(--text-muted);line-height:1.45">Livré en 8 semaines — autonomie complète du design au déploiement</div>
-      </div>
-    </div>
-
-    <!-- Merci + CTA -->
-    <div class="reveal d6" contenteditable="false" style="font-family:var(--font-display);font-weight:800;font-size:clamp(1.2rem,3vw,2rem);color:var(--accent);margin-bottom:clamp(0.6rem,1.5vh,1rem)">Merci — Des questions ?</div>
-    <a class="reveal d7" href="https://crop-health-scan-21.preview.emergentagent.com" target="_blank" contenteditable="false" style="display:inline-block;text-decoration:none;padding:clamp(6px,0.6vw,10px) clamp(12px,1.5vw,20px);border:1px solid rgba(212,255,80,0.2);border-radius:8px;background:rgba(212,255,80,0.06);color:var(--accent);font-family:var(--font-display);font-weight:600;font-size:clamp(0.6rem,0.9vw,0.8rem);transition:background 0.2s,box-shadow 0.2s">🌐 Tester la démo</a>
-    <div class="reveal d8" contenteditable="false" style="margin-top:clamp(0.6rem,1.5vh,1.2rem);font-family:var(--font-body);font-weight:400;font-size:clamp(0.45rem,0.65vw,0.55rem);color:var(--text-muted)">Bachelor 2025/2026 · Chambre d'Agriculture · Emergent Agent</div>
-  </div>
-</section>
-
-<!-- ===========================================
      SLIDE 13 — MON COMPTE & AUTH
      =========================================== -->
-<section class="slide" data-index="12" id="slide-12" style="background:var(--gradient-hero)">
+<section class="slide" data-index="13" id="slide-13" style="background:var(--gradient-hero)">
   <div class="noise"></div>
   <div class="shape shape-c parallax" style="width:clamp(90px,16vw,200px);height:clamp(90px,16vw,200px);top:-5%;left:10%"></div>
   <div class="shape shape-a parallax" style="width:clamp(60px,10vw,140px);height:clamp(60px,10vw,140px);bottom:10%;right:5%"></div>
@@ -1472,7 +1548,7 @@ body.edit-active .slide{cursor:text}
 <!-- ===========================================
      SLIDE 14 — CARTE INTERACTIVE
      =========================================== -->
-<section class="slide" data-index="13" id="slide-13" style="background:var(--gradient-hero)">
+<section class="slide" data-index="14" id="slide-14" style="background:var(--gradient-hero)">
   <div class="noise"></div>
   <div class="shape shape-a parallax" style="width:clamp(100px,18vw,220px);height:clamp(100px,18vw,220px);bottom:-6%;right:12%"></div>
   <div class="shape shape-c parallax" style="width:clamp(60px,10vw,140px);height:clamp(60px,10vw,140px);top:18%;left:5%"></div>
@@ -1540,7 +1616,7 @@ body.edit-active .slide{cursor:text}
 <!-- ===========================================
      SLIDE 15 — CAPTEURS IoT SIMULÉS
      =========================================== -->
-<section class="slide" data-index="14" id="slide-14">
+<section class="slide" data-index="15" id="slide-15">
   <div class="noise"></div>
   <div class="glitch-overlay"></div>
   <div class="dot-grid"></div>
@@ -1619,7 +1695,7 @@ body.edit-active .slide{cursor:text}
 <!-- ===========================================
      SLIDE 16 — ADMINISTRATION BACK-OFFICE
      =========================================== -->
-<section class="slide" data-index="15" id="slide-15" style="background:var(--gradient-hero)">
+<section class="slide" data-index="16" id="slide-16" style="background:var(--gradient-hero)">
   <div class="noise"></div>
   <div class="shape shape-c parallax" style="width:clamp(100px,18vw,220px);height:clamp(100px,18vw,220px);top:-4%;left:8%"></div>
   <div class="shape shape-b parallax" style="width:clamp(60px,10vw,140px);height:clamp(60px,10vw,140px);bottom:12%;right:8%"></div>
@@ -1673,6 +1749,49 @@ body.edit-active .slide{cursor:text}
   <span class="slide-dataparticle dp1">admin@agriscan.ai</span>
   <span class="slide-dataparticle dp2">GET /api/stats</span>
   <div class="slide-organic-glow"></div>
+</section>
+
+<!-- ===========================================
+     SLIDE 17 — CONCLUSION / REMERCIEMENTS
+     =========================================== -->
+<section class="slide" data-index="17" id="slide-17" style="background:var(--gradient-hero);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center">
+  <div class="noise"></div>
+  <div class="slide-organic-glow" style="position:absolute;bottom:0;left:0;right:0;height:clamp(120px,30vh,300px);background:linear-gradient(to top,rgba(212,255,80,0.04),transparent);z-index:0;pointer-events:none"></div>
+  <div style="position:relative;z-index:3;text-align:center;max-width:min(90vw,1000px);padding:var(--slide-padding);width:100%">
+    <!-- Logo + punchline -->
+    <div class="reveal d1" style="margin-bottom:clamp(0.6rem,1.5vh,1rem)">
+      <h1 contenteditable="false" style="font-family:var(--font-display);font-weight:800;font-size:clamp(1.8rem,5.5vw,3.5rem);color:var(--text-primary);line-height:1.1">
+        AgriScan<span style="color:var(--accent)"> AI</span>
+      </h1>
+    </div>
+    <div class="reveal d2" contenteditable="false" style="font-family:var(--font-display);font-weight:600;font-size:clamp(1rem,2.8vw,1.8rem);color:var(--text-secondary);margin-bottom:clamp(1rem,3vh,2rem)">
+      Du diagnostic agricole à l'application déployée en production
+    </div>
+
+    <!-- 3 cards -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(0.5rem,1.2vw,1rem);max-width:min(90vw,800px);margin:0 auto clamp(1rem,2.5vh,1.8rem)">
+      <div class="tilt-card reveal d3" contenteditable="false" style="text-align:left;padding:clamp(0.5rem,1vw,0.8rem);cursor:default">
+        <div style="font-family:var(--font-mono);font-weight:700;font-size:clamp(0.45rem,0.65vw,0.55rem);color:var(--accent);margin-bottom:clamp(0.2rem,0.4vh,0.3rem)">01 · NO/LOW-CODE</div>
+        <div style="font-family:var(--font-body);font-weight:600;font-size:clamp(0.7rem,1.1vw,0.9rem);color:var(--text-primary);margin-bottom:clamp(0.15rem,0.3vh,0.25rem)">Bolt.new + Lovable</div>
+        <div style="font-family:var(--font-body);font-weight:400;font-size:clamp(0.5rem,0.75vw,0.6rem);color:var(--text-muted);line-height:1.45">Prototypage rapide et itérations produit sans dette technique</div>
+      </div>
+      <div class="tilt-card reveal d4" contenteditable="false" style="text-align:left;padding:clamp(0.5rem,1vw,0.8rem);cursor:default">
+        <div style="font-family:var(--font-mono);font-weight:700;font-size:clamp(0.45rem,0.65vw,0.55rem);color:var(--success);margin-bottom:clamp(0.2rem,0.4vh,0.3rem)">02 · INTELLIGENCE ARTIFICIELLE</div>
+        <div style="font-family:var(--font-body);font-weight:600;font-size:clamp(0.7rem,1.1vw,0.9rem);color:var(--text-primary);margin-bottom:clamp(0.15rem,0.3vh,0.25rem)">3 agents IA spécialisés</div>
+        <div style="font-family:var(--font-body);font-weight:400;font-size:clamp(0.5rem,0.75vw,0.6rem);color:var(--text-muted);line-height:1.45">Diagnostic, génération de rapports, recommandations — orchestrés</div>
+      </div>
+      <div class="tilt-card reveal d5" contenteditable="false" style="text-align:left;padding:clamp(0.5rem,1vw,0.8rem);cursor:default">
+        <div style="font-family:var(--font-mono);font-weight:700;font-size:clamp(0.45rem,0.65vw,0.55rem);color:var(--info);margin-bottom:clamp(0.2rem,0.4vh,0.3rem)">03 · VISION PRODUIT</div>
+        <div style="font-family:var(--font-body);font-weight:600;font-size:clamp(0.7rem,1.1vw,0.9rem);color:var(--text-primary);margin-bottom:clamp(0.15rem,0.3vh,0.25rem)">Mobile + Web en production</div>
+        <div style="font-family:var(--font-body);font-weight:400;font-size:clamp(0.5rem,0.75vw,0.6rem);color:var(--text-muted);line-height:1.45">Livré en 8 semaines — autonomie complète du design au déploiement</div>
+      </div>
+    </div>
+
+    <!-- Merci + CTA -->
+    <div class="reveal d6" contenteditable="false" style="font-family:var(--font-display);font-weight:800;font-size:clamp(1.2rem,3vw,2rem);color:var(--accent);margin-bottom:clamp(0.6rem,1.5vh,1rem)">Merci — Des questions ?</div>
+    <a class="reveal d7" href="https://crop-health-scan-21.preview.emergentagent.com" target="_blank" contenteditable="false" style="display:inline-block;text-decoration:none;padding:clamp(6px,0.6vw,10px) clamp(12px,1.5vw,20px);border:1px solid rgba(212,255,80,0.2);border-radius:8px;background:rgba(212,255,80,0.06);color:var(--accent);font-family:var(--font-display);font-weight:600;font-size:clamp(0.6rem,0.9vw,0.8rem);transition:background 0.2s,box-shadow 0.2s">🌐 Tester la démo</a>
+    <div class="reveal d8" contenteditable="false" style="margin-top:clamp(0.6rem,1.5vh,1.2rem);font-family:var(--font-body);font-weight:400;font-size:clamp(0.45rem,0.65vw,0.55rem);color:var(--text-muted)">Bachelor 2025/2026 · Chambre d'Agriculture · Emergent Agent</div>
+  </div>
 </section>
 
 <div class="lightbox" id="screenshotLightbox">
@@ -1866,13 +1985,17 @@ class CinemaController {
       if (idx === 7) return 'cineMorphIn';
       if (idx === 8) return 'cineSlideInRight';
       if (idx === 9) return 'cineElevateIn';
-      if (idx === 10) return 'cineZoomIn';
-      if (idx === 11) return 'cineFadeThroughBlack';
+      if (idx === 10) return 'cineElevateIn';
+      if (idx === 11) return 'cineElevateIn';
+      if (idx === 12) return 'cineZoomIn';
+      if (idx === 17) return 'cineZoomIn';
       return 'cineSlideInRight';
     } else {
       if (idx === 2 || idx === 6) return 'cineSlideBackRight';
-      if (idx === 10) return 'cineZoomOut';
-      if (idx === 11 || idx === 0) return 'cineZoomIn';
+      if (idx === 10) return 'cineElevateIn';
+      if (idx === 11) return 'cineElevateIn';
+      if (idx === 12) return 'cineZoomOut';
+      if (idx === 0 || idx === 17) return 'cineZoomIn';
       if (idx === 8) return 'cineSlideInLeft';
       return 'cineSlideInLeft';
     }
