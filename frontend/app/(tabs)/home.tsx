@@ -101,11 +101,6 @@ export default function HomeScreen() {
             <View>
               <Text style={styles.greeting}>Bonjour,</Text>
               <Text style={styles.userName}>{user?.display_name || 'Agriculteur'}</Text>
-              {user?.role && (
-                <View style={styles.roleBadge}>
-                  <Text style={styles.roleText}>{user.role === 'admin' ? '🔧 Admin' : '🌱 Fermier'}</Text>
-                </View>
-              )}
               {user?.farm_name && (
                 <Text style={styles.farmName}>{user.farm_name}</Text>
               )}
@@ -293,21 +288,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: Colors.lime,
     marginTop: 4,
-  },
-  roleBadge: {
-    backgroundColor: Colors.lime10,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 12,
-    marginTop: 6,
-    alignSelf: 'flex-start',
-    borderWidth: 1,
-    borderColor: Colors.lime25,
-  },
-  roleText: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: Colors.lime,
   },
   section: {
     marginBottom: 32,
