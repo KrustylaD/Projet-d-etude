@@ -664,7 +664,7 @@ async def get_user_stats(user_id: str):
 
 @api_router.get("/")
 async def root():
-    return {"message": "AgriScan AI API", "version": "1.0.3"}
+    return {"message": "AgriScan AI API", "version": "1.0.1"}
 
 @api_router.get("/health")
 async def health_check():
