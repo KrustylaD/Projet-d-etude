@@ -87,6 +87,21 @@ class AdminStatsResponse(BaseModel):
     total_messages: int
     total_alerts: int
 
+class AdminDiagnosticResponse(BaseModel):
+    id: str
+    user_id: str
+    user_email: str
+    user_display_name: str
+    culture: str
+    symptoms: str
+    location: Optional[str] = None
+    status: str = "en cours"
+    created_at: datetime
+    updated_at: Optional[datetime] = None
+
+class MessageResponse(BaseModel):
+    message: str
+
 class MessageCreate(BaseModel):
     role: str  # "user" or "assistant" or "diagnosis"
     content: str
@@ -731,8 +746,8 @@ async def get_admin_stats(user_id: str):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@api_router.get("/admin/users", response_model=List[AdminUserResponse])
-async def get_admin_users(user_id: str, search: str = ""):
+@api_router.get("/admin/users")
+async def get_admin_users(user_id: str, search: str = "", limit: int = 50, offset: int = 0):
     try:
         await require_admin(user_id)
         query = {}
@@ -741,7 +756,8 @@ async def get_admin_users(user_id: str, search: str = ""):
                 {"email": {"$regex": search, "$options": "i"}},
                 {"display_name": {"$regex": search, "$options": "i"}}
             ]
-        users = await db.users.find(query).sort("created_at", -1).to_list(100)
+        total = await db.users.count_documents(query)
+        users = await db.users.find(query).sort("created_at", -1).skip(offset).limit(limit).to_list(limit)
         result = []
         for u in users:
             diag_count = await db.diagnostics.count_documents({"user_id": u["uid"]})
@@ -757,7 +773,7 @@ async def get_admin_users(user_id: str, search: str = ""):
                 created_at=u["created_at"],
                 diagnostic_count=diag_count
             ))
-        return result
+        return {"total": total, "limit": limit, "offset": offset, "users": result}
     except HTTPException:
         raise
     except Exception as e:
@@ -765,10 +781,12 @@ async def get_admin_users(user_id: str, search: str = ""):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@api_router.patch("/admin/users/{uid}/role")
+@api_router.patch("/admin/users/{uid}/role", response_model=MessageResponse)
 async def update_user_role(uid: str, user_id: str, role: str):
     try:
         await require_admin(user_id)
+        if uid == user_id:
+            raise HTTPException(status_code=400, detail="Cannot change your own role")
         if role not in ("farmer", "admin"):
             raise HTTPException(status_code=400, detail="Invalid role. Must be 'farmer' or 'admin'")
         result = await db.users.update_one(
@@ -777,7 +795,7 @@ async def update_user_role(uid: str, user_id: str, role: str):
         )
         if result.matched_count == 0:
             raise HTTPException(status_code=404, detail="User not found")
-        return {"message": f"User role updated to {role}"}
+        return MessageResponse(message=f"User role updated to {role}")
     except HTTPException:
         raise
     except Exception as e:
@@ -785,7 +803,7 @@ async def update_user_role(uid: str, user_id: str, role: str):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@api_router.delete("/admin/users/{uid}")
+@api_router.delete("/admin/users/{uid}", response_model=MessageResponse)
 async def delete_user(uid: str, user_id: str):
     try:
         await require_admin(user_id)
@@ -804,7 +822,7 @@ async def delete_user(uid: str, user_id: str):
         await db.diagnostics.delete_many({"user_id": uid})
         await db.alerts.delete_many({"user_id": uid})
         await db.users.delete_one({"uid": uid})
-        return {"message": "User and all associated data deleted"}
+        return MessageResponse(message="User and all associated data deleted")
     except HTTPException:
         raise
     except Exception as e:
@@ -812,7 +830,7 @@ async def delete_user(uid: str, user_id: str):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@api_router.get("/admin/diagnostics", response_model=List[DiagnosticResponse])
+@api_router.get("/admin/diagnostics", response_model=List[AdminDiagnosticResponse])
 async def get_admin_diagnostics(user_id: str, culture: str = ""):
     try:
         await require_admin(user_id)
@@ -820,7 +838,22 @@ async def get_admin_diagnostics(user_id: str, culture: str = ""):
         if culture:
             query["culture"] = {"$regex": culture, "$options": "i"}
         diagnostics = await db.diagnostics.find(query).sort("created_at", -1).to_list(100)
-        return [DiagnosticResponse(**d) for d in diagnostics]
+        result = []
+        for d in diagnostics:
+            user = await db.users.find_one({"uid": d["user_id"]})
+            result.append(AdminDiagnosticResponse(
+                id=d["id"],
+                user_id=d["user_id"],
+                user_email=user["email"] if user else "unknown",
+                user_display_name=user["display_name"] if user else "Unknown",
+                culture=d["culture"],
+                symptoms=d["symptoms"],
+                location=d.get("location"),
+                status=d.get("status", "en cours"),
+                created_at=d["created_at"],
+                updated_at=d.get("updated_at")
+            ))
+        return result
     except HTTPException:
         raise
     except Exception as e:
