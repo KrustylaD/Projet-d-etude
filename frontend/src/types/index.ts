@@ -5,6 +5,7 @@ export interface User {
   phone_number?: string;
   farm_name?: string;
   location?: string;
+  role?: string;
   created_at: string;
 }
 
