@@ -898,7 +898,7 @@ body.edit-active .slide{cursor:text}
 <!-- Slide counter -->
 <button class="slide-nav-btn prev" id="slidePrev" aria-label="Slide précédente">‹</button>
 <button class="slide-nav-btn next" id="slideNext" aria-label="Slide suivante">›</button>
-<div class="slide-counter" id="slideCounter">01 / 12</div>
+<div class="slide-counter" id="slideCounter">01 / 16</div>
 
 <!-- ===========================================
      SLIDE 1 — COVER : CODE ORGANIQUE
@@ -1423,6 +1423,256 @@ body.edit-active .slide{cursor:text}
     <a class="reveal d7" href="https://crop-health-scan-21.preview.emergentagent.com" target="_blank" contenteditable="false" style="display:inline-block;text-decoration:none;padding:clamp(6px,0.6vw,10px) clamp(12px,1.5vw,20px);border:1px solid rgba(212,255,80,0.2);border-radius:8px;background:rgba(212,255,80,0.06);color:var(--accent);font-family:var(--font-display);font-weight:600;font-size:clamp(0.6rem,0.9vw,0.8rem);transition:background 0.2s,box-shadow 0.2s">🌐 Tester la démo</a>
     <div class="reveal d8" contenteditable="false" style="margin-top:clamp(0.6rem,1.5vh,1.2rem);font-family:var(--font-body);font-weight:400;font-size:clamp(0.45rem,0.65vw,0.55rem);color:var(--text-muted)">Bachelor 2025/2026 · Chambre d'Agriculture · Emergent Agent</div>
   </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 13 — MON COMPTE & AUTH
+     =========================================== -->
+<section class="slide" data-index="12" id="slide-12" style="background:var(--gradient-hero)">
+  <div class="noise"></div>
+  <div class="shape shape-c parallax" style="width:clamp(90px,16vw,200px);height:clamp(90px,16vw,200px);top:-5%;left:10%"></div>
+  <div class="shape shape-a parallax" style="width:clamp(60px,10vw,140px);height:clamp(60px,10vw,140px);bottom:10%;right:5%"></div>
+  <div class="glow-spot" style="top:50%;left:30%"></div>
+  <div class="focus-split">
+    <div class="focus-left">
+      <div class="focus-mockup reveal d1 phone-mockup" style="padding:0;background:#0A1B0E;position:relative;overflow:hidden">
+        <img src="assets/page connexion.jpg" alt="Connexion AgriScan" data-src="assets/page connexion.jpg" class="screenshot-click" style="width:100%;height:auto;display:block;border-radius:clamp(6px,0.8vw,10px)">
+        <div style="position:absolute;inset:0;border-radius:clamp(6px,0.8vw,10px);box-shadow:inset 0 0 0 1px rgba(249,249,242,0.06);pointer-events:none"></div>
+      </div>
+    </div>
+    <div class="focus-right">
+      <div class="focus-label info reveal d1" contenteditable="false">GESTION DE COMPTE</div>
+      <h2 class="focus-title reveal d2" contenteditable="false">Authentification &amp; profil</h2>
+      <ul class="focus-items">
+        <li class="reveal d2" contenteditable="false">Inscription &amp; connexion sécurisées (email + mot de passe)</li>
+        <li class="reveal d3" contenteditable="false">Profil modifiable : photo, nom, email, mot de passe</li>
+        <li class="reveal d3" contenteditable="false">Rôle affiché (Admin / Utilisateur) avec badge distinctif</li>
+        <li class="reveal d4" contenteditable="false">Déconnexion et protection des routes privées</li>
+        <li class="reveal d4" contenteditable="false">Token JWT stocké localement pour session persistante</li>
+      </ul>
+      <div class="focus-badges reveal d5" contenteditable="false">
+        <span class="badge" style="background:rgba(212,255,80,0.08);color:var(--accent);border:1px solid rgba(212,255,80,0.2)">JWT</span>
+        <span class="badge" style="background:rgba(77,170,255,0.08);color:var(--info);border:1px solid rgba(77,170,255,0.2)">Zustand</span>
+        <span class="badge" style="background:rgba(58,224,134,0.08);color:var(--success);border:1px solid rgba(58,224,134,0.2)">AsyncStorage</span>
+      </div>
+    </div>
+  </div>
+  <div class="slide-vine">
+    <svg viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
+      <path d="M90,55 C70,40 50,50 30,35 C20,28 10,30 5,25" fill="none" stroke="#D4FF50" stroke-width="0.8" opacity="0.25" stroke-dasharray="120" stroke-dashoffset="120"/>
+      <circle cx="85" cy="50" r="3" fill="none" stroke="#D4FF50" stroke-width="0.5" opacity="0.15"/>
+      <circle cx="45" cy="42" r="2.5" fill="none" stroke="#3AE086" stroke-width="0.5" opacity="0.15"/>
+    </svg>
+  </div>
+  <span class="slide-dataparticle dp1">user { role: "admin" }</span>
+  <span class="slide-dataparticle dp2">POST /auth/login</span>
+  <div class="slide-organic-glow"></div>
+</section>
+
+<!-- ===========================================
+     SLIDE 14 — CARTE INTERACTIVE
+     =========================================== -->
+<section class="slide" data-index="13" id="slide-13" style="background:var(--gradient-hero)">
+  <div class="noise"></div>
+  <div class="shape shape-a parallax" style="width:clamp(100px,18vw,220px);height:clamp(100px,18vw,220px);bottom:-6%;right:12%"></div>
+  <div class="shape shape-c parallax" style="width:clamp(60px,10vw,140px);height:clamp(60px,10vw,140px);top:18%;left:5%"></div>
+  <div class="glow-spot" style="top:50%;right:25%;width:clamp(120px,25vw,320px);height:clamp(120px,25vw,320px);background:radial-gradient(circle,rgba(77,170,255,0.05),transparent 70%)"></div>
+  <div class="focus-split reverse">
+    <div class="focus-right">
+      <div class="focus-mockup reveal d1" style="background:#0A1B0E;padding:clamp(8px,1vw,14px);position:relative;overflow:hidden">
+        <div style="width:100%;aspect-ratio:9/16;border-radius:clamp(4px,0.5vw,6px);background:linear-gradient(160deg,#0A1B0E,#0D2814,#0A1B0E);position:relative;overflow:hidden">
+          <div style="position:absolute;inset:0;opacity:0.04;background:radial-gradient(circle at 30% 40%,var(--accent) 0%,transparent 50%),radial-gradient(circle at 70% 60%,var(--info) 0%,transparent 40%)"></div>
+          <div style="position:absolute;top:clamp(6px,0.6vw,10px);left:clamp(6px,0.6vw,10px);right:clamp(6px,0.6vw,10px);bottom:clamp(6px,0.6vw,10px);display:flex;flex-direction:column;gap:clamp(3px,0.3vw,5px)">
+            <div style="display:flex;gap:clamp(2px,0.2vw,4px);flex-wrap:wrap">
+              <div style="flex:1;min-width:40%;padding:clamp(3px,0.35vw,5px) clamp(4px,0.4vw,7px);background:rgba(58,224,134,0.06);border:1px solid rgba(58,224,134,0.1);border-radius:2px;font-family:var(--font-mono);font-weight:700;font-size:clamp(0.3rem,0.4vw,0.45rem);color:var(--success)">Parcelle A · Blé</div>
+              <div style="flex:1;min-width:40%;padding:clamp(3px,0.35vw,5px) clamp(4px,0.4vw,7px);background:rgba(255,180,67,0.06);border:1px solid rgba(255,180,67,0.12);border-radius:2px;font-family:var(--font-mono);font-weight:700;font-size:clamp(0.3rem,0.4vw,0.45rem);color:var(--warning)">Parcelle B · Vigne</div>
+              <div style="flex:1;min-width:40%;padding:clamp(3px,0.35vw,5px) clamp(4px,0.4vw,7px);background:rgba(58,224,134,0.06);border:1px solid rgba(58,224,134,0.1);border-radius:2px;font-family:var(--font-mono);font-weight:700;font-size:clamp(0.3rem,0.4vw,0.45rem);color:var(--success)">Parcelle C · Maïs</div>
+              <div style="flex:1;min-width:40%;padding:clamp(3px,0.35vw,5px) clamp(4px,0.4vw,7px);background:rgba(212,255,80,0.05);border:1px solid rgba(212,255,80,0.08);border-radius:2px;font-family:var(--font-mono);font-weight:700;font-size:clamp(0.3rem,0.4vw,0.45rem);color:var(--accent)">Parcelle D · Soja</div>
+              <div style="flex:1;min-width:40%;padding:clamp(3px,0.35vw,5px) clamp(4px,0.4vw,7px);background:rgba(255,78,92,0.06);border:1px solid rgba(255,78,92,0.12);border-radius:2px;font-family:var(--font-mono);font-weight:700;font-size:clamp(0.3rem,0.4vw,0.45rem);color:var(--error)">Parcelle E · Orge</div>
+            </div>
+            <div style="flex:1;display:flex;align-items:center;justify-content:center">
+              <div style="width:clamp(40px,6vw,90px);height:clamp(40px,6vw,90px);border-radius:50%;border:1px solid rgba(212,255,80,0.08);display:flex;align-items:center;justify-content:center;font-size:clamp(0.5rem,0.7vw,0.7rem);color:var(--text-muted);font-family:var(--font-mono)"><span style="color:var(--accent)">IA</span> scan</div>
+            </div>
+            <div style="display:flex;gap:clamp(2px,0.2vw,4px);justify-content:center">
+              <div style="width:clamp(3px,0.3vw,5px);height:clamp(3px,0.3vw,5px);border-radius:50%;background:var(--accent)"></div>
+              <div style="width:clamp(3px,0.3vw,5px);height:clamp(3px,0.3vw,5px);border-radius:50%;background:rgba(249,249,242,0.1)"></div>
+              <div style="width:clamp(3px,0.3vw,5px);height:clamp(3px,0.3vw,5px);border-radius:50%;background:rgba(249,249,242,0.1)"></div>
+            </div>
+          </div>
+          <div style="position:absolute;bottom:clamp(3px,0.3vw,5px);left:clamp(6px,0.5vw,10px);display:flex;gap:clamp(2px,0.2vw,4px)">
+            <span style="font-family:var(--font-mono);font-weight:700;font-size:clamp(0.25rem,0.3vw,0.35rem);color:rgba(249,249,242,0.12)">Google Maps API</span>
+            <span style="font-family:var(--font-mono);font-weight:700;font-size:clamp(0.25rem,0.3vw,0.35rem);color:rgba(249,249,242,0.08)">react-native-maps</span>
+          </div>
+        </div>
+        <div class="focus-mockup-text" style="margin-top:clamp(3px,0.4vw,6px)">Carte interactive — Google Maps API intégrée</div>
+      </div>
+    </div>
+    <div class="focus-left">
+      <div class="focus-label warn reveal d1" contenteditable="false">CARTOGRAPHIE</div>
+      <h2 class="focus-title reveal d2" contenteditable="false">Visualisation géolocalisée des parcelles</h2>
+      <ul class="focus-items">
+        <li class="reveal d2" contenteditable="false">🗺️ Carte Google Maps — localisation des parcelles</li>
+        <li class="reveal d3" contenteditable="false">📍 Marquage par code couleur selon l'alerte IA</li>
+        <li class="reveal d3" contenteditable="false">📊 Données par zone : température, humidité, risque</li>
+        <li class="reveal d4" contenteditable="false">🔍 Zoom et clic sur une parcelle pour les détails</li>
+        <li class="reveal d4" contenteditable="false">📱 Interface adaptée mobile (react-native-maps) et web</li>
+      </ul>
+      <div class="focus-badges reveal d5" contenteditable="false">
+        <span class="badge" style="background:rgba(255,78,92,0.1);color:var(--error);border:1px solid rgba(255,78,92,0.2)">ALERTE</span>
+        <span class="badge" style="background:rgba(255,180,67,0.1);color:var(--warning);border:1px solid rgba(255,180,67,0.2)">SURVEILLANCE</span>
+        <span class="badge" style="background:rgba(58,224,134,0.1);color:var(--success);border:1px solid rgba(58,224,134,0.2)">SAIN</span>
+      </div>
+    </div>
+  </div>
+  <div class="slide-vine">
+    <svg viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
+      <path d="M5,10 C25,20 40,15 60,28 C75,36 85,30 95,40" fill="none" stroke="#4DAAFF" stroke-width="0.8" opacity="0.2" stroke-dasharray="120" stroke-dashoffset="120"/>
+      <circle cx="10" cy="15" r="2.5" fill="none" stroke="#4DAAFF" stroke-width="0.5" opacity="0.12"/>
+      <circle cx="55" cy="24" r="2" fill="none" stroke="#4DAAFF" stroke-width="0.5" opacity="0.12"/>
+    </svg>
+  </div>
+  <span class="slide-dataparticle dp1">lat: 43.5° N</span>
+  <span class="slide-dataparticle dp2">lon: 2.8° E</span>
+  <span class="slide-dataparticle dp3">{ parcels: 5 }</span>
+  <div class="slide-organic-glow"></div>
+</section>
+
+<!-- ===========================================
+     SLIDE 15 — CAPTEURS IoT SIMULÉS
+     =========================================== -->
+<section class="slide" data-index="14" id="slide-14">
+  <div class="noise"></div>
+  <div class="glitch-overlay"></div>
+  <div class="dot-grid"></div>
+  <div class="vline"></div>
+  <div class="shape shape-b parallax" style="width:clamp(80px,14vw,180px);height:clamp(80px,14vw,180px);top:12%;right:5%"></div>
+  <div class="shape shape-a parallax" style="width:clamp(50px,8vw,120px);height:clamp(50px,8vw,120px);bottom:8%;left:10%"></div>
+  <div class="glow-spot" style="top:40%;left:50%"></div>
+  <div class="slide-content">
+    <div style="position:relative;z-index:2;max-width:min(92vw,1100px);width:100%;margin:0 auto">
+      <div class="focus-label lime reveal d1" style="margin-bottom:clamp(0.3rem,0.6vh,0.5rem);text-align:center">INFRASTRUCTURE IoT</div>
+      <h2 class="focus-title reveal d2" contenteditable="false" style="text-align:center;font-size:clamp(1.1rem,2.5vw,2rem);margin-bottom:clamp(0.5rem,1.2vh,1rem)">Capteurs au service de l'agriculture de précision</h2>
+      <p class="reveal d3" contenteditable="false" style="text-align:center;font-family:var(--font-body);font-weight:400;font-size:clamp(0.55rem,0.85vw,0.7rem);color:var(--text-muted);margin-bottom:clamp(0.5rem,1.2vh,1rem);max-width:clamp(280px,55vw,650px);margin-left:auto;margin-right:auto">Données simulées en frontend — architecture IoT réelle conçue pour le terrain</p>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(0.3rem,0.7vw,0.6rem)">
+        <div class="tilt-card reveal d3" style="padding:clamp(0.35rem,0.7vw,0.6rem);text-align:center;border:1px solid rgba(212,255,80,0.06)">
+          <div style="font-size:clamp(0.9rem,1.6vw,1.3rem);margin-bottom:2px">🌡️</div>
+          <div style="font-family:var(--font-mono);font-weight:700;font-size:clamp(0.5rem,0.7vw,0.6rem);color:var(--accent)">Température</div>
+          <div style="font-family:var(--font-body);font-weight:600;font-size:clamp(0.6rem,0.9vw,0.75rem);color:var(--text-primary);margin-bottom:clamp(3px,0.3vw,5px)">24.6 °C</div>
+          <div style="height:2px;background:var(--bg-input);border-radius:2px;overflow:hidden"><div style="height:100%;width:62%;background:var(--accent);border-radius:2px"></div></div>
+        </div>
+        <div class="tilt-card reveal d3" style="padding:clamp(0.35rem,0.7vw,0.6rem);text-align:center;border:1px solid rgba(77,170,255,0.06)">
+          <div style="font-size:clamp(0.9rem,1.6vw,1.3rem);margin-bottom:2px">💧</div>
+          <div style="font-family:var(--font-mono);font-weight:700;font-size:clamp(0.5rem,0.7vw,0.6rem);color:var(--info)">Humidité sol</div>
+          <div style="font-family:var(--font-body);font-weight:600;font-size:clamp(0.6rem,0.9vw,0.75rem);color:var(--text-primary);margin-bottom:clamp(3px,0.3vw,5px)">78%</div>
+          <div style="height:2px;background:var(--bg-input);border-radius:2px;overflow:hidden"><div style="height:100%;width:78%;background:var(--info);border-radius:2px"></div></div>
+        </div>
+        <div class="tilt-card reveal d4" style="padding:clamp(0.35rem,0.7vw,0.6rem);text-align:center;border:1px solid rgba(255,180,67,0.06)">
+          <div style="font-size:clamp(0.9rem,1.6vw,1.3rem);margin-bottom:2px">☀️</div>
+          <div style="font-family:var(--font-mono);font-weight:700;font-size:clamp(0.5rem,0.7vw,0.6rem);color:var(--warning)">Lumière PAR</div>
+          <div style="font-family:var(--font-body);font-weight:600;font-size:clamp(0.6rem,0.9vw,0.75rem);color:var(--text-primary);margin-bottom:clamp(3px,0.3vw,5px)">412 µmol/m²/s</div>
+          <div style="height:2px;background:var(--bg-input);border-radius:2px;overflow:hidden"><div style="height:100%;width:55%;background:var(--warning);border-radius:2px"></div></div>
+        </div>
+        <div class="tilt-card reveal d4" style="padding:clamp(0.35rem,0.7vw,0.6rem);text-align:center;border:1px solid rgba(58,224,134,0.06)">
+          <div style="font-size:clamp(0.9rem,1.6vw,1.3rem);margin-bottom:2px">🌬️</div>
+          <div style="font-family:var(--font-mono);font-weight:700;font-size:clamp(0.5rem,0.7vw,0.6rem);color:var(--success)">Vent</div>
+          <div style="font-family:var(--font-body);font-weight:600;font-size:clamp(0.6rem,0.9vw,0.75rem);color:var(--text-primary);margin-bottom:clamp(3px,0.3vw,5px)">12 km/h</div>
+          <div style="height:2px;background:var(--bg-input);border-radius:2px;overflow:hidden"><div style="height:100%;width:35%;background:var(--success);border-radius:2px"></div></div>
+        </div>
+        <div class="tilt-card reveal d5" style="padding:clamp(0.35rem,0.7vw,0.6rem);text-align:center;border:1px solid rgba(255,78,92,0.06)">
+          <div style="font-size:clamp(0.9rem,1.6vw,1.3rem);margin-bottom:2px">🌱</div>
+          <div style="font-family:var(--font-mono);font-weight:700;font-size:clamp(0.5rem,0.7vw,0.6rem);color:var(--error)">pH Sol</div>
+          <div style="font-family:var(--font-body);font-weight:600;font-size:clamp(0.6rem,0.9vw,0.75rem);color:var(--text-primary);margin-bottom:clamp(3px,0.3vw,5px)">6.8</div>
+          <div style="height:2px;background:var(--bg-input);border-radius:2px;overflow:hidden"><div style="height:100%;width:72%;background:var(--error);border-radius:2px"></div></div>
+        </div>
+        <div class="tilt-card reveal d5" style="padding:clamp(0.35rem,0.7vw,0.6rem);text-align:center;border:1px solid rgba(77,170,255,0.06)">
+          <div style="font-size:clamp(0.9rem,1.6vw,1.3rem);margin-bottom:2px">🔋</div>
+          <div style="font-family:var(--font-mono);font-weight:700;font-size:clamp(0.5rem,0.7vw,0.6rem);color:var(--info)">Batterie</div>
+          <div style="font-family:var(--font-body);font-weight:600;font-size:clamp(0.6rem,0.9vw,0.75rem);color:var(--text-primary);margin-bottom:clamp(3px,0.3vw,5px)">73%</div>
+          <div style="height:2px;background:var(--bg-input);border-radius:2px;overflow:hidden"><div style="height:100%;width:73%;background:var(--info);border-radius:2px"></div></div>
+        </div>
+        <div class="tilt-card reveal d6" style="padding:clamp(0.35rem,0.7vw,0.6rem);text-align:center;grid-column:span 2;border:1px solid rgba(212,255,80,0.06)">
+          <div style="display:flex;align-items:center;gap:clamp(4px,0.5vw,8px);justify-content:center">
+            <span style="font-size:clamp(0.9rem,1.6vw,1.3rem)">📡</span>
+            <div>
+              <div style="font-family:var(--font-mono);font-weight:700;font-size:clamp(0.5rem,0.7vw,0.6rem);color:var(--accent)">Connectivité LoRaWAN</div>
+              <div style="font-family:var(--font-body);font-weight:400;font-size:clamp(0.35rem,0.5vw,0.45rem);color:var(--text-muted)">Signal : 4/5 · Dernière transmission : 3 min</div>
+            </div>
+          </div>
+          <div style="height:2px;background:var(--bg-input);border-radius:2px;overflow:hidden;margin-top:clamp(3px,0.3vw,5px)"><div style="height:100%;width:80%;background:var(--accent);border-radius:2px"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-vine">
+    <svg viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
+      <path d="M90,5 C70,15 50,10 30,22 C20,28 10,25 5,32" fill="none" stroke="#3AE086" stroke-width="0.8" opacity="0.2" stroke-dasharray="120" stroke-dashoffset="120"/>
+      <circle cx="85" cy="10" r="3" fill="none" stroke="#3AE086" stroke-width="0.5" opacity="0.12"/>
+      <circle cx="25" cy="18" r="2" fill="none" stroke="#3AE086" stroke-width="0.5" opacity="0.12"/>
+    </svg>
+  </div>
+  <span class="slide-dataparticle dp1">sensor_id: tmp_01</span>
+  <span class="slide-dataparticle dp2">lorawan: 868 MHz</span>
+  <span class="slide-dataparticle dp3">payload: 12 bytes</span>
+  <div class="slide-organic-glow"></div>
+</section>
+
+<!-- ===========================================
+     SLIDE 16 — ADMINISTRATION BACK-OFFICE
+     =========================================== -->
+<section class="slide" data-index="15" id="slide-15" style="background:var(--gradient-hero)">
+  <div class="noise"></div>
+  <div class="shape shape-c parallax" style="width:clamp(100px,18vw,220px);height:clamp(100px,18vw,220px);top:-4%;left:8%"></div>
+  <div class="shape shape-b parallax" style="width:clamp(60px,10vw,140px);height:clamp(60px,10vw,140px);bottom:12%;right:8%"></div>
+  <div class="glow-spot" style="top:30%;right:15%;width:clamp(100px,20vw,280px);height:clamp(100px,20vw,280px);background:radial-gradient(circle,rgba(77,170,255,0.04),transparent 70%)"></div>
+  <div class="focus-split">
+    <div class="focus-left">
+      <div class="focus-mockup reveal d1 phone-mockup" style="padding:0;background:#0A1B0E;position:relative;overflow:hidden">
+        <img src="assets/page dashboard.jpg" alt="Dashboard AgriScan" data-src="assets/page dashboard.jpg" class="screenshot-click" style="width:100%;height:auto;display:block;border-radius:clamp(6px,0.8vw,10px)">
+        <div style="position:absolute;inset:0;border-radius:clamp(6px,0.8vw,10px);box-shadow:inset 0 0 0 1px rgba(249,249,242,0.06);pointer-events:none"></div>
+      </div>
+    </div>
+    <div class="focus-right">
+      <div class="focus-label info reveal d1" contenteditable="false">BACK-OFFICE</div>
+      <h2 class="focus-title reveal d2" contenteditable="false">Administration &amp; pilotage</h2>
+      <div style="display:flex;flex-direction:column;gap:clamp(0.3rem,0.6vh,0.6rem)">
+        <div class="tilt-card reveal d3" style="padding:clamp(0.4rem,0.8vw,0.7rem)">
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(0.3rem,0.5vw,0.4rem);text-align:center">
+            <div><div style="font-family:var(--font-mono);font-weight:800;font-size:clamp(0.8rem,1.3vw,1.1rem);color:var(--accent)">24</div><div style="font-family:var(--font-body);font-weight:400;font-size:clamp(0.35rem,0.5vw,0.45rem);color:var(--text-muted)">Utilisateurs</div></div>
+            <div><div style="font-family:var(--font-mono);font-weight:800;font-size:clamp(0.8rem,1.3vw,1.1rem);color:var(--info)">89</div><div style="font-family:var(--font-body);font-weight:400;font-size:clamp(0.35rem,0.5vw,0.45rem);color:var(--text-muted)">Diagnostics</div></div>
+            <div><div style="font-family:var(--font-mono);font-weight:800;font-size:clamp(0.8rem,1.3vw,1.1rem);color:var(--success)">12</div><div style="font-family:var(--font-body);font-weight:400;font-size:clamp(0.35rem,0.5vw,0.45rem);color:var(--text-muted)">Alertes</div></div>
+            <div><div style="font-family:var(--font-mono);font-weight:800;font-size:clamp(0.8rem,1.3vw,1.1rem);color:var(--warning)">98%</div><div style="font-family:var(--font-body);font-weight:400;font-size:clamp(0.35rem,0.5vw,0.45rem);color:var(--text-muted)">Disponibilité</div></div>
+          </div>
+        </div>
+        <div class="tilt-card reveal d4" style="padding:clamp(0.4rem,0.8vw,0.7rem)">
+          <div class="focus-label warn" style="margin-bottom:clamp(0.1rem,0.2vh,0.2rem);font-size:clamp(0.45rem,0.65vw,0.55rem)">GESTION UTILISATEURS</div>
+          <div style="display:flex;flex-wrap:wrap;gap:clamp(2px,0.2vw,4px)">
+            <span style="padding:clamp(1px,0.15vw,3px) clamp(4px,0.5vw,7px);background:rgba(212,255,80,0.06);border:1px solid rgba(212,255,80,0.1);border-radius:2px;font-family:var(--font-mono);font-weight:700;font-size:clamp(0.35rem,0.5vw,0.45rem);color:var(--accent)">Jean D. · Admin</span>
+            <span style="padding:clamp(1px,0.15vw,3px) clamp(4px,0.5vw,7px);background:rgba(249,249,242,0.03);border:1px solid rgba(249,249,242,0.06);border-radius:2px;font-family:var(--font-mono);font-weight:700;font-size:clamp(0.35rem,0.5vw,0.45rem);color:var(--text-muted)">Marie M.</span>
+            <span style="padding:clamp(1px,0.15vw,3px) clamp(4px,0.5vw,7px);background:rgba(249,249,242,0.03);border:1px solid rgba(249,249,242,0.06);border-radius:2px;font-family:var(--font-mono);font-weight:700;font-size:clamp(0.35rem,0.5vw,0.45rem);color:var(--text-muted)">Pierre D.</span>
+            <span style="padding:clamp(1px,0.15vw,3px) clamp(4px,0.5vw,7px);background:rgba(212,255,80,0.06);border:1px solid rgba(212,255,80,0.1);border-radius:2px;font-family:var(--font-mono);font-weight:700;font-size:clamp(0.35rem,0.5vw,0.45rem);color:var(--accent)">Sophie L. · Admin</span>
+            <span style="padding:clamp(1px,0.15vw,3px) clamp(4px,0.5vw,7px);background:rgba(249,249,242,0.03);border:1px solid rgba(249,249,242,0.06);border-radius:2px;font-family:var(--font-mono);font-weight:700;font-size:clamp(0.35rem,0.5vw,0.45rem);color:var(--text-muted)">+ 20 autres...</span>
+          </div>
+        </div>
+        <div class="tilt-card reveal d5" style="padding:clamp(0.4rem,0.8vw,0.7rem);display:flex;align-items:center;justify-content:space-between">
+          <div>
+            <div class="focus-label success" style="margin-bottom:clamp(0.05rem,0.1vh,0.15rem);font-size:clamp(0.45rem,0.65vw,0.55rem)">MODÈLE IA</div>
+            <div style="font-family:var(--font-body);font-weight:400;font-size:clamp(0.4rem,0.55vw,0.5rem);color:var(--text-muted)">GPT-5.2 · Précision 93% · 47 req/24h</div>
+          </div>
+          <span style="font-family:var(--font-mono);font-weight:700;font-size:clamp(0.4rem,0.5vw,0.45rem);padding:clamp(2px,0.2vw,4px) clamp(6px,0.6vw,8px);background:rgba(58,224,134,0.08);border:1px solid rgba(58,224,134,0.15);border-radius:3px;color:var(--success)">Actif</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-vine">
+    <svg viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
+      <path d="M90,55 C70,40 50,50 30,35 C20,28 10,30 5,25" fill="none" stroke="#4DAAFF" stroke-width="0.8" opacity="0.25" stroke-dasharray="120" stroke-dashoffset="120"/>
+      <circle cx="85" cy="50" r="3" fill="none" stroke="#4DAAFF" stroke-width="0.5" opacity="0.15"/>
+      <circle cx="45" cy="42" r="2.5" fill="none" stroke="#4DAAFF" stroke-width="0.5" opacity="0.15"/>
+    </svg>
+  </div>
+  <span class="slide-dataparticle dp1">admin@agriscan.ai</span>
+  <span class="slide-dataparticle dp2">GET /api/stats</span>
+  <div class="slide-organic-glow"></div>
 </section>
 
 <div class="lightbox" id="screenshotLightbox">
