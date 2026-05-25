@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Script de Présentation — AgriScan AI</title>
+<style>
+  @page {
+    size: A4;
+    margin: 2cm 2.2cm;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Helvetica Neue', 'Segoe UI', Arial, sans-serif;
+    font-size: 10pt;
+    line-height: 1.55;
+    color: #1a1a1a;
+    background: #fff;
+  }
+  .page { max-width: 17cm; margin: 0 auto; }
+
+  /* Cover / Title block */
+  .cover {
+    text-align: center;
+    padding: 4cm 0 3cm;
+    page-break-after: always;
+  }
+  .cover h1 {
+    font-size: 28pt;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: #0a1b0e;
+    margin-bottom: 8pt;
+  }
+  .cover h1 .ai { color: #7cb342; }
+  .cover .subtitle {
+    font-size: 14pt;
+    color: #555;
+    font-weight: 400;
+    margin-bottom: 20pt;
+  }
+  .cover .meta {
+    font-size: 10pt;
+    color: #888;
+    border-top: 2px solid #e8e8e8;
+    padding-top: 16pt;
+    display: inline-block;
+  }
+  .cover .meta span {
+    display: inline-block;
+    margin: 0 12pt;
+  }
+
+  /* Person section headers */
+  .person-header {
+    background: #0a1b0e;
+    color: #fff;
+    padding: 8pt 14pt;
+    border-radius: 4pt;
+    margin: 28pt 0 16pt;
+    page-break-after: avoid;
+  }
+  .person-header h2 {
+    font-size: 13pt;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+  }
+  .person-header .range {
+    font-size: 9pt;
+    font-weight: 400;
+    opacity: 0.7;
+  }
+
+  /* Slide headings */
+  .slide-block {
+    page-break-inside: avoid;
+    margin-bottom: 18pt;
+  }
+  .slide-block h3 {
+    font-size: 11pt;
+    font-weight: 700;
+    color: #0a1b0e;
+    border-bottom: 2.5px solid #7cb342;
+    padding-bottom: 4pt;
+    margin-bottom: 8pt;
+    display: inline-block;
+  }
+  .slide-block .text {
+    background: #f8faf8;
+    border-left: 3px solid #7cb342;
+    padding: 10pt 14pt;
+    border-radius: 0 4pt 4pt 0;
+    font-size: 9.5pt;
+    line-height: 1.6;
+    color: #222;
+  }
+  .slide-block .text p { margin-bottom: 6pt; }
+  .slide-block .text p:last-child { margin-bottom: 0; }
+  .slide-block .text ul { margin: 4pt 0 4pt 16pt; }
+  .slide-block .text li { margin-bottom: 2pt; }
+
+  /* Visual description badges */
+  .vis-desc {
+    display: inline-block;
+    background: #eef6ea;
+    color: #4a7a2f;
+    font-size: 8pt;
+    font-weight: 600;
+    padding: 2pt 8pt;
+    border-radius: 3pt;
+    border: 1px solid #c8e0b8;
+    margin: 2pt 0;
+    letter-spacing: 0.2px;
+  }
+
+  /* Distribution table */
+  .distrib {
+    margin: 16pt 0 24pt;
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9.5pt;
+  }
+  .distrib th {
+    background: #0a1b0e;
+    color: #fff;
+    padding: 6pt 10pt;
+    text-align: left;
+    font-weight: 600;
+  }
+  .distrib td {
+    padding: 5pt 10pt;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  .distrib tr:last-child td { border-bottom: none; }
+
+  /* Time recapitulation table */
+  .recap-table {
+    margin: 16pt 0;
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9.5pt;
+  }
+  .recap-table th {
+    background: #0a1b0e;
+    color: #fff;
+    padding: 6pt 10pt;
+    text-align: left;
+    font-weight: 600;
+  }
+  .recap-table td {
+    padding: 5pt 10pt;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  .recap-table tr:last-child td { border-bottom: none; }
+  .recap-table .total td { font-weight: 700; background: #f5f8f5; }
+
+  /* Tips section */
+  .tips {
+    margin-top: 24pt;
+    padding: 12pt 16pt;
+    background: #faf8f0;
+    border: 1px solid #e8e0c8;
+    border-radius: 4pt;
+    page-break-inside: avoid;
+  }
+  .tips h3 {
+    font-size: 10pt;
+    font-weight: 700;
+    color: #8b6914;
+    margin-bottom: 6pt;
+  }
+  .tips ul { margin-left: 16pt; }
+  .tips li { margin-bottom: 3pt; font-size: 9pt; }
+
+  hr { border: none; border-top: 1px solid #e0e0e0; margin: 18pt 0; }
+  strong { color: #0a1b0e; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- COVER -->
+<div class="cover">
+  <h1>AgriScan<span class="ai">.ai</span></h1>
+  <div class="subtitle">Script de Présentation Orale</div>
+  <div class="meta">
+    <span>3 personnes</span>
+    <span>17 slides</span>
+    <span>~15–18 min</span>
+  </div>
+</div>
+
+<!-- DISTRIBUTION -->
+<h3 style="font-size:12pt;margin-bottom:6pt;color:#0a1b0e">Distribution</h3>
+<table class="distrib">
+  <tr><th>Personne</th><th>Slides</th><th>Contenu</th></tr>
+  <tr><td><strong>Personne 1</strong></td><td>0–5</td><td>Cover, Problème, Solution, Fonctionnalités, Focus Diagnostic, Alertes</td></tr>
+  <tr><td><strong>Personne 2</strong></td><td>6–10</td><td>No/Low-Code, Architecture, Défis, Migration, Llama 70B</td></tr>
+  <tr><td><strong>Personne 3</strong></td><td>11–16</td><td>Impact, Auth, IoT, Admin, Perspectives, Conclusion</td></tr>
+</table>
+
+<!-- PERSONNE 1 -->
+<div class="person-header"><h2>Personne 1 <span class="range">— Slides 0 à 5</span></h2></div>
+
+<div class="slide-block">
+  <h3>Slide 0 — Cover</h3>
+  <div class="text">
+    <p>Bonjour à tous. Je suis ravi de vous présenter aujourd'hui notre projet d'étude : <strong>AgriScan AI</strong>.</p>
+    <p>AgriScan AI est une application mobile et web de <strong>diagnostic intelligent des maladies des plantes</strong>, développée dans le cadre de notre Bachelor 2025-2026, en réponse à une demande de la <strong>Chambre d'Agriculture</strong>.</p>
+    <p>L'idée est simple : permettre à un agriculteur de <strong>photographier une plante suspecte</strong> et d'obtenir instantanément un diagnostic — maladie, probabilité, urgence et traitement recommandé — le tout propulsé par l'intelligence artificielle.</p>
+  </div>
+</div>
+
+<div class="slide-block">
+  <h3>Slide 1 — Problème</h3>
+  <div class="text">
+    <p>Avant de vous parler de la solution, posons le problème.</p>
+    <p>Aujourd'hui, quand un agriculteur voit une plante malade dans son champ, il ne peut pas toujours joindre un agronome rapidement. Le délai moyen d'un diagnostic est de <strong>48 à 72 heures</strong> — un délai critique pendant lequel la maladie peut se propager.</p>
+    <p><strong>Conséquence</strong> : un traitement tardif peut entraîner jusqu'à <strong>40% de perte de récolte</strong>, ce qui est irréversible pour la saison.</p>
+    <p>Et pour couronner le tout, les alertes phytosanitaires sont dispersées entre différentes sources, sans <strong>aucune visualisation géolocalisée</strong> centralisée. L'agriculteur n'a pas une vue d'ensemble des menaces qui pèsent sur ses parcelles.</p>
+  </div>
+</div>
+
+<div class="slide-block">
+  <h3>Slide 2 — Solution</h3>
+  <div class="text">
+    <p>C'est là qu'AgriScan AI intervient.</p>
+    <p><strong>Une photo. Une analyse. Un traitement.</strong></p>
+    <p>Notre application permet à l'utilisateur de :</p>
+    <ul>
+      <li><strong>Photographier</strong> la plante suspecte directement depuis son mobile</li>
+      <li><strong>Analyser</strong> l'image via notre agent IA spécialisé en pathologie végétale</li>
+      <li><strong>Traiter</strong> grâce à une recommandation personnalisée</li>
+    </ul>
+    <p>Le tout en <strong>moins de 5 secondes</strong>, sans avoir besoin d'un expert sur le terrain.</p>
+  </div>
+</div>
+
+<div class="slide-block">
+  <h3>Slide 3 — Fonctionnalités</h3>
+  <div class="text">
+    <p>Concrètement, AgriScan AI s'articule autour de <strong>5 fonctionnalités clés</strong> :</p>
+    <ul>
+      <li><strong>Le Diagnostic IA</strong> : le cœur de l'application — on prend une photo, l'IA identifie la maladie avec sa probabilité et propose un traitement</li>
+      <li><strong>L'Assistant conversationnel</strong> : un agent IA spécialisé avec lequel on peut discuter, dossier par dossier</li>
+      <li><strong>Le Dashboard &amp; Historique</strong> : pour suivre ses diagnostics, ses statistiques et gérer son exploitation</li>
+      <li><strong>Les Alertes géolocalisées</strong> : une carte interactive avec les risques phytosanitaires</li>
+      <li><strong>Le Profil &amp; Exploitation</strong> : gestion du compte et des paramètres personnels</li>
+    </ul>
+    <p>Voici un aperçu de l'interface : la page d'accueil, la page de diagnostic IA et le profil utilisateur. <span class="vis-desc">3 screenshots : home, diagnostic, profil</span></p>
+  </div>
+</div>
+
+<div class="slide-block">
+  <h3>Slide 4 — Focus Diagnostic IA</h3>
+  <div class="text">
+    <p>Plongeons un peu plus dans la <strong>feature principale</strong> : le diagnostic par IA.</p>
+    <p>Contrairement à un simple chatbot, nous avons conçu un <strong>véritable agent expert</strong>. L'utilisateur envoie une photo, et le moteur Llama 70B — avec un system prompt spécialisé en pathologie végétale — analyse l'image et retourne un résultat structuré.</p>
+    <p>On obtient : <strong>le nom de la maladie, un pourcentage de probabilité, un niveau d'urgence, et le traitement recommandé</strong>.</p>
+    <p>Et si le résultat n'est pas assez précis, on peut dialoguer avec l'agent pour affiner le diagnostic.</p>
+    <p><span class="vis-desc">Screenshot interface diagnostic : Mildiou de la vigne — 87% — Urgence modérée</span></p>
+  </div>
+</div>
+
+<div class="slide-block">
+  <h3>Slide 5 — Focus Alertes &amp; Carte</h3>
+  <div class="text">
+    <p>Pour finir ma partie, parlons des <strong>alertes phytosanitaires</strong>.</p>
+    <p>L'application intègre une <strong>carte Google Maps interactive</strong> qui permet à l'agriculteur de visualiser ses parcelles et les alertes en cours.</p>
+    <p>Chaque alerte est <strong>classée par type et par sévérité</strong> : critique, modérée, ou simple information. On peut voir d'un coup d'œil ce qui menace ses cultures avant même d'aller au champ.</p>
+    <p>L'application intègre aussi les <strong>données météo</strong>, des <strong>données par zone</strong> comme la température, l'humidité et le risque, et envoie des <strong>notifications personnalisées</strong> par parcelle avec un simple clic pour les détails.</p>
+    <p><span class="vis-desc">Screenshot carte avec alertes classées par code couleur</span></p>
+    <p>C'est un outil de <strong>vigilance temps réel</strong> qui transforme la manière dont l'agriculteur surveille son exploitation.</p>
+  </div>
+</div>
+
+<!-- PERSONNE 2 -->
+<div class="person-header"><h2>Personne 2 <span class="range">— Slides 6 à 10</span></h2></div>
+
+<div class="slide-block">
+  <h3>Slide 6 — Approche No/Low-Code</h3>
+  <div class="text">
+    <p>Merci. Je vais maintenant vous expliquer notre <strong>approche de développement</strong>.</p>
+    <p>Nous avons adopté une stratégie hybride : <strong>No/Low-Code + agents IA</strong>.</p>
+    <p>D'un côté, nous avons utilisé la <strong>plateforme Emergent</strong> — une solution no-code qui nous a permis d'accélérer le développement : infrastructure, base de données, authentification, stockage — tout était natif. Le <strong>time-to-market a été divisé par 3</strong>.</p>
+    <p>De l'autre côté, nous avons <strong>superposé des agents IA spécialisés</strong> : un system prompt pour la pathologie végétale, une mémoire de conversation par dossier diagnostic, et une analyse multimodale photo + texte.</p>
+    <p>Et troisièmement, face aux restrictions de la plateforme Emergent, nous avons dû opérer une <strong>migration locale</strong> dont je reparlerai. Le code a été exporté, adapté pour fonctionner en local avec FastAPI, Motor, MongoDB et les modèles Llama via Groq.</p>
+    <p>Ce n'est pas du no-code basique — c'est une <strong>architecture hybride moderne</strong>.</p>
+  </div>
+</div>
+
+<div class="slide-block">
+  <h3>Slide 7 — Architecture</h3>
+  <div class="text">
+    <p>Regardons maintenant l'<strong>architecture technique</strong> dans son ensemble.</p>
+    <p>En haut, le <strong>client</strong> : une application React Native avec Expo SDK, compatible mobile et web, avec Google Maps intégré. La navigation est gérée par Expo Router et l'état global par Zustand.</p>
+    <p>Au milieu, le <strong>serveur</strong> : une API REST FastAPI en Python avec MongoDB pour la persistance des données. L'authentification est simplifiée — pas de JWT, on utilise directement l'identifiant utilisateur. Le serveur expose <strong>~23 endpoints REST</strong> couvrant l'auth, les diagnostics, le chat, les alertes et les statistiques. Tout ce code tourne en <strong>local</strong>, plus aucune dépendance au cloud Emergent.</p>
+    <p>Et enfin, la couche <strong>IA</strong> : nous utilisons l'API <strong>Groq</strong> (compatible OpenAI) avec deux modèles <strong>Llama</strong> — le <strong>Llama 3.3-70B</strong> pour les conversations et le <strong>Llama 4 Scout 17B</strong> pour l'analyse d'images. C'est une migration complète depuis l'ancien <strong>GPT-5.2</strong> d'Emergent.</p>
+    <p>C'est une architecture en <strong>3 couches</strong> — propre, maintenable, et 100% maîtrisée.</p>
+  </div>
+</div>
+
+<div class="slide-block">
+  <h3>Slide 8 — Défis Surmontés</h3>
+  <div class="text">
+    <p>Bien sûr, ce projet n'a pas été un long fleuve tranquille. Voici les <strong>3 défis majeurs</strong> que nous avons dû surmonter.</p>
+    <p><strong>Défi 1 — le cross-platform</strong> : faire tourner le même code sur iOS, Android et Web. Notre solution ? Expo avec détection Platform.OS, AsyncStorage côté web, SecureStore côté natif, et deux implémentations Google Maps différentes. Résultat : un seul codebase, trois plateformes.</p>
+    <p><strong>Défi 2 — l'intégration IA sans casser l'UX</strong> : les appels à l'IA peuvent être lents. Notre solution ? Le <strong>streaming des réponses</strong> pour éviter les temps de chargement bloquants, et le parsing automatique des réponses structurées. Résultat : diagnostic en moins de 5 secondes.</p>
+    <p><strong>Défi 3 — le plus critique</strong> : les <strong>crédits Emergent épuisés</strong>. La plateforme no-code imposait des limites strictes de crédits, rendant la facturation intenable. Nous avons dû exporter tout le code et le faire fonctionner en local. Résultat : une <strong>migration réussie vers Groq et Llama</strong> dont je vais vous parler.</p>
+  </div>
+</div>
+
+<div class="slide-block">
+  <h3>Slide 9 — Migration Emergent → Local</h3>
+  <div class="text">
+    <p>Ce <strong>pivot stratégique</strong> a été un moment clé du projet.</p>
+    <p><strong>Étape 1</strong> : nous avons exporté l'intégralité du backend depuis la plateforme Emergent.</p>
+    <p><strong>Étape 2</strong> : nous avons adapté le code pour fonctionner en local avec <strong>FastAPI, Motor et MongoDB</strong> — plus aucune dépendance au cloud Emergent. Et côté IA, nous avons remplacé GPT-5.2 par <strong>Llama 70B via Groq</strong>.</p>
+    <p><strong>Étape 3</strong> : nous avons gagné notre <strong>autonomie totale</strong> — contrôle complet sur l'infrastructure, coûts maîtrisés, et une roadmap libre.</p>
+    <p>Ce qui aurait pu être un échec s'est transformé en opportunité : nous maîtrisons désormais <strong>100% de notre stack technique</strong>.</p>
+  </div>
+</div>
+
+<div class="slide-block">
+  <h3>Slide 10 — Llama 70B via Groq</h3>
+  <div class="text">
+    <p>Pour terminer ma partie, parlons du <strong>modèle d'inférence</strong> que nous utilisons désormais.</p>
+    <p><span class="vis-desc">Comparatif Avant/Après : GPT-5.2 (Emergent) → Llama 70B (Groq)</span></p>
+    <p>Avant, nous dépendions de <strong>GPT-5.2</strong> via la plateforme Emergent — un modèle puissant mais coûteux et limité par les crédits.</p>
+    <p>Maintenant, nous utilisons <strong>Llama 70B</strong> fourni par <strong>Groq</strong> — un modèle open source performant qui remplace GPT-5.2 pour <strong>tous les usages</strong> : à la fois la génération de code et les diagnostics agricoles. Pour l'analyse d'images, nous utilisons <strong>Llama 4 Scout 17B</strong> qui gère la vision.</p>
+    <p>Les avantages sont multiples :</p>
+    <ul>
+      <li><strong>Zéro coût d'API</strong> : le modèle Groq est accessible gratuitement</li>
+      <li><strong>Indépendance totale</strong> : plus de crédits, plus de dépendance, plus de facturation imprévue</li>
+      <li><strong>Backend local</strong> : FastAPI autonome, IA via Groq (cloud gratuit)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- PERSONNE 3 -->
+<div class="person-header"><h2>Personne 3 <span class="range">— Slides 11 à 16</span></h2></div>
+
+<div class="slide-block">
+  <h3>Slide 11 — Impact &amp; Métriques</h3>
+  <div class="text">
+    <p>Merci. Alors, qu'est-ce que ce projet démontre concrètement ?</p>
+    <ul>
+      <li><strong>2 plateformes</strong> : mobile et web, livrées simultanément</li>
+      <li><strong>~23 endpoints API</strong> : toute une API REST documentée</li>
+      <li><strong>1 agent IA expert</strong> en pathologie végétale</li>
+      <li><strong>5 modules complets</strong> : diagnostic, dashboard, alertes, profil, administration</li>
+      <li><strong>Backend local, IA via Groq</strong> : migration Emergent → FastAPI + Groq/Llama effective</li>
+    </ul>
+    <p>Ce projet a été livré en <strong>autonomie complète</strong> — du design au déploiement, en passant par le mobile, le web, l'IA, le backend et le design system.</p>
+  </div>
+</div>
+
+<div class="slide-block">
+  <h3>Slide 12 — Authentification &amp; Profil</h3>
+  <div class="text">
+    <p>Regardons maintenant quelques fonctionnalités en détail, en commençant par la <strong>gestion de compte</strong>.</p>
+    <p>L'utilisateur peut s'inscrire et se connecter via email et mot de passe. Une fois connecté, il peut modifier son profil : photo, nom, email et mot de passe.</p>
+    <p><span class="vis-desc">Screenshot page de profil utilisateur</span></p>
+    <p>Chaque utilisateur a un <strong>rôle</strong> — Admin ou Utilisateur — affiché avec un badge distinctif. L'authentification est simplifiée pour le MVP : pas de JWT, l'utilisateur est stocké en mémoire avec Zustand. C'est volontairement léger pour cette version.</p>
+    <p>Les routes privées sont protégées côté interface par la vérification du state Zustand.</p>
+  </div>
+</div>
+
+<div class="slide-block">
+  <h3>Slide 13 — Capteurs IoT</h3>
+  <div class="text">
+    <p>Parlons maintenant de l'<strong>infrastructure IoT</strong> — un aspect clé de l'agriculture de précision.</p>
+    <p><span class="vis-desc">Screenshot interface capteurs : 6 indicateurs (température, humidité, lumière, vent, pH, batterie) + connectivité LoRaWAN</span></p>
+    <p>Nous avons conçu et simulé des <strong>capteurs</strong> qui remontent en temps réel les données du terrain : température, humidité du sol, lumière PAR, vent, pH, batterie — le tout connecté via <strong>LoRaWAN</strong>.</p>
+    <p>Les données sont simulées côté frontend pour le moment, mais l'architecture IoT a été conçue pour fonctionner sur le terrain avec des capteurs réels. La connectivité affiche un signal de 4/5 avec une transmission toutes les 3 minutes.</p>
+    <p>C'est une <strong>architecture IoT complète</strong>, prête à être déployée physiquement.</p>
+  </div>
+</div>
+
+<div class="slide-block">
+  <h3>Slide 14 — Administration</h3>
+  <div class="text">
+    <p>Côté <strong>back-office</strong>, l'administration est complète.</p>
+    <p><span class="vis-desc">Screenshot panneau d'administration : liste utilisateurs + statut modèle IA</span></p>
+    <p>La gestion des utilisateurs permet de voir tous les comptes, leurs rôles, et de les administrer directement. Le panneau affiche aussi le <strong>statut du modèle IA</strong> — Llama 70B via Groq — toujours actif, sans limite de crédits.</p>
+    <p>C'est un outil de pilotage complet pour les administrateurs de la plateforme.</p>
+  </div>
+</div>
+
+<div class="slide-block">
+  <h3>Slide 15 — Perspectives &amp; Évolution</h3>
+  <div class="text">
+    <p>Regardons maintenant les <strong>prochaines étapes</strong> pour AgriScan AI.</p>
+    <p><strong>1. Capteurs Réels</strong> — l'infrastructure IoT est conçue et simulée. La prochaine étape est de déployer des capteurs LoRaWAN sur une parcelle test pour remonter de vraies données de température, humidité et luminosité.</p>
+    <p><strong>2. Mode Hors-Ligne</strong> — nous voulons implémenter un cache local qui permet de prendre des photos et de poser des diagnostics même sans connexion, avec synchronisation automatique au retour du réseau.</p>
+    <p><strong>3. Notifications Push</strong> — envoyer des alertes en temps réel via expo-notifications quand un risque est détecté sur une parcelle.</p>
+    <p><strong>4. Tests Terrain</strong> — valider l'application sur des cas réels en partenariat avec la Chambre d'Agriculture, pour mesurer la précision des diagnostics sur le terrain.</p>
+    <p>Ce projet est une <strong>base solide</strong>, et ces évolutions le transformeront en un outil professionnel complet.</p>
+  </div>
+</div>
+
+<div class="slide-block">
+  <h3>Slide 16 — Conclusion / Remerciements</h3>
+  <div class="text">
+    <p>Pour conclure, AgriScan AI, c'est :</p>
+    <p><strong>1. Du No/Low-Code</strong> : nous avons utilisé la plateforme Emergent pour un prototypage rapide.</p>
+    <p><strong>2. De l'Intelligence Artificielle</strong> : un agent IA spécialisé en pathologie végétale, propulsé par Llama 70B via Groq.</p>
+    <p><strong>3. Une migration réussie</strong> : du cloud Emergent (GPT-5.2) vers une architecture locale (FastAPI backend) + IA via Groq (Llama).</p>
+    <p>Un grand merci à la <strong>Chambre d'Agriculture</strong> pour ce cahier des charges, à notre établissement pour l'encadrement, et à vous pour votre attention.</p>
+    <p><strong>Des questions ?</strong></p>
+  </div>
+</div>
+
+<hr>
+
+<!-- TIME RECAP -->
+<h3 style="font-size:11pt;margin-bottom:6pt;color:#0a1b0e">Récapitulatif du temps</h3>
+<table class="recap-table">
+  <tr><th>Personne</th><th>Slides</th><th>Durée estimée</th></tr>
+  <tr><td><strong>Personne 1</strong></td><td>0–5 (6 slides)</td><td>~5–6 min</td></tr>
+  <tr><td><strong>Personne 2</strong></td><td>6–10 (5 slides)</td><td>~5–6 min</td></tr>
+  <tr><td><strong>Personne 3</strong></td><td>11–16 (6 slides)</td><td>~5–6 min</td></tr>
+  <tr class="total"><td><strong>Total</strong></td><td><strong>17 slides</strong></td><td><strong>~15–18 min</strong></td></tr>
+</table>
+
+<div class="tips">
+  <h3>Conseils de présentation</h3>
+  <ul>
+    <li><strong>Transitions</strong> : quand une personne finit, dire "Je passe la parole à..." pour fluidité</li>
+    <li><strong>Slides 8-10</strong> (Défis → Migration → Llama) : à enchaîner sans pause — c'est l'histoire centrale du projet</li>
+    <li><strong>Démo</strong> : prévoir d'ouvrir l'application locale sur mobile ou navigateur pendant les questions</li>
+    <li><strong>Ton</strong> : rester naturel, ne pas lire mot à mot — le script est une base, adaptez le langage à l'oral</li>
+  </ul>
+</div>
+
+</div>
+</body>
+</html>

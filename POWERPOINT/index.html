@@ -1,0 +1,2351 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AgriScan AI — Présentation Bachelor 2025/2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,500&family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+/* ===========================================
+   CSS CUSTOM PROPERTIES — Synapse Palette
+   =========================================== */
+:root {
+  --bg-primary: #050D07;
+  --bg-cards: rgba(10, 27, 14, 0.75);
+  --bg-glass: rgba(10, 27, 14, 0.45);
+  --bg-input: #2D3A2F;
+  --text-primary: #F9F9F2;
+  --text-secondary: rgba(249,249,242,0.7);
+  --text-muted: rgba(249,249,242,0.4);
+  --accent: #D4FF50;
+  --accent-glow: rgba(212,255,80,0.25);
+  --accent-soft: rgba(212,255,80,0.06);
+  --accent-warm: #FFB443;
+  --accent-warm-glow: rgba(255,180,67,0.2);
+  --success: #3AE086;
+  --success-glow: rgba(58,224,134,0.25);
+  --error: #FF4E5C;
+  --warning: #FFB443;
+  --info: #4DAAFF;
+  --gradient-hero: linear-gradient(135deg, #050D07, #0A1B0E, #122215);
+  --gradient-warm: linear-gradient(135deg, #050D07, #0E1410, #1A1810);
+
+  --font-display: 'Outfit', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --title-size: clamp(2rem, 5.5vw, 4rem);
+  --h2-size: clamp(1.4rem, 3.5vw, 2.8rem);
+  --h3-size: clamp(1.1rem, 2.8vw, 1.8rem);
+  --body-size: clamp(0.8rem, 1.5vw, 1.15rem);
+  --small-size: clamp(0.65rem, 1.1vw, 0.9rem);
+  --slide-padding: clamp(0.6rem, 2vw, 1.8rem);
+  --content-gap: clamp(0.5rem, 1.5vw, 1.5rem);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --duration: 0.6s;
+  --card-border-subtle: rgba(249,249,242,0.06);
+  --card-border-hover: rgba(212,255,80,0.2);
+  --card-shadow: 0 0 0 1px rgba(212,255,80,0.06);
+}
+
+/* ===========================================
+   CINEMATIC STACK LAYOUT + VIEWPORT FITTING
+   Replaces scroll-snap with cinema-style transitions
+   =========================================== */
+html,body{height:100dvh;overflow:hidden;overflow-x:hidden;background:#000;scroll-behavior:smooth}
+body{position:relative}
+
+.slide{
+  position:fixed;top:0;left:0;width:100vw;height:100vh;height:100dvh;
+  overflow:hidden;display:none;flex-direction:column;
+  background:var(--gradient-hero);
+  opacity:0;z-index:0;
+}
+.slide.active{
+  display:flex;opacity:1;z-index:10;
+}
+.slide.transitioning{
+  z-index:20;
+}
+.slide-content{
+  flex:1;display:flex;flex-direction:column;justify-content:center;
+  max-height:100%;overflow:hidden;padding:var(--slide-padding);
+}
+.card,.container,.content-box{
+  max-width:min(90vw,1000px);max-height:min(80vh,700px);
+}
+img,.image-container{max-width:100%;max-height:min(70vh,600px);object-fit:contain}
+
+/* ===========================================
+   CINEMATIC TRANSITION KEYFRAMES
+   =========================================== */
+@keyframes cineFadeIn{from{opacity:0}to{opacity:1}}
+@keyframes cineFadeOut{from{opacity:1}to{opacity:0}}
+@keyframes cineSlideInRight{from{opacity:0.3;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
+@keyframes cineSlideInLeft{from{opacity:0.3;transform:translateX(-40px)}to{opacity:1;transform:translateX(0)}}
+@keyframes cineZoomIn{from{opacity:0;transform:scale(1.06)}to{opacity:1;transform:scale(1)}}
+@keyframes cineZoomOut{from{opacity:0;transform:scale(0.94)}to{opacity:1;transform:scale(1)}}
+@keyframes cineGlitchIn{
+  0%{opacity:0;transform:translateX(0)}
+  20%{opacity:0.7;transform:translateX(-8px)}
+  30%{opacity:0.5;transform:translateX(8px)}
+  40%{opacity:0.8;transform:translateX(-4px)}
+  50%{opacity:0.6;transform:translateX(4px)}
+  60%{opacity:0.9;transform:translateX(-2px)}
+  100%{opacity:1;transform:translateX(0)}
+}
+@keyframes cineFadeThroughBlack{0%{opacity:1}30%{opacity:0}70%{opacity:0}100%{opacity:1}}
+@keyframes cineMorphIn{
+  from{opacity:0;transform:translateX(30px) scale(0.97)}
+  to{opacity:1;transform:translateX(0) scale(1)}
+}
+@keyframes cineElevateIn{
+  from{opacity:0;transform:translateY(28px) scale(0.98)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+@keyframes cineSlideDownIn{
+  from{opacity:0;transform:translateY(-30px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes cineSlideBackRight{
+  from{opacity:0.3;transform:translateX(-30px)}
+  to{opacity:1;transform:translateX(0)}
+}
+
+/* ===========================================
+   CINEMATIC OVERLAYS — always on top
+   =========================================== */
+/* Letterbox bars — cinema aspect ratio */
+.cine-vignette{
+  position:fixed;inset:0;z-index:8999;pointer-events:none;
+  background:radial-gradient(ellipse at center,transparent 50%,rgba(0,0,0,0.45) 100%);
+}
+
+/* Color grade overlay — subtle teal/orange cinema look */
+.cine-grade{
+  position:fixed;inset:0;z-index:8998;pointer-events:none;mix-blend-mode:overlay;opacity:0.12;
+  background:linear-gradient(135deg,rgba(0,180,216,0.4) 0%,transparent 40%,transparent 60%,rgba(255,140,0,0.35) 100%);
+}
+
+/* Film grain canvas */
+#cineGrain{position:fixed;inset:0;z-index:8997;pointer-events:none;opacity:0.04}
+
+/* Lens flare */
+.cine-flare{position:fixed;z-index:8996;pointer-events:none;opacity:0;transition:opacity 1.2s ease}
+.cine-flare.active{opacity:0.15}
+
+/* God rays */
+.cine-rays{position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;transition:opacity 0.6s ease}
+.slide.visible .cine-rays{opacity:0.08}
+.cine-rays::before{content:'';position:absolute;top:-50%;left:10%;width:80%;height:200%;
+  background:radial-gradient(ellipse at 40% 20%,rgba(212,255,80,0.25),transparent 70%);
+  transform:rotate(-15deg);animation:rayDrift 20s ease-in-out infinite alternate}
+@keyframes rayDrift{0%{transform:rotate(-15deg) scale(1)}100%{transform:rotate(-10deg) scale(1.08)}}
+
+/* Ken Burns slow zoom on backgrounds */
+.cine-kenburns{position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 50%,rgba(212,255,80,0.015),transparent 60%);
+  animation:kenBurns 30s ease-in-out infinite alternate}
+@keyframes kenBurns{0%{transform:scale(1)}100%{transform:scale(1.04)}}
+
+/* Parallax drift for shapes */
+.shape.parallax{animation:parallaxDrift 12s ease-in-out infinite alternate}
+@keyframes parallaxDrift{0%{transform:translate(0,0) scale(1)}33%{transform:translate(-10px,8px) scale(1.05)}66%{transform:translate(8px,-4px) scale(0.97)}100%{transform:translate(-4px,-8px) scale(1.02)}}
+
+/* Vignette pulse on dark slides */
+.cine-vignette.pulse{animation:vignettePulse 6s ease-in-out infinite}
+@keyframes vignettePulse{0%,100%{opacity:1}50%{opacity:0.7}}
+
+/* Chromatic aberration — RGB split effect */
+.slide.chroma{animation:chromaSplit 0.5s ease-out forwards}
+@keyframes chromaSplit{
+  0%{filter:none}
+  20%{filter:drop-shadow(4px 0 1px rgba(255,60,60,0.25)) drop-shadow(-4px 0 1px rgba(60,140,255,0.25))}
+  100%{filter:none}
+}
+
+/* Anamorphic blue streak flare */
+.cine-anaflare{position:fixed;z-index:8995;pointer-events:none;opacity:0;
+  background:linear-gradient(90deg,transparent,rgba(100,180,255,0.35),rgba(180,220,255,0.15),transparent);
+  height:clamp(60px,12vh,160px);transition:opacity 1.5s ease}
+.cine-anaflare.active{opacity:0.12}
+
+/* Text shimmer effect */
+.shimmer{position:relative;overflow:hidden}
+.shimmer::after{content:'';position:absolute;inset:0;
+  background:linear-gradient(105deg,transparent 35%,rgba(212,255,80,0.08) 42%,rgba(212,255,80,0.15) 45%,rgba(212,255,80,0.08) 48%,transparent 55%);
+  background-size:200% 100%;animation:shimmerSweep 4s ease-in-out infinite}
+@keyframes shimmerSweep{0%,100%{background-position:200% 0}50%{background-position:-200% 0}}
+
+/* Film gate weave — micro projector jitter */
+/* Camera shake disabled */
+
+/* Smoke/dust canvas */
+#cineDust{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0.18}
+
+/* Mouse-tracking 3D perspective */
+body{perspective:1400px}
+.slide.active{transform-origin:center center;transition:transform 0.8s cubic-bezier(0.23,1,0.32,1)}
+
+@media(max-height:700px){
+  :root{--slide-padding:clamp(0.6rem,2.5vw,1.5rem);--content-gap:clamp(0.3rem,1vw,0.8rem);--title-size:clamp(1.3rem,4vw,2.2rem);--h2-size:clamp(1rem,2.5vw,1.5rem)}
+}
+@media(max-height:600px){
+  :root{--slide-padding:clamp(0.4rem,2vw,1rem);--content-gap:clamp(0.25rem,0.8vw,0.6rem);--title-size:clamp(1rem,3.5vw,1.8rem);--body-size:clamp(0.6rem,1vw,0.8rem)}
+  .nav-dots,.keyboard-hint,.decorative{display:none}
+}
+@media(max-height:500px){
+  :root{--slide-padding:clamp(0.3rem,1.5vw,0.8rem);--title-size:clamp(0.9rem,3vw,1.4rem);--h2-size:clamp(0.75rem,2vw,1.1rem);--body-size:clamp(0.55rem,0.9vw,0.7rem)}
+}
+@media(max-width:600px){
+  :root{--title-size:clamp(1.2rem,7vw,2.2rem)}
+  .grid{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:0.01ms!important;transition-duration:0.2s!important}
+  .typewriter-cursor::after{animation:none!important}
+  #particleCanvas,#cineGrain,#cineDust{display:none!important}
+  .slide-dataparticle,.code-particles,.shape.parallax{animation:none!important}
+  .cine-kenburns,.cine-rays{animation:none!important;opacity:0!important}
+}
+
+/* ===========================================
+   BASE RESET & THEME STYLES
+   =========================================== */
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font-body);background:var(--bg-primary);color:var(--text-primary);font-weight:400}
+
+#particleCanvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.7}
+
+/* Progress bar */
+.progress-bar{position:fixed;top:0;left:0;height:2px;background:var(--accent);z-index:9000;transition:width 0.3s ease;box-shadow:0 0 8px var(--accent-glow)}
+
+/* Navigation dots */
+.nav-dots{position:fixed;right:clamp(8px,1.5vw,16px);top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:clamp(4px,0.8vh,10px);z-index:5000}
+.nav-dot{width:clamp(5px,0.6vw,8px);height:clamp(5px,0.6vw,8px);border-radius:50%;background:rgba(249,249,242,0.12);transition:all 0.3s ease;cursor:pointer;border:none}
+.nav-dot.active{background:var(--accent);box-shadow:0 0 6px var(--accent-glow);transform:scale(1.3)}
+
+/* Slide number counter */
+.slide-counter{position:fixed;bottom:clamp(8px,1.5vh,16px);right:clamp(12px,2vw,24px);font-family:var(--font-mono);font-weight:700;font-size:clamp(0.55rem,0.8vw,0.7rem);color:rgba(249,249,242,0.15);z-index:5000}
+.slide-nav-btn{position:fixed;bottom:clamp(8px,1.5vh,16px);z-index:5000;background:rgba(249,249,242,0.06);border:1px solid rgba(249,249,242,0.1);color:rgba(249,249,242,0.4);width:clamp(28px,3vw,36px);height:clamp(28px,3vw,36px);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:clamp(14px,1.2vw,18px);transition:all 0.2s ease;user-select:none;font-family:var(--font-body);line-height:1}
+.slide-nav-btn:hover{background:rgba(212,255,80,0.12);border-color:rgba(212,255,80,0.25);color:var(--accent);transform:scale(1.1)}
+.slide-nav-btn.prev{left:clamp(80px,12vw,150px)}
+.slide-nav-btn.next{right:clamp(12px,2vw,24px)}
+:root.light .slide-nav-btn{background:rgba(0,0,0,0.04);border-color:rgba(0,0,0,0.1);color:rgba(0,0,0,0.3)}
+:root.light .slide-nav-btn:hover{background:rgba(58,224,134,0.1);border-color:rgba(58,224,134,0.2);color:var(--success)}
+
+/* ===========================================
+   DECORATIVE ELEMENTS — Dark Botanical style
+   =========================================== */
+
+/* Abstract soft gradient circles */
+.shape{position:absolute;border-radius:50%;filter:blur(80px);z-index:0;pointer-events:none}
+.shape-a{background:rgba(212,255,80,0.06)}
+.shape-b{background:rgba(58,224,134,0.04)}
+.shape-c{background:rgba(77,170,255,0.03)}
+
+/* Vertical accent line */
+.vline{position:absolute;left:clamp(1.5rem,6vw,4rem);top:12%;bottom:12%;width:1px;background:rgba(212,255,80,0.2);z-index:1}
+
+.decorative{display:initial}
+/* Noise texture (SVG inline) */
+.noise{
+  position:absolute;inset:0;opacity:0.025;z-index:0;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Scan lines (Slide 12) */
+.scan-lines{
+  position:absolute;inset:0;opacity:0.02;z-index:0;pointer-events:none;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(212,255,80,0.1) 3px,rgba(212,255,80,0.1) 4px);
+}
+
+/* Glitch overlay — moving scan effect for tech slides */
+.glitch-overlay{
+  position:absolute;inset:0;z-index:0;pointer-events:none;opacity:0.025;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(212,255,80,0.3) 2px,rgba(212,255,80,0.3) 3px);
+  animation:glitchScan 8s linear infinite;
+}
+@keyframes glitchScan{0%{transform:translateY(0)}100%{transform:translateY(100vh)}}
+
+/* Center glow spot */
+.glow-spot{
+  position:absolute;width:clamp(200px,40vw,500px);height:clamp(200px,40vw,500px);
+  background:radial-gradient(circle,rgba(212,255,80,0.06),transparent 70%);
+  border-radius:50%;z-index:0;pointer-events:none;
+}
+.glow-spot.pulse{animation:spotPulse 4s ease-in-out infinite}
+@keyframes spotPulse{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:0.6}50%{transform:translate(-50%,-50%) scale(1.15);opacity:1}}
+
+/* ===========================================
+   ENTRANCE ANIMATIONS
+   =========================================== */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity var(--duration) var(--ease-out-expo),transform var(--duration) var(--ease-out-expo)}
+.slide.visible .reveal{opacity:1;transform:translateY(0)}
+
+.reveal-up{opacity:0;transform:translateY(24px);transition:opacity 0.55s var(--ease-out-expo),transform 0.55s var(--ease-out-expo)}
+.slide.visible .reveal-up{opacity:1;transform:translateY(0)}
+
+.reveal-left{opacity:0;transform:translateX(-30px);transition:opacity 0.5s var(--ease-out-expo),transform 0.5s var(--ease-out-expo)}
+.slide.visible .reveal-left{opacity:1;transform:translateX(0)}
+
+.reveal-right{opacity:0;transform:translateX(30px);transition:opacity 0.5s var(--ease-out-expo),transform 0.5s var(--ease-out-expo)}
+.slide.visible .reveal-right{opacity:1;transform:translateX(0)}
+
+.reveal-blur{opacity:0;filter:blur(8px);transition:opacity 0.7s var(--ease-out-expo),filter 0.7s var(--ease-out-expo)}
+.slide.visible .reveal-blur{opacity:1;filter:blur(0)}
+
+/* Stagger delays */
+.d0{transition-delay:0s}.d1{transition-delay:0.05s}.d2{transition-delay:0.15s}.d3{transition-delay:0.25s}.d4{transition-delay:0.35s}.d5{transition-delay:0.45s}.d6{transition-delay:0.55s}.d7{transition-delay:0.7s}.d8{transition-delay:0.85s}
+
+/* Typewriter cursor */
+.keyboard-hint{display:initial}
+.typewriter-cursor::after{content:'|';color:var(--accent);animation:blink 0.8s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* ===========================================
+   CARD & UI COMPONENTS
+   =========================================== */
+.card{
+  background:var(--bg-cards);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  will-change:transform;
+  border-radius:clamp(6px,0.8vw,10px);
+  border:1px solid var(--card-border-subtle);
+  padding:clamp(0.6rem,1.5vw,1.2rem);
+  transition:transform 0.25s var(--ease-spring),border-color 0.25s ease,box-shadow 0.25s ease;
+  box-shadow:var(--card-shadow);
+}
+.card:hover{transform:translateY(-2px);border-color:var(--card-border-hover);box-shadow:0 4px 24px rgba(212,255,80,0.06),var(--card-shadow)}
+
+.tilt-card{
+  transform-style:preserve-3d;perspective:1000px;
+  transition:transform 0.15s var(--ease-spring);
+  will-change:transform;
+  background:var(--bg-cards);
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+}
+
+/* Glass effect for all card variants */
+.p-card,.feat-card,.sol-step,.s-card,.ch-card,.nc-card,.arch-layer,.met-card,.focus-mockup{
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+  will-change:transform;
+}
+
+/* Dot-grid pattern for tech slides */
+.dot-grid{
+  position:absolute;inset:0;z-index:0;pointer-events:none;opacity:0.015;
+  background-image:radial-gradient(rgba(212,255,80,0.3) 0.5px,transparent 0.5px);
+  background-size:24px 24px;
+}
+
+/* Metric count-up flash glow */
+.met-number.flash-glow{animation:flashGlow 0.5s var(--ease-out-expo)}
+@keyframes flashGlow{0%{text-shadow:0 0 0 transparent}50%{text-shadow:0 0 40px var(--accent)}100%{text-shadow:0 0 15px var(--accent-glow)}}
+
+.tag{
+  font-family:var(--font-mono);font-weight:700;font-size:clamp(0.5rem,0.8vw,0.65rem);
+  padding:clamp(2px,0.4vw,5px) clamp(6px,1vw,10px);
+  border-radius:3px;display:inline-block;
+}
+
+.badge{
+  display:inline-block;font-family:var(--font-body);font-weight:500;
+  font-size:clamp(0.55rem,0.85vw,0.7rem);padding:clamp(2px,0.4vw,5px) clamp(8px,1.2vw,12px);
+  border-radius:999px;
+}
+
+.divider{height:1px;background:linear-gradient(90deg,transparent,rgba(212,255,80,0.2),transparent);width:100%}
+
+/* ===========================================
+   PHONE MOCKUP SVG
+   =========================================== */
+.phone-mockup{max-width:clamp(180px,28vw,380px)}
+.phone-mockup .phone-frame{width:100%;height:auto;display:block}
+.phone-content-text{font-family:var(--font-body)}
+
+/* ===========================================
+   SLIDE 1 — COVER
+   =========================================== */
+.slide-cover{display:flex;align-items:center;justify-content:center;text-align:center;
+  background:var(--gradient-hero);position:relative}
+.slide-cover .cover-content{z-index:3;position:relative;max-width:clamp(260px,70vw,850px)}
+.slide-cover .cover-logo{font-family:var(--font-display);font-weight:800;
+  font-size:clamp(2.8rem,9vw,6rem);color:var(--text-primary);letter-spacing:-0.03em;line-height:1.05}
+.slide-cover .cover-logo .ai{color:var(--accent);text-shadow:0 0 18px var(--accent-glow)}
+.slide-cover .cover-sub{font-family:var(--font-body);font-weight:500;
+  font-size:clamp(0.95rem,2.3vw,1.5rem);color:rgba(249,249,242,0.8);margin-top:clamp(0.4rem,1.2vh,1rem);letter-spacing:-0.01em}
+.slide-cover .cover-badge{font-family:var(--font-body);font-weight:500;
+  font-size:clamp(0.6rem,1.2vw,0.8rem);color:var(--text-muted);
+  margin-top:clamp(0.6rem,1.5vh,1.2rem);padding:clamp(4px,0.5vw,6px) clamp(12px,1.8vw,20px);
+  border:1px solid rgba(212,255,80,0.12);border-radius:999px;display:inline-block}
+.slide-cover .cover-tags{display:flex;gap:clamp(0.3rem,0.8vw,0.6rem);justify-content:center;margin-top:clamp(0.5rem,1.2vh,1rem);flex-wrap:wrap}
+.slide-cover .cover-tag{font-family:var(--font-mono);font-weight:700;
+  font-size:clamp(0.55rem,0.9vw,0.7rem);color:var(--accent);
+  padding:clamp(3px,0.4vw,5px) clamp(8px,1.2vw,12px);
+  border:1px solid rgba(212,255,80,0.18);border-radius:4px}
+.slide-cover .cover-sep{width:clamp(36px,5vw,72px);height:1px;background:rgba(212,255,80,0.3);margin:clamp(0.6rem,1.5vh,1.2rem) auto}
+
+/* Dark translucent backdrop behind title for readability */
+.cover-backdrop{position:absolute;top:32%;left:50%;transform:translate(-50%,-50%);z-index:1;pointer-events:none;opacity:0;
+  width:clamp(280px,65vw,700px);height:clamp(80px,18vh,160px);
+  background:radial-gradient(ellipse,rgba(5,13,7,0.85) 30%,rgba(5,13,7,0.4) 65%,transparent 100%);
+  border-radius:50%;filter:blur(20px);transition:opacity 0.8s ease}
+.slide-cover.visible .cover-backdrop{opacity:1}
+
+/* Code Organique — plant & data overlay */
+.slide-cover-organique{background:linear-gradient(170deg,#030A05,#071A0E,#0A1F10)}
+
+.code-plant{position:absolute;inset:0;z-index:1;pointer-events:none;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 2s ease}
+.slide-cover-organique.visible .code-plant{opacity:1}
+
+.plant-svg{width:clamp(260px,80vw,800px);height:auto;max-height:80vh}
+
+/* Staggered animations via CSS vars */
+.plant-roots .root{stroke-dasharray:200;stroke-dashoffset:200;animation:growRoot 1s var(--ease-out-expo) forwards}
+.slide-cover-organique.visible .plant-roots .r1{animation-delay:0.15s}
+.slide-cover-organique.visible .plant-roots .r2{animation-delay:0.2s}
+.slide-cover-organique.visible .plant-roots .r3{animation-delay:0.25s}
+@keyframes growRoot{to{stroke-dashoffset:0}}
+
+.plant-stem .stem-line{stroke-dasharray:310;stroke-dashoffset:310;animation:growStem 1s var(--ease-out-expo) forwards}
+.slide-cover-organique.visible .stem-line{animation-delay:0.1s}
+@keyframes growStem{to{stroke-dashoffset:0}}
+
+.plant-branches .branch{stroke-dasharray:200;stroke-dashoffset:200;animation:growBranch 0.7s var(--ease-out-expo) forwards}
+.slide-cover-organique.visible .branch.b1{animation-delay:0.4s}
+.slide-cover-organique.visible .branch.b2{animation-delay:0.45s}
+.slide-cover-organique.visible .branch.b3{animation-delay:0.55s}
+.slide-cover-organique.visible .branch.b4{animation-delay:0.6s}
+.slide-cover-organique.visible .branch.b5{animation-delay:0.7s}
+.slide-cover-organique.visible .branch.b6{animation-delay:0.75s}
+@keyframes growBranch{to{stroke-dashoffset:0}}
+
+.plant-leaves .leaf{stroke-dasharray:120;stroke-dashoffset:120;animation:unfoldLeaf 0.5s var(--ease-out-expo) forwards}
+.plant-leaves .leaf-text{opacity:0;animation:fadeLeafText 0.4s ease forwards}
+.slide-cover-organique.visible .leaf.l1{animation-delay:0.55s}
+.slide-cover-organique.visible .leaf.l2{animation-delay:0.6s}
+.slide-cover-organique.visible .leaf.l3{animation-delay:0.7s}
+.slide-cover-organique.visible .leaf.l4{animation-delay:0.75s}
+.slide-cover-organique.visible .leaf.l5{animation-delay:0.85s}
+.slide-cover-organique.visible .leaf.l6{animation-delay:0.9s}
+.slide-cover-organique.visible .leaf-text.lt1{animation-delay:0.75s}
+.slide-cover-organique.visible .leaf-text.lt2{animation-delay:0.8s}
+.slide-cover-organique.visible .leaf-text.lt3{animation-delay:0.9s}
+.slide-cover-organique.visible .leaf-text.lt4{animation-delay:0.95s}
+.slide-cover-organique.visible .leaf-text.lt5{animation-delay:1.05s}
+.slide-cover-organique.visible .leaf-text.lt6{animation-delay:1.1s}
+@keyframes unfoldLeaf{to{stroke-dashoffset:0}}
+@keyframes fadeLeafText{to{opacity:1}}
+
+/* Floating code particles */
+.code-particles{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+.cp{position:absolute;font-family:var(--font-mono);font-weight:700;font-size:clamp(0.4rem,0.7vw,0.6rem);color:rgba(212,255,80,0.15);white-space:nowrap;opacity:0;animation:cpFloat 12s ease-in-out infinite,cpFadeIn 3s ease forwards}
+.slide-cover-organique.visible .cp{animation-play-state:running}
+.cp1{top:15%;left:5%;animation-delay:0s,0s;animation-duration:14s,5s}
+.cp2{top:20%;right:8%;animation-delay:0s,0.8s;animation-duration:13s,4s}
+.cp3{top:65%;left:3%;animation-delay:0s,0.4s;animation-duration:15s,4.5s}
+.cp4{top:60%;right:5%;animation-delay:0s,1.2s;animation-duration:12s,4s}
+.cp5{top:78%;left:40%;animation-delay:0s,0.6s;animation-duration:11s,5s}
+@keyframes cpFloat{
+  0%,100%{transform:translate(0,0)}
+  25%{transform:translate(12px,-8px)}
+  50%{transform:translate(-6px,-16px)}
+  75%{transform:translate(-10px,4px)}
+}
+@keyframes cpFadeIn{to{opacity:1}}
+
+@media(max-height:600px){.plant-leaves .leaf,.plant-leaves .leaf-text{animation-duration:0.01ms!important;opacity:0!important}}
+
+/* ===========================================
+   SLIDE 2 — PROBLÈME
+   =========================================== */
+.slide-problem{padding:var(--slide-padding)}
+.slide-problem .problem-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(0.6rem,1.5vw,1.2rem);
+  flex:1;align-content:center;max-width:min(90vw,1100px);margin:0 auto}
+.slide-problem .p-card{background:var(--bg-cards);border-radius:clamp(6px,0.8vw,10px);
+  border:1px solid rgba(249,249,242,0.06);padding:clamp(0.7rem,1.5vw,1.2rem);
+  transition:transform 0.15s ease,border-color 0.15s ease}
+.slide-problem .p-card:hover{transform:translateY(-2px)}
+.slide-problem .p-card.warn{border-left:2px solid var(--warning)}
+.slide-problem .p-card.err{border-left:2px solid var(--error)}
+.slide-problem .p-card.info-card{border-left:2px solid var(--info)}
+.slide-problem .p-card-icon{font-size:clamp(1.2rem,2.5vw,2rem);margin-bottom:clamp(0.2rem,0.5vh,0.5rem)}
+.slide-problem .p-card-title{font-family:var(--font-display);font-weight:600;
+  font-size:clamp(0.9rem,1.6vw,1.25rem);color:var(--text-primary);margin-bottom:clamp(0.2rem,0.4vh,0.4rem)}
+.slide-problem .p-card-sub{font-family:var(--font-body);font-weight:400;
+  font-size:clamp(0.7rem,1.1vw,0.9rem);color:rgba(249,249,242,0.5)}
+
+@media(max-width:700px){.slide-problem .problem-grid{grid-template-columns:1fr}}
+
+/* ===========================================
+   SLIDE 3 — SOLUTION
+   =========================================== */
+.slide-solution{text-align:center;padding:var(--slide-padding)}
+.slide-solution .sol-header{margin-bottom:clamp(0.6rem,2vh,1.5rem)}
+.slide-solution .sol-hook{font-family:var(--font-body);font-weight:500;
+  font-size:clamp(1rem,2.2vw,1.5rem);color:var(--accent);margin-bottom:clamp(0.2rem,0.5vh,0.5rem)}
+.slide-solution .sol-desc{font-family:var(--font-body);font-weight:400;
+  font-size:clamp(0.8rem,1.4vw,1.1rem);color:var(--text-secondary);max-width:clamp(280px,60vw,700px);margin:0 auto;
+  line-height:1.5;margin-bottom:clamp(0.5rem,1.5vh,1rem)}
+.slide-solution .sol-steps{display:grid;grid-template-columns:repeat(3,1fr);
+  gap:clamp(0.6rem,1.5vw,1.2rem);max-width:min(90vw,1000px);margin:0 auto}
+.slide-solution .sol-step{background:var(--bg-cards);border-radius:clamp(6px,0.8vw,10px);
+  border:1px solid rgba(212,255,80,0.08);padding:clamp(0.7rem,1.5vw,1.2rem);text-align:center;
+  transition:transform 0.15s ease}
+.slide-solution .sol-step:hover{transform:translateY(-2px)}
+.slide-solution .sol-step-icon{font-size:clamp(1.5rem,3vw,2.5rem);margin-bottom:clamp(0.3rem,0.6vh,0.6rem)}
+.slide-solution .sol-step-title{font-family:var(--font-display);font-weight:600;
+  font-size:clamp(0.9rem,1.6vw,1.25rem);color:var(--text-primary);margin-bottom:clamp(0.1rem,0.3vh,0.3rem)}
+.slide-solution .sol-step-label{font-family:var(--font-body);font-weight:400;
+  font-size:clamp(0.7rem,1.1vw,0.85rem);color:var(--text-muted)}
+
+@media(max-width:600px){.slide-solution .sol-steps{grid-template-columns:1fr}.sol-arrow{display:none}}
+
+/* ===========================================
+   SLIDE 4 — FONCTIONNALITÉS
+   =========================================== */
+.slide-features{padding:var(--slide-padding)}
+.slide-features .feat-grid{display:grid;grid-template-columns:repeat(2,1fr);grid-template-rows:auto auto auto;
+  gap:clamp(0.4rem,1vw,0.8rem);flex:1;align-content:center;max-width:min(90vw,1100px);margin:0 auto}
+.slide-features .feat-card{background:var(--bg-cards);border-radius:clamp(6px,0.8vw,10px);
+  border:1px solid rgba(249,249,242,0.06);padding:clamp(0.6rem,1.3vw,1rem);
+  transition:transform 0.15s ease,border-color 0.15s ease}
+.slide-features .feat-card:hover{transform:translateY(-2px)}
+.slide-features .feat-card.accent-lime{border-left:2px solid var(--accent)}
+.slide-features .feat-card.accent-info{border-left:2px solid var(--info)}
+.slide-features .feat-card.accent-success{border-left:2px solid var(--success)}
+.slide-features .feat-card.accent-warn{border-left:2px solid var(--warning)}
+.slide-features .feat-card.accent-cream{border-left:2px solid rgba(249,249,242,0.25)}
+.slide-features .feat-header{display:flex;align-items:center;gap:clamp(0.3rem,0.6vw,0.5rem);margin-bottom:clamp(0.2rem,0.4vh,0.3rem)}
+.slide-features .feat-title{font-family:var(--font-display);font-weight:600;
+  font-size:clamp(0.85rem,1.4vw,1.1rem);color:var(--text-primary)}
+.slide-features .feat-desc{font-family:var(--font-body);font-weight:400;
+  font-size:clamp(0.7rem,1.1vw,0.85rem);color:rgba(249,249,242,0.5);line-height:1.4}
+.slide-features .feat-wide{grid-column:1/-1}
+
+/* Slide 4 — taille renforcée */
+#slide-3 .feat-title{font-size:clamp(0.95rem,1.7vw,1.3rem)!important}
+#slide-3 .feat-desc{font-size:clamp(0.8rem,1.3vw,1rem)!important}
+#slide-3 .focus-title{font-size:clamp(1.4rem,3.2vw,2.6rem)!important}
+
+@media(max-width:700px){.slide-features .feat-grid{grid-template-columns:1fr}}
+
+/* ===========================================
+   SLIDES 5-6 — FOCUS SPLIT LAYOUTS
+   =========================================== */
+.focus-split{display:grid;grid-template-columns:1fr 1fr;gap:clamp(1rem,2.5vw,2rem);
+  flex:1;align-content:center;padding:var(--slide-padding);max-width:min(95vw,1400px);margin:0 auto;
+  width:100%}
+.focus-split.reverse{direction:rtl}
+.focus-split.reverse>*{direction:ltr}
+.focus-left,.focus-right{display:flex;flex-direction:column;justify-content:center}
+.focus-mockup{
+  display:flex;align-items:flex-start;justify-content:center;
+  background:var(--bg-cards);border:1px solid rgba(212,255,80,0.12);
+  border-radius:clamp(8px,1vw,14px);padding:clamp(0.6rem,1.2vw,1rem);
+  box-shadow:0 0 30px rgba(212,255,80,0.08);
+  position:relative;max-width:clamp(200px,32vw,420px);width:100%;
+  margin:0 auto;
+}
+.focus-mockup img{width:100%;height:auto}
+.focus-mockup-text{font-family:var(--font-body);font-weight:400;
+  font-size:clamp(0.55rem,0.85vw,0.7rem);color:var(--text-muted);text-align:center}
+.focus-label{font-family:var(--font-body);font-weight:500;
+  font-size:clamp(0.6rem,0.9vw,0.75rem);text-transform:uppercase;letter-spacing:0.1em;
+  margin-bottom:clamp(0.2rem,0.4vh,0.4rem)}
+.focus-label.lime{color:var(--accent)}
+.focus-label.warn{color:var(--warning)}
+.focus-label.info{color:var(--info)}
+.focus-title{font-family:var(--font-display);font-weight:800;
+  font-size:clamp(1.2rem,2.8vw,2.2rem);color:var(--text-primary);margin-bottom:clamp(0.4rem,1vh,0.8rem);
+  line-height:1.2}
+.focus-items{list-style:none;display:flex;flex-direction:column;gap:clamp(0.25rem,0.6vh,0.5rem)}
+.focus-items li{font-family:var(--font-body);font-weight:400;
+  font-size:clamp(0.7rem,1.2vw,1rem);color:rgba(249,249,242,0.75);
+  padding-left:clamp(0.8rem,1.2vw,1rem);position:relative;line-height:1.5}
+.focus-items li::before{content:'→';position:absolute;left:0;color:var(--accent);font-weight:700;
+  font-size:clamp(0.6rem,0.9vw,0.75rem)}
+.focus-result{background:var(--bg-cards);border:1px solid rgba(58,224,134,0.15);
+  border-radius:clamp(5px,0.7vw,8px);padding:clamp(0.4rem,0.8vw,0.7rem);
+  margin-top:clamp(0.4rem,1vh,0.8rem)}
+.focus-result-text{font-family:var(--font-mono);font-weight:700;
+  font-size:clamp(0.6rem,0.9vw,0.75rem);color:var(--success)}
+.focus-badges{display:flex;gap:clamp(0.2rem,0.5vw,0.4rem);flex-wrap:wrap;margin-top:clamp(0.3rem,0.8vh,0.6rem)}
+
+@media(max-width:750px){.focus-split{grid-template-columns:1fr}.focus-mockup{max-width:clamp(180px,55vw,380px)}}
+
+/* ===========================================
+   SLIDE 7 — NO/LOW-CODE
+   =========================================== */
+.slide-nocode{padding:var(--slide-padding)}
+.slide-nocode .nc-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(0.6rem,1.5vw,1.2rem);
+  max-width:min(90vw,1100px);margin:0 auto;width:100%}
+.slide-nocode .nc-card{background:var(--bg-cards);border-radius:clamp(6px,0.8vw,10px);
+  padding:clamp(0.7rem,1.5vw,1.2rem)}
+.slide-nocode .nc-card.emerg{border:1px solid rgba(212,255,80,0.1)}
+.slide-nocode .nc-card.agents{border:1px solid rgba(212,255,80,0.2);
+  box-shadow:0 0 20px rgba(212,255,80,0.08)}
+.slide-nocode .nc-label{font-family:var(--font-body);font-weight:600;
+  font-size:clamp(0.65rem,1vw,0.8rem);margin-bottom:clamp(0.3rem,0.8vh,0.6rem)}
+.slide-nocode .nc-label.emerg{color:var(--text-secondary)}
+.slide-nocode .nc-label.agents{color:var(--accent)}
+.slide-nocode .nc-list{list-style:none;display:flex;flex-direction:column;gap:clamp(0.2rem,0.5vh,0.4rem);
+  margin-bottom:clamp(0.4rem,0.8vh,0.6rem)}
+.slide-nocode .nc-list li{font-family:var(--font-body);font-weight:400;
+  font-size:clamp(0.6rem,1.1vw,0.75rem);color:rgba(249,249,242,0.65);line-height:1.4;
+  padding-left:clamp(0.6rem,1vw,0.8rem);position:relative}
+.slide-nocode .nc-list li::before{content:'→';position:absolute;left:0;color:var(--accent);
+  font-size:clamp(0.55rem,0.8vw,0.65rem)}
+.slide-nocode .nc-callout{grid-column:1/-1;background:rgba(212,255,80,0.04);
+  border:1px solid rgba(212,255,80,0.15);border-radius:clamp(5px,0.7vw,8px);
+  padding:clamp(0.5rem,1vw,0.8rem);text-align:center}
+.slide-nocode .nc-callout p{font-family:var(--font-body);font-weight:500;font-style:italic;
+  font-size:clamp(0.6rem,1.1vw,0.8rem);color:rgba(249,249,242,0.7);line-height:1.5}
+
+@media(max-width:650px){.slide-nocode .nc-grid{grid-template-columns:1fr}}
+
+/* ===========================================
+   SLIDE 8 — ARCHITECTURE
+   =========================================== */
+.slide-arch{padding:var(--slide-padding)}
+.slide-arch .arch-layers{display:flex;flex-direction:column;align-items:center;gap:clamp(0.15rem,0.4vh,0.3rem);
+  flex:1;justify-content:center;max-width:min(92vw,1100px);margin:0 auto;width:100%}
+.arch-layer{width:100%;background:var(--bg-cards);border-radius:clamp(5px,0.7vw,8px);
+  padding:clamp(0.5rem,1vw,0.9rem);position:relative}
+.arch-layer .arch-stack{flex-wrap:wrap;gap:clamp(0.2rem,0.4vw,0.4rem)}
+.arch-chip{font-size:clamp(0.5rem,0.8vw,0.65rem);padding:clamp(2px,0.3vw,4px) clamp(4px,0.7vw,7px)}
+.arch-layer.front{border:1px solid rgba(212,255,80,0.1)}
+.arch-layer.back{border:1px solid rgba(77,170,255,0.12)}
+.arch-layer.ai{border:1px solid rgba(58,224,134,0.15);box-shadow:0 0 20px rgba(58,224,134,0.06)}
+.arch-layer-label{font-family:var(--font-body);font-weight:500;
+  font-size:clamp(0.6rem,0.85vw,0.7rem);text-transform:uppercase;letter-spacing:0.08em;
+  margin-bottom:clamp(0.15rem,0.3vh,0.3rem)}
+.arch-layer-label.front{color:var(--accent)}
+.arch-layer-label.back{color:var(--info)}
+.arch-layer-label.ai{color:var(--success)}
+.arch-stack{display:flex;gap:clamp(0.3rem,0.6vw,0.5rem);flex-wrap:wrap;justify-content:center}
+.arch-chip{font-family:var(--font-mono);font-weight:700;
+  font-size:clamp(0.55rem,0.85vw,0.7rem);color:rgba(249,249,242,0.7);
+  background:rgba(249,249,242,0.04);border:1px solid rgba(249,249,242,0.06);
+  border-radius:4px;padding:clamp(3px,0.4vw,5px) clamp(6px,0.9vw,8px)}
+.arch-arrow{text-align:center;padding:clamp(0.1rem,0.2vh,0.2rem) 0}
+.arch-arrow-svg{width:clamp(16px,3vw,28px);height:clamp(20px,3.5vw,32px);display:block;margin:0 auto}
+.arch-arrow-label{font-family:var(--font-body);font-weight:400;
+  font-size:clamp(0.5rem,0.75vw,0.65rem);color:rgba(249,249,242,0.25);
+  margin-top:clamp(0.05rem,0.1vh,0.1rem)}
+
+/* ===========================================
+   SLIDE 8 — DÉFIS
+   =========================================== */
+.slide-challenges{padding:var(--slide-padding)}
+.slide-challenges .ch-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(0.5rem,1.2vw,1rem);
+  flex:1;align-content:center;max-width:min(90vw,1150px);margin:0 auto}
+.slide-challenges .ch-card{background:var(--bg-cards);border-radius:clamp(6px,0.8vw,10px);
+  padding:clamp(0.6rem,1.3vw,1rem)}
+.slide-challenges .ch-card.warn{border:1px solid rgba(255,180,67,0.15)}
+.slide-challenges .ch-card.err{border:1px solid rgba(255,78,92,0.15)}
+.slide-challenges .ch-card.info{border:1px solid rgba(77,170,255,0.15)}
+.slide-challenges .ch-header{font-family:var(--font-mono);font-weight:700;
+  font-size:clamp(0.55rem,0.8vw,0.7rem);text-transform:uppercase;letter-spacing:0.06em;
+  margin-bottom:clamp(0.15rem,0.3vh,0.3rem)}
+.slide-challenges .ch-header.warn{color:var(--warning)}
+.slide-challenges .ch-header.err{color:var(--error)}
+.slide-challenges .ch-header.info{color:var(--info)}
+.slide-challenges .ch-title{font-family:var(--font-body);font-weight:600;
+  font-size:clamp(0.8rem,1.2vw,1rem);color:var(--text-primary);margin-bottom:clamp(0.2rem,0.4vh,0.4rem)}
+.slide-challenges .ch-sep{height:1px;width:30px;background:var(--accent);margin-bottom:clamp(0.2rem,0.4vh,0.4rem)}
+.slide-challenges .ch-solution-label{font-family:var(--font-mono);font-weight:700;
+  font-size:clamp(0.45rem,0.65vw,0.55rem);color:var(--accent);margin-bottom:clamp(0.1rem,0.3vh,0.25rem)}
+.slide-challenges .ch-solution-text{font-family:var(--font-body);font-weight:400;
+  font-size:clamp(0.6rem,0.9vw,0.75rem);color:rgba(249,249,242,0.6);line-height:1.45;
+  margin-bottom:clamp(0.2rem,0.5vh,0.4rem)}
+.slide-challenges .ch-result{font-family:var(--font-body);font-weight:500;
+  font-size:clamp(0.65rem,0.95vw,0.8rem);color:var(--success)}
+
+@media(max-width:750px){.slide-challenges .ch-grid{grid-template-columns:1fr}}
+
+/* ===========================================
+   SLIDE 11 — IMPACT & MÉTRIQUES
+   =========================================== */
+.slide-impact{padding:var(--slide-padding);text-align:center}
+.slide-impact .met-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(0.5rem,1.2vw,1rem);
+  flex:1;align-content:center;max-width:min(90vw,1000px);margin:0 auto}
+.slide-impact .met-card{text-align:center;padding:clamp(0.5rem,1vw,0.8rem)}
+.slide-impact .met-number{font-family:var(--font-mono);font-weight:800;
+  font-size:clamp(2rem,5vw,3.5rem);transition:color 0.3s}
+.slide-impact .met-number.lime{color:var(--accent);text-shadow:0 0 20px var(--accent-glow)}
+.slide-impact .met-number.info{color:var(--info)}
+.slide-impact .met-number.success{color:var(--success);text-shadow:0 0 15px var(--success-glow)}
+.slide-impact .met-number.warn{color:var(--warning)}
+.slide-impact .met-number.cream{color:rgba(249,249,242,0.25)}
+.slide-impact .met-label{font-family:var(--font-body);font-weight:500;
+  font-size:clamp(0.65rem,1vw,0.85rem);color:var(--text-primary);margin-top:clamp(0.1rem,0.3vh,0.3rem)}
+.slide-impact .met-sublabel{font-family:var(--font-body);font-weight:400;
+  font-size:clamp(0.5rem,0.75vw,0.6rem);color:var(--text-muted);margin-top:clamp(0.05rem,0.2vh,0.2rem)}
+.slide-impact .impact-quote{margin-top:clamp(0.3rem,0.8vh,0.6rem);
+  border-left:3px solid var(--accent);padding-left:clamp(0.6rem,1vw,0.8rem);
+  font-family:var(--font-body);font-weight:500;font-style:italic;
+  font-size:clamp(0.55rem,0.8vw,0.7rem);color:rgba(249,249,242,0.55);
+  text-align:left;max-width:min(85vw,750px);margin-left:auto;margin-right:auto}
+
+/* Count-up animation */
+.met-number.counting{transition:none}
+
+@media(max-width:650px){.slide-impact .met-grid{grid-template-columns:repeat(2,1fr)}.met-number{font-size:clamp(1.5rem,7vw,2.5rem)!important}}
+
+
+
+/* ===========================================
+   EDIT MODE — Inline editing
+   =========================================== */
+.edit-hotzone{position:fixed;top:0;left:0;width:80px;height:80px;z-index:10000;cursor:pointer}
+.edit-toggle{position:fixed;top:clamp(8px,1.5vh,14px);left:clamp(8px,1.5vw,14px);
+  font-size:clamp(0.8rem,1.2vw,1rem);background:rgba(212,255,80,0.08);border:1px solid rgba(212,255,80,0.15);
+  color:var(--accent);border-radius:6px;padding:clamp(4px,0.5vw,6px) clamp(8px,1vw,10px);
+  opacity:0;pointer-events:none;transition:opacity 0.3s ease;cursor:pointer;z-index:10001}
+.edit-toggle.show,.edit-toggle.active{opacity:1;pointer-events:auto}
+.edit-banner{position:fixed;top:0;left:0;right:0;
+  background:rgba(212,255,80,0.08);border-bottom:1px solid rgba(212,255,80,0.2);
+  padding:clamp(4px,0.6vw,6px) clamp(8px,1.5vw,12px);z-index:10002;
+  font-family:var(--font-mono);font-weight:700;font-size:clamp(0.5rem,0.8vw,0.65rem);
+  color:var(--accent);text-align:center;opacity:0;pointer-events:none;transition:opacity 0.3s ease}
+.edit-banner.active{opacity:1;pointer-events:auto}
+body.edit-active [contenteditable]{outline:1px dashed rgba(212,255,80,0.3);outline-offset:2px;
+  cursor:text;transition:outline 0.2s}
+body.edit-active [contenteditable]:focus{outline:1px solid var(--accent);background:rgba(212,255,80,0.03)}
+body.edit-active .slide{cursor:text}
+
+/* ===========================================
+   ORGANIC DECORATIONS — code vine & particles
+   =========================================== */
+/* ===========================================
+   ORGANIC DECORATIONS — vine, particles, glow
+   =========================================== */
+.slide-vine{position:absolute;bottom:clamp(4px,1vh,10px);right:clamp(8px,1.5vw,16px);z-index:2;pointer-events:none;opacity:0.6}
+.slide-vine svg{width:clamp(50px,7vw,100px);height:auto}
+.slide-vine path{transition:stroke-dashoffset 1.5s var(--ease-out-expo)}
+.slide.visible .slide-vine path{stroke-dashoffset:0 !important}
+.slide-dataparticle{position:absolute;z-index:2;pointer-events:none;font-family:var(--font-mono);font-weight:700;font-size:clamp(0.55rem,0.8vw,0.7rem);color:rgba(212,255,80,0.25);text-shadow:0 0 6px rgba(212,255,80,0.12);white-space:nowrap;animation:dpDrift 8s ease-in-out infinite}
+.slide-dataparticle.dp1{top:clamp(8px,2vh,20px);left:clamp(8px,1.5vw,16px);animation-delay:0s}
+.slide-dataparticle.dp2{top:clamp(40px,5vh,50px);right:clamp(8px,1.5vw,16px);animation-delay:-2.5s}
+.slide-dataparticle.dp3{bottom:clamp(50px,7vh,70px);left:clamp(16px,3vw,32px);animation-delay:-5s}
+@keyframes dpDrift{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(0,-6px) scale(1.04)}}
+.slide-organic-glow{position:absolute;bottom:0;left:0;right:0;height:clamp(60px,10vh,120px);z-index:0;pointer-events:none;background:linear-gradient(0deg,rgba(212,255,80,0.05) 0%,transparent 100%)}
+
+/* ===========================================
+   METRIC RINGS — slide 11 SVG progress circles
+   =========================================== */
+.met-card{position:relative}
+.met-ring{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:-1;width:clamp(64px,9vw,110px);height:auto;pointer-events:none}
+.met-ring .bg{fill:none;stroke:rgba(212,255,80,0.07);stroke-width:2.5}
+.met-ring .fg{fill:none;stroke:var(--accent);stroke-width:2.5;stroke-linecap:round;stroke-dasharray:283;stroke-dashoffset:283;transition:stroke-dashoffset 1.4s var(--ease-out-expo)}
+.slide.visible .met-ring .fg{stroke-dashoffset:calc(283 - (283 * var(--pct,1))) !important}
+.met-card:hover .met-ring .fg{stroke-width:3.5;filter:drop-shadow(0 0 6px var(--accent-glow))}
+
+/* ===========================================
+   LIGHTBOX — zoom on screenshots
+   =========================================== */
+.lightbox{position:fixed;inset:0;z-index:10000;display:none;align-items:center;justify-content:center;
+  background:rgba(5,13,7,0.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  cursor:zoom-out;opacity:0;transition:opacity 0.3s ease}
+.lightbox.open{display:flex;opacity:1}
+.lightbox-img{max-width:min(92vw,480px);max-height:min(96vh,94dvh);border-radius:clamp(8px,1vw,14px);
+  box-shadow:0 0 60px rgba(212,255,80,0.1);cursor:default;transform:scale(0.92);
+  transition:transform 0.4s var(--ease-spring);object-fit:contain;width:auto;height:auto}
+.lightbox.open .lightbox-img{transform:scale(1)}
+.lightbox-btn{position:absolute;top:50%;transform:translateY(-50%);z-index:10001;
+  background:rgba(212,255,80,0.1);border:1px solid rgba(212,255,80,0.2);color:var(--accent);
+  width:clamp(36px,3.5vw,52px);height:clamp(36px,3.5vw,52px);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:clamp(1rem,1.8vw,1.5rem);
+  transition:background 0.2s,transform 0.2s var(--ease-spring);opacity:0;pointer-events:none}
+.lightbox.open .lightbox-btn{opacity:1;pointer-events:auto}
+.lightbox-btn:hover{background:rgba(212,255,80,0.2);transform:translateY(-50%) scale(1.1)}
+.lightbox-prev{left:clamp(12px,3vw,32px)}
+.lightbox-next{right:clamp(12px,3vw,32px)}
+.lightbox-close{position:absolute;top:clamp(12px,2vh,24px);right:clamp(12px,2vw,24px);z-index:10001;
+  background:rgba(249,249,242,0.08);border:1px solid rgba(249,249,242,0.12);color:var(--text-primary);
+  width:clamp(32px,3vw,44px);height:clamp(32px,3vw,44px);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:clamp(0.9rem,1.4vw,1.2rem);
+  transition:background 0.2s,transform 0.2s var(--ease-spring);opacity:0;pointer-events:none}
+.lightbox.open .lightbox-close{opacity:1;pointer-events:auto}
+.lightbox-close:hover{background:rgba(249,249,242,0.15);transform:scale(1.1)}
+.lightbox-counter{position:absolute;bottom:clamp(16px,3vh,32px);left:50%;transform:translateX(-50%);
+  font-family:var(--font-mono);font-weight:700;font-size:clamp(0.6rem,0.9vw,0.8rem);
+  color:var(--text-muted);opacity:0;transition:opacity 0.3s ease}
+.lightbox.open .lightbox-counter{opacity:1}
+.lightbox-img{cursor:zoom-out}
+.screenshot-click{cursor:pointer;transition:transform 0.2s var(--ease-spring),box-shadow 0.2s ease}
+.screenshot-click:hover{transform:scale(1.02);box-shadow:0 0 30px rgba(212,255,80,0.12)}
+
+/* ===========================================
+   THEME TOGGLE — dark/light switch
+   =========================================== */
+:root.light{--bg-primary:#F7F5F0;--bg-cards:rgba(255,255,255,0.65);--bg-glass:rgba(255,255,255,0.45);--bg-input:#E5E2D8;--text-primary:#1C1B16;--text-secondary:rgba(28,27,22,0.7);--text-muted:rgba(28,27,22,0.4);--gradient-hero:linear-gradient(135deg,#F7F5F0,#EFECE4,#E8E4DA);--accent-soft:rgba(212,255,80,0.15);--card-shadow:0 0 0 1px rgba(0,0,0,0.04),0 2px 8px rgba(0,0,0,0.04);--card-border-subtle:rgba(0,0,0,0.06);--card-border-hover:rgba(212,255,80,0.3)}
+:root.light .slide{background:var(--gradient-hero)}
+:root.light .tilt-card{background:rgba(255,255,255,0.65);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+:root.light .met-ring .bg{stroke:rgba(0,0,0,0.06)}
+:root.light .glow-spot{opacity:0.25}
+:root.light .shape-a{background:rgba(212,255,80,0.12)}
+:root.light .shape-b{background:rgba(58,224,134,0.08)}
+:root.light .shape-c{background:rgba(77,170,255,0.06)}
+:root.light .noise{opacity:0.008}
+:root.light .slide-vine{opacity:0.3}
+:root.light .slide-organic-glow{background:linear-gradient(0deg,rgba(212,255,80,0.08) 0%,transparent 100%)}
+:root.light img,.image-container{filter:brightness(0.95)}
+:root.light .code-plant{opacity:0.45}
+:root.light .cine-vignette{opacity:0.3}
+:root.light .nav-dot{background:rgba(0,0,0,0.12)}
+:root.light .nav-dot.active{background:var(--accent)}
+:root.light .focus-mockup{background:rgba(255,255,255,0.5)}
+
+/* ===========================================
+   AUTO-ADVANCE & TOGGLE BUTTONS
+   =========================================== */
+.theme-toggle,.auto-toggle{position:fixed;z-index:9998;font-family:var(--font-mono);font-weight:700;font-size:clamp(0.45rem,0.6vw,0.55rem);background:rgba(212,255,80,0.08);border:1px solid rgba(212,255,80,0.12);color:var(--accent);border-radius:6px;padding:clamp(3px,0.4vw,5px) clamp(6px,0.7vw,9px);cursor:pointer;transition:background 0.3s,opacity 0.3s;opacity:0.4;pointer-events:auto;text-transform:uppercase;letter-spacing:0.04em}
+.theme-toggle:hover,.auto-toggle:hover{opacity:1;background:rgba(212,255,80,0.14)}
+.theme-toggle{bottom:clamp(8px,1.5vh,16px);left:clamp(12px,2vw,24px)}
+.auto-toggle{bottom:clamp(32px,4vh,48px);left:clamp(12px,2vw,24px)}
+.auto-toggle.active{border-color:var(--accent);background:rgba(212,255,80,0.14);opacity:0.7}
+
+/* ===========================================
+   NEW SLIDES 10-11 — Migration & Llama 70B
+   =========================================== */
+.migration-flow{display:flex;align-items:center;justify-content:center;gap:clamp(0.5rem,1.5vw,1.5rem);flex-wrap:wrap;margin-top:clamp(0.5rem,1.5vh,1rem)}
+.mig-step{flex:1;min-width:clamp(140px,20vw,240px);text-align:center;padding:clamp(0.6rem,1.2vw,1rem);background:var(--bg-cards);border:1px solid rgba(212,255,80,0.08);border-radius:clamp(6px,0.8vw,10px)}
+.mig-num{width:clamp(28px,3vw,40px);height:clamp(28px,3vw,40px);border-radius:50%;background:rgba(212,255,80,0.1);border:1px solid rgba(212,255,80,0.2);display:flex;align-items:center;justify-content:center;margin:0 auto clamp(0.3rem,0.6vh,0.5rem);font-family:var(--font-mono);font-weight:800;font-size:clamp(0.8rem,1.4vw,1.1rem);color:var(--accent)}
+.mig-step h4{font-family:var(--font-display);font-weight:600;font-size:clamp(0.7rem,1.2vw,0.95rem);color:var(--text-primary);margin-bottom:clamp(0.15rem,0.3vh,0.3rem)}
+.mig-step p{font-family:var(--font-body);font-weight:400;font-size:clamp(0.5rem,0.75vw,0.65rem);color:var(--text-muted);line-height:1.4}
+.mig-arrow{font-size:clamp(1rem,2vw,1.8rem);color:var(--accent);opacity:0.4;flex-shrink:0}
+/* Llama 70B slide */
+.ds-grid{display:flex;align-items:center;justify-content:center;gap:clamp(0.8rem,2vw,1.5rem);margin-top:clamp(0.5rem,1.5vh,1rem);flex-wrap:wrap}
+.ds-card{flex:1;min-width:clamp(180px,28vw,320px);background:var(--bg-cards);border:1px solid rgba(212,255,80,0.08);border-radius:clamp(6px,0.8vw,10px);padding:clamp(0.7rem,1.5vw,1.2rem);text-align:center}
+.ds-card.highlight{border-color:var(--accent);box-shadow:0 0 30px var(--accent-glow)}
+.ds-card h4{font-family:var(--font-display);font-weight:700;font-size:clamp(0.75rem,1.3vw,1.05rem);color:var(--text-primary);margin-bottom:clamp(0.2rem,0.4vh,0.4rem)}
+.ds-card p{font-family:var(--font-body);font-weight:400;font-size:clamp(0.55rem,0.85vw,0.7rem);color:var(--text-muted);line-height:1.4}
+.ds-arrow{font-size:clamp(1.2rem,2.5vw,2rem);color:var(--accent);opacity:0.5;flex-shrink:0}
+.ds-benefits{display:flex;gap:clamp(0.4rem,1vw,0.8rem);justify-content:center;margin-top:clamp(0.5rem,1.2vh,0.8rem);flex-wrap:wrap}
+.ds-benefits span{font-family:var(--font-mono);font-weight:700;font-size:clamp(0.5rem,0.75vw,0.65rem);padding:clamp(3px,0.4vw,6px) clamp(8px,1vw,12px);background:rgba(212,255,80,0.06);border:1px solid rgba(212,255,80,0.12);border-radius:999px;color:var(--accent)}
+.slide-dark{background:linear-gradient(135deg,#030A05,#0A1B0E)}
+.gradient-text{background:linear-gradient(135deg,var(--accent),#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* Accent button */
+.btn-accent{
+  display:inline-block;text-decoration:none;
+  padding:clamp(6px,0.6vw,10px) clamp(14px,1.5vw,24px);
+  border:1px solid rgba(212,255,80,0.2);border-radius:8px;
+  background:rgba(212,255,80,0.06);color:var(--accent);
+  font-family:var(--font-display);font-weight:600;
+  font-size:clamp(0.6rem,0.9vw,0.8rem);
+  transition:background 0.25s ease,box-shadow 0.25s ease,transform 0.25s var(--ease-spring);
+  cursor:pointer;
+}
+.btn-accent:hover{
+  background:rgba(212,255,80,0.12);
+  box-shadow:0 0 20px rgba(212,255,80,0.1);
+  transform:translateY(-1px);
+}
+</style>
+</head>
+<body>
+
+<canvas id="particleCanvas"></canvas>
+
+<!-- Cinematic overlays -->
+<div class="cine-vignette pulse" id="cineVignette"></div>
+<div class="cine-grade"></div>
+<canvas id="cineGrain"></canvas>
+<canvas id="cineDust"></canvas>
+<div class="cine-flare" id="cineFlare" style="top:15%;left:10%;width:clamp(300px,60vw,700px);height:clamp(120px,25vw,300px);
+  background:radial-gradient(ellipse at 30% 50%,rgba(212,255,80,0.6),rgba(212,255,80,0.15) 30%,transparent 70%);
+  filter:blur(2px);transform:rotate(-25deg)"></div>
+<div class="cine-anaflare" id="cineAnaflare" style="top:30%;left:0;width:100%"></div>
+
+<!-- Progress bar -->
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- Edit hotzone + toggle -->
+<div class="edit-hotzone" id="editHotzone"></div>
+<button class="edit-toggle" id="editToggle" title="Edit mode (E)">✏️</button>
+<button class="theme-toggle" id="themeToggle" title="Changer le thème">🌙 Thème</button>
+<button class="auto-toggle" id="autoToggle" title="Lecture automatique">▶ Auto</button>
+<div class="edit-banner" id="editBanner">
+  <span>✏️ MODE ÉDITION</span>
+  <span style="margin-left:clamp(8px,1.5vw,12px);opacity:0.5">Ctrl+S = Sauvegarder · Échap = Quitter · Cliquez un texte pour l'éditer</span>
+</div>
+
+<!-- Navigation dots -->
+<nav class="nav-dots" id="navDots"></nav>
+
+<!-- Slide counter -->
+<button class="slide-nav-btn prev" id="slidePrev" aria-label="Slide précédente">‹</button>
+<button class="slide-nav-btn next" id="slideNext" aria-label="Slide suivante">›</button>
+<div class="slide-counter" id="slideCounter">01 / 17</div>
+
+<!-- ===========================================
+     SLIDE 1 — COVER : CODE ORGANIQUE
+     =========================================== -->
+<section class="slide slide-cover slide-cover-organique" data-index="0" id="slide-0">
+  <div class="noise"></div>
+
+  <!-- Central glow halo behind title -->
+  <div class="title-glow" style="position:absolute;top:36%;left:50%;transform:translate(-50%,-50%);width:clamp(260px,60vw,650px);height:clamp(140px,32vh,280px);background:radial-gradient(ellipse,rgba(212,255,80,0.06),transparent 70%);z-index:0;pointer-events:none"></div>
+
+  <!-- Code-organic plant SVG — stays in bottom half -->
+  <div class="code-plant">
+    <svg viewBox="0 0 800 500" class="plant-svg" xmlns="http://www.w3.org/2000/svg">
+      <!-- Roots -->
+      <g class="plant-roots">
+        <path class="root r1" d="M380,510 C340,480 270,460 220,440" fill="none" stroke="#D4FF50" stroke-width="1" opacity="0.25" stroke-linecap="round"/>
+        <path class="root r2" d="M400,510 C400,470 390,460 420,440" fill="none" stroke="#3AE086" stroke-width="1.2" opacity="0.3" stroke-linecap="round"/>
+        <path class="root r3" d="M420,510 C460,480 530,460 580,440" fill="none" stroke="#D4FF50" stroke-width="1" opacity="0.25" stroke-linecap="round"/>
+      </g>
+      <!-- Short stem -->
+      <g class="plant-stem">
+        <path class="stem-line" d="M400,510 L400,380" fill="none" stroke="#D4FF50" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+      </g>
+      <!-- Low branches — spread wide, stay low -->
+      <g class="plant-branches">
+        <path class="branch b1" d="M400,470 C350,455 260,445 180,420" fill="none" stroke="#D4FF50" stroke-width="1.1" stroke-linecap="round" opacity="0.35"/>
+        <path class="branch b2" d="M400,470 C450,455 540,445 620,420" fill="none" stroke="#3AE086" stroke-width="1.1" stroke-linecap="round" opacity="0.35"/>
+        <path class="branch b3" d="M400,420 C360,410 280,395 200,380" fill="none" stroke="#D4FF50" stroke-width="0.9" stroke-linecap="round" opacity="0.3"/>
+        <path class="branch b4" d="M400,420 C440,410 520,395 600,380" fill="none" stroke="#4DAAFF" stroke-width="0.9" stroke-linecap="round" opacity="0.3"/>
+      </g>
+      <!-- Leaf data nodes on branch tips -->
+      <g class="plant-leaves">
+        <circle class="leaf l1" cx="180" cy="418" r="16" fill="none" stroke="#D4FF50" stroke-width="0.7" opacity="0.4"/>
+        <text class="leaf-text lt1" x="180" y="422" text-anchor="middle" fill="#D4FF50" font-family="JetBrains Mono,monospace" font-weight="700" font-size="6" opacity="0.55">87%</text>
+        <circle class="leaf l2" cx="620" cy="418" r="16" fill="none" stroke="#3AE086" stroke-width="0.7" opacity="0.4"/>
+        <text class="leaf-text lt2" x="620" y="422" text-anchor="middle" fill="#3AE086" font-family="JetBrains Mono,monospace" font-weight="700" font-size="5.5" opacity="0.55">scan</text>
+        <circle class="leaf l3" cx="200" cy="378" r="14" fill="none" stroke="#D4FF50" stroke-width="0.6" opacity="0.35"/>
+        <text class="leaf-text lt3" x="200" y="382" text-anchor="middle" fill="#D4FF50" font-family="JetBrains Mono,monospace" font-weight="700" font-size="5.5" opacity="0.5">IA</text>
+        <circle class="leaf l4" cx="600" cy="378" r="14" fill="none" stroke="#4DAAFF" stroke-width="0.6" opacity="0.35"/>
+        <text class="leaf-text lt4" x="600" y="382" text-anchor="middle" fill="#4DAAFF" font-family="JetBrains Mono,monospace" font-weight="700" font-size="5.5" opacity="0.5">api</text>
+      </g>
+    </svg>
+  </div>
+
+  <!-- Floating code particles — pushed to corners -->
+  <div class="code-particles">
+    <span class="cp cp1">{ mildiou }</span>
+    <span class="cp cp2">Llama 70B</span>
+    <span class="cp cp3">POST /diagnose</span>
+    <span class="cp cp4">accuracy: 0.93</span>
+  </div>
+
+  <!-- Dark backdrop panel for text -->
+  <div class="cover-backdrop reveal d0"></div>
+
+  <div class="cover-content">
+    <h1 class="cover-logo reveal d1" contenteditable="false">AgriScan<span class="ai">.ai</span></h1>
+    <p class="cover-sub reveal d3" contenteditable="false">Diagnostic intelligent des maladies des plantes</p>
+    <div class="cover-sep reveal d4"></div>
+    <div class="cover-badge reveal d5" contenteditable="false">Bachelor 2025/2026 · Chambre d'Agriculture</div>
+    <div class="cover-tags reveal d6">
+      <span class="cover-tag" contenteditable="false">📱 Mobile & Web</span>
+      <span class="cover-tag" contenteditable="false">🤖 IA Générative</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 2 — LE PROBLÈME
+     =========================================== -->
+<section class="slide slide-problem" data-index="1" id="slide-1">
+  <div class="noise"></div>
+  <div class="slide-content">
+    <h2 class="reveal" contenteditable="false" style="font-family:var(--font-display);font-weight:800;font-size:var(--h2-size);color:var(--text-primary);text-align:center;margin-bottom:clamp(0.4rem,1.5vh,1rem)">Un mauvais diagnostic peut détruire une récolte</h2>
+    <div class="problem-grid">
+      <div class="p-card warn reveal d1" contenteditable="false">
+        <div class="p-card-icon">⏱️</div>
+        <div class="p-card-title">Pas d'expert disponible sur le terrain en temps réel</div>
+        <div class="p-card-sub">Délai moyen : 48 à 72h pour un diagnostic agronomique</div>
+      </div>
+      <div class="p-card err reveal d2" contenteditable="false">
+        <div class="p-card-icon">💸</div>
+        <div class="p-card-title">Un traitement tardif = perte de rendement irréversible</div>
+        <div class="p-card-sub">Jusqu'à 40% de récolte perdue sur certaines cultures</div>
+      </div>
+      <div class="p-card info-card reveal d3" contenteditable="false">
+        <div class="p-card-icon">📍</div>
+        <div class="p-card-title">Les alertes phytosanitaires sont dispersées et non centralisées</div>
+        <div class="p-card-sub">Aucune visualisation géolocalisée accessible</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 3 — LA SOLUTION
+     =========================================== -->
+<section class="slide slide-solution" data-index="2" id="slide-2">
+  <div class="cine-rays"></div>
+  <div class="glow-spot" style="top:15%;left:50%;transform:translate(-50%,-50%);width:clamp(250px,50vw,600px);height:clamp(250px,50vw,600px)"></div>
+  <div class="shape shape-a parallax" style="width:clamp(80px,16vw,200px);height:clamp(80px,16vw,200px);bottom:-10%;right:-5%"></div>
+  <div class="slide-content">
+    <div class="sol-header">
+      <h2 class="reveal shimmer" contenteditable="false" style="font-family:var(--font-display);font-weight:800;font-size:var(--title-size);color:var(--text-primary)">AgriScan AI</h2>
+      <p class="sol-hook reveal d2" contenteditable="false">Une photo. Une analyse. Un traitement.</p>
+      <p class="sol-desc reveal d3" contenteditable="false">L'IA identifie la maladie, estime sa probabilité et propose un traitement adapté en quelques secondes.</p>
+    </div>
+    <div class="sol-steps">
+      <div class="sol-step reveal d3" contenteditable="false">
+        <div class="sol-step-icon">📸</div>
+        <div class="sol-step-title">Photographier</div>
+        <div class="sol-step-label">Capturez la plante suspecte</div>
+      </div>
+      <div class="sol-step reveal d4" contenteditable="false">
+        <div class="sol-step-icon">🧠</div>
+        <div class="sol-step-title">Analyser</div>
+        <div class="sol-step-label">L'IA identifie la maladie</div>
+      </div>
+      <div class="sol-step reveal d5" contenteditable="false">
+        <div class="sol-step-icon">💊</div>
+        <div class="sol-step-title">Traiter</div>
+        <div class="sol-step-label">Recommandation personnalisée</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- ===========================================
+     SLIDE 3 — 5 FONCTIONNALITÉS
+     =========================================== -->
+<section class="slide" data-index="3" id="slide-3" style="background:var(--gradient-hero)">
+  <div class="noise"></div>
+  <div class="shape shape-a parallax" style="width:clamp(120px,22vw,280px);height:clamp(120px,22vw,280px);top:5%;left:-6%"></div>
+  <div class="shape shape-c parallax" style="width:clamp(100px,18vw,220px);height:clamp(100px,18vw,220px);bottom:-10%;right:-4%"></div>
+  <div class="focus-split" style="align-items:center">
+    <div class="focus-left" style="align-items:center">
+      <div class="reveal d1 phone-mockup" style="background:#0A1B0E;border-radius:clamp(8px,1vw,14px);border:1px solid rgba(212,255,80,0.12);overflow:hidden;box-shadow:0 0 30px rgba(212,255,80,0.08)">
+          <img src="assets/home_page.jpg" alt="AgriScan AI Accueil" data-src="assets/home_page.jpg" class="screenshot-click" style="width:100%;height:auto;display:block">
+      </div>
+    </div>
+    <div class="focus-right">
+      <h2 class="reveal d1" contenteditable="false" style="font-family:var(--font-display);font-weight:800;font-size:var(--h2-size);color:var(--text-primary);margin-bottom:clamp(0.3rem,0.8vh,0.5rem)">5 fonctionnalités clés</h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:clamp(0.2rem,0.5vw,0.4rem);max-width:100%">
+        <div class="card accent-lime reveal d2" contenteditable="false" style="grid-column:1/-1;padding:clamp(0.35rem,0.7vw,0.55rem)">
+          <div class="feat-header" style="margin-bottom:0">
+            <span class="badge" style="background:rgba(212,255,80,0.1);color:var(--accent);border:1px solid rgba(212,255,80,0.2);font-size:clamp(0.45rem,0.65vw,0.55rem)">CORE</span>
+            <span class="feat-title" style="font-size:clamp(0.8rem,1.2vw,1rem)">🔍 Diagnostic IA</span>
+          </div>
+          <div class="feat-desc" style="font-size:clamp(0.6rem,0.9vw,0.75rem);margin-top:clamp(0.05rem,0.1vh,0.15rem)">Photo → identification maladie + probabilité + traitement</div>
+        </div>
+        <div class="card accent-info reveal d3" contenteditable="false" style="padding:clamp(0.3rem,0.6vw,0.5rem)">
+          <div class="feat-header" style="margin-bottom:clamp(0.05rem,0.1vh,0.1rem)">
+            <span class="feat-title" style="font-size:clamp(0.65rem,1vw,0.8rem)">💬 Assistant conversationnel</span>
+          </div>
+          <div class="feat-desc" style="font-size:clamp(0.5rem,0.75vw,0.6rem)">Agent IA spécialisé, mémoire par dossier</div>
+        </div>
+        <div class="card accent-success reveal d3" contenteditable="false" style="padding:clamp(0.3rem,0.6vw,0.5rem)">
+          <div class="feat-header" style="margin-bottom:clamp(0.05rem,0.1vh,0.1rem)">
+            <span class="feat-title" style="font-size:clamp(0.65rem,1vw,0.8rem)">📊 Dashboard & Historique</span>
+          </div>
+          <div class="feat-desc" style="font-size:clamp(0.5rem,0.75vw,0.6rem)">Statistiques, suivi des diagnostics</div>
+        </div>
+        <div class="card accent-warn reveal d4" contenteditable="false" style="padding:clamp(0.3rem,0.6vw,0.5rem)">
+          <div class="feat-header" style="margin-bottom:clamp(0.05rem,0.1vh,0.1rem)">
+            <span class="feat-title" style="font-size:clamp(0.65rem,1vw,0.8rem)">🚨 Alertes géolocalisées</span>
+          </div>
+          <div class="feat-desc" style="font-size:clamp(0.5rem,0.75vw,0.6rem)">Carte interactive, météo, alertes</div>
+        </div>
+        <div class="card accent-cream reveal d5" contenteditable="false" style="padding:clamp(0.3rem,0.6vw,0.5rem)">
+          <div class="feat-header" style="margin-bottom:clamp(0.05rem,0.1vh,0.1rem)">
+            <span class="feat-title" style="font-size:clamp(0.65rem,1vw,0.8rem)">👤 Profil & Exploitation</span>
+          </div>
+          <div class="feat-desc" style="font-size:clamp(0.5rem,0.75vw,0.6rem)">Gestion compte, exploitation, paramètres</div>
+        </div>
+      </div>
+      <div class="reveal d6" style="display:flex;gap:clamp(0.4rem,0.8vw,0.8rem);margin-top:clamp(0.3rem,0.8vh,0.6rem);justify-content:center">
+        <div style="width:clamp(70px,10vw,120px);border-radius:clamp(4px,0.5vw,8px);border:1px solid rgba(212,255,80,0.12)">
+          <img src="assets/profile_page.jpg" alt="Profil utilisateur" data-src="assets/profile_page.jpg" class="screenshot-click" style="width:100%;height:auto;display:block;border-radius:clamp(4px,0.5vw,8px)">
+        </div>
+        <div style="width:clamp(70px,10vw,120px);border-radius:clamp(4px,0.5vw,8px);border:1px solid rgba(212,255,80,0.12)">
+          <img src="assets/diag_page.jpg" alt="Diagnostic IA" data-src="assets/diag_page.jpg" class="screenshot-click" style="width:100%;height:auto;display:block;border-radius:clamp(4px,0.5vw,8px)">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+<!-- ===========================================
+     SLIDE 4 — FOCUS : DIAGNOSTIC IA
+     =========================================== -->
+<section class="slide" data-index="4" id="slide-4" style="background:var(--gradient-hero)">
+  <div class="shape shape-a parallax" style="width:clamp(90px,16vw,200px);height:clamp(90px,16vw,200px);top:-5%;right:10%"></div>
+  <div class="focus-split">
+    <div class="focus-left">
+      <div class="reveal d1 phone-mockup" style="background:#0A1B0E;border-radius:clamp(8px,1vw,14px);border:1px solid rgba(212,255,80,0.12);overflow:hidden;box-shadow:0 0 30px rgba(212,255,80,0.08)">
+          <img src="assets/diag_page.jpg" alt="Diagnostic IA AgriScan" data-src="assets/diag_page.jpg" class="screenshot-click" style="width:100%;height:auto;display:block">
+      </div>
+    </div>
+    <div class="focus-right">
+      <div class="focus-label lime reveal d1" contenteditable="false">FEATURE PRINCIPALE</div>
+      <h2 class="focus-title reveal d2" contenteditable="false">Un agent expert, pas un simple chatbot</h2>
+      <ul class="focus-items">
+        <li class="reveal d2" contenteditable="false">Envoi de photo depuis mobile ou navigateur</li>
+        <li class="reveal d3" contenteditable="false">Analyse Llama 70B — system prompt pathologie végétale</li>
+        <li class="reveal d3" contenteditable="false">Résultat : maladie + % probabilité + urgence</li>
+        <li class="reveal d4" contenteditable="false">Traitement recommandé + prévention</li>
+        <li class="reveal d4" contenteditable="false">Dialogue pour affiner si nécessaire</li>
+      </ul>
+      <div class="focus-result reveal d5" contenteditable="false">
+        <div class="focus-result-text">Mildiou de la vigne · 87% · Urgence : Modérée</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 5 — FOCUS : ALERTES & CARTE
+     =========================================== -->
+<section class="slide" data-index="5" id="slide-5" style="background:var(--gradient-hero)">
+  <div class="shape shape-b parallax" style="width:clamp(90px,16vw,200px);height:clamp(90px,16vw,200px);bottom:-8%;left:8%"></div>
+  <div class="focus-split reverse">
+    <div class="focus-right">
+      <div class="reveal d1 phone-mockup" style="background:#0A1B0E;border-radius:clamp(8px,1vw,14px);border:1px solid rgba(212,255,80,0.12);overflow:hidden;box-shadow:0 0 30px rgba(212,255,80,0.08)">
+          <img src="assets/alert_page.jpg" alt="Alertes AgriScan AI" data-src="assets/alert_page.jpg" class="screenshot-click" style="width:100%;height:auto;display:block">
+      </div>
+    </div>
+    <div class="focus-left">
+      <div class="focus-label warn reveal d1" contenteditable="false">ALERTES PHYTOSANITAIRES</div>
+      <h2 class="focus-title reveal d2" contenteditable="false">Savoir ce qui menace ses cultures avant d'aller au champ</h2>
+      <ul class="focus-items">
+        <li class="reveal d2" contenteditable="false">🗺️ Carte Google Maps — visualisation géolocalisée</li>
+        <li class="reveal d3" contenteditable="false">📍 Alertes classées par type et sévérité</li>
+        <li class="reveal d3" contenteditable="false">🌦️ Intégration météo et recommandations terrain</li>
+        <li class="reveal d4" contenteditable="false">🔔 Notifications personnalisées par zone</li>
+        <li class="reveal d4" contenteditable="false">📊 Données par zone : température, humidité, risque</li>
+        <li class="reveal d5" contenteditable="false">🔍 Zoom et clic pour les détails par parcelle</li>
+      </ul>
+      <div class="focus-badges reveal d5" contenteditable="false">
+        <span class="badge" style="background:rgba(255,78,92,0.12);color:var(--error);border:1px solid rgba(255,78,92,0.25)">CRITIQUE</span>
+        <span class="badge" style="background:rgba(255,180,67,0.12);color:var(--warning);border:1px solid rgba(255,180,67,0.25)">MODÉRÉ</span>
+        <span class="badge" style="background:rgba(77,170,255,0.12);color:var(--info);border:1px solid rgba(77,170,255,0.25)">INFO</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 6 — APPROCHE NO/LOW-CODE
+     =========================================== -->
+<section class="slide slide-nocode" data-index="6" id="slide-6">
+  <div class="dot-grid"></div>
+  <div class="vline"></div>
+  <div class="shape shape-b parallax" style="width:clamp(100px,18vw,220px);height:clamp(100px,18vw,220px);top:8%;right:10%"></div>
+  <div class="slide-content">
+    <h2 class="reveal" contenteditable="false" style="font-family:var(--font-display);font-weight:800;font-size:var(--h2-size);color:var(--text-primary);text-align:center;margin-bottom:clamp(0.1rem,0.4vh,0.3rem)">Une approche moderne du développement</h2>
+    <p class="reveal d1" contenteditable="false" style="font-family:var(--font-body);font-weight:400;font-size:clamp(0.75rem,1.1vw,0.9rem);color:var(--text-muted);text-align:center;margin-bottom:clamp(0.4rem,1vh,0.8rem)">No/Low-Code + Agents IA — le meilleur des deux mondes</p>
+    <div class="nc-grid">
+      <div class="nc-card emerg reveal d2" contenteditable="false">
+        <div class="nc-label emerg">⚡ PLATEFORME EMERGENT</div>
+        <ul class="nc-list">
+          <li>Infrastructure et déploiement accélérés</li>
+          <li>Focus sur la logique métier</li>
+          <li>Intégrations natives (DB, Auth, Storage)</li>
+          <li>Time-to-market divisé par 3</li>
+        </ul>
+      </div>
+      <div class="nc-card agents reveal d2" contenteditable="false">
+        <div class="nc-label agents">🤖 AGENTS IA AJOUTÉS</div>
+        <ul class="nc-list">
+          <li>Superposés en surcouche sur la plateforme</li>
+          <li>System prompt pathologie végétale</li>
+          <li>Mémoire de conversation par dossier</li>
+          <li>Analyse multimodale (photo + texte)</li>
+          <li>Mise à jour auto des diagnostics</li>
+        </ul>
+      </div>
+      <div class="nc-card emerg reveal d3" contenteditable="false" style="--i:2">
+        <div class="nc-label emerg">🔄 MIGRATION LOCALE</div>
+        <ul class="nc-list">
+          <li>Face aux restrictions de crédits Emergent, le code a été exporté</li>
+          <li>Adapté pour fonctionner en local avec Llama 70B via Groq</li>
+          <li>Garantissant la continuité sans interruption de service</li>
+          <li>FastAPI · Motor · MongoDB en local</li>
+        </ul>
+      </div>
+      <div class="nc-callout reveal d4" contenteditable="false">
+        <p>💡 Emergent fournit le socle. Les agents IA apportent l'intelligence. Ce n'est pas du no-code basique — c'est une architecture hybride moderne, et sa migration vers une exécution locale.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- ===========================================
+     SLIDE 7 — ARCHITECTURE TECHNIQUE
+     =========================================== -->
+<section class="slide slide-arch" data-index="7" id="slide-7">
+  <div class="glitch-overlay"></div>
+  <div class="dot-grid"></div>
+  <div class="noise"></div>
+  <div class="slide-content">
+    <h2 class="reveal" contenteditable="false" style="font-family:var(--font-display);font-weight:800;font-size:var(--h2-size);color:var(--text-primary);text-align:center;margin-bottom:clamp(0.3rem,1vh,0.6rem)">Architecture — Vue d'ensemble</h2>
+    <div class="arch-layers">
+      <div class="arch-layer front reveal d1" contenteditable="false">
+        <div class="arch-layer-label front">CLIENT</div>
+        <div class="arch-stack">
+          <span class="arch-chip">📱 Mobile · React Native 0.81 · Expo SDK 54</span>
+          <span class="arch-chip">🌐 Web · React 19 · TypeScript 5.9</span>
+          <span class="arch-chip">🗺️ Maps · react-native-maps · Google Maps JS</span>
+        </div>
+        <div style="text-align:center;margin-top:clamp(0.1rem,0.3vh,0.25rem);font-size:clamp(0.45rem,0.65vw,0.55rem);color:rgba(249,249,242,0.2)">Expo Router 6 · Zustand 5</div>
+      </div>
+
+      <div class="arch-arrow reveal d2">
+        <svg class="arch-arrow-svg" viewBox="0 0 24 28"><defs><linearGradient id="a1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#D4FF50" stop-opacity="0.3"/><stop offset="100%" stop-color="#D4FF50" stop-opacity="0.8"/></linearGradient></defs><path d="M12 0 L12 22 M6 16 L12 24 L18 16" fill="none" stroke="url(#a1)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="stroke-dasharray:40;animation:drawArrow 1s ease-in-out forwards"/></svg>
+        <div class="arch-arrow-label">REST API · JSON</div>
+      </div>
+
+      <div class="arch-layer back reveal d3" contenteditable="false">
+        <div class="arch-layer-label back">SERVEUR</div>
+        <div class="arch-stack">
+          <span class="arch-chip">⚙️ FastAPI · Uvicorn · Python 3.11+</span>
+          <span class="arch-chip">🗄️ MongoDB · Motor async driver</span>
+          <span class="arch-chip">🔐 Auth simplifiée · user_id param</span>
+        </div>
+        <div style="text-align:center;margin-top:clamp(0.1rem,0.3vh,0.25rem);font-size:clamp(0.45rem,0.65vw,0.55rem);color:rgba(249,249,242,0.2)">CORS tout-origine · ~23 endpoints REST</div>
+      </div>
+
+      <div class="arch-arrow reveal d4">
+        <svg class="arch-arrow-svg" viewBox="0 0 24 28"><defs><linearGradient id="a2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3AE086" stop-opacity="0.3"/><stop offset="100%" stop-color="#3AE086" stop-opacity="0.8"/></linearGradient></defs><path d="M12 0 L12 22 M6 16 L12 24 L18 16" fill="none" stroke="url(#a2)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="stroke-dasharray:40;animation:drawArrow 1s ease-in-out 0.3s forwards"/></svg>
+        <div class="arch-arrow-label">Groq API · OpenAI-compatible</div>
+      </div>
+
+      <div class="arch-layer ai reveal d5" contenteditable="false">
+        <div class="arch-layer-label ai">IA — INFÉRENCE</div>
+        <div class="arch-stack">
+          <span class="arch-chip">🦙 Llama 3.3-70B-Versatile · Chat</span>
+          <span class="arch-chip">🦙 Llama 4 Scout 17B · Vision</span>
+          <span class="arch-chip">🧪 System Prompt · Pathologie végétale (FR)</span>
+        </div>
+        <div style="text-align:center;margin-top:clamp(0.1rem,0.3vh,0.25rem);display:flex;gap:clamp(0.3rem,0.6vw,0.5rem);justify-content:center;flex-wrap:wrap">
+          <span class="badge" style="background:rgba(212,255,80,0.08);color:var(--accent);border:1px solid rgba(212,255,80,0.15);font-size:clamp(0.4rem,0.55vw,0.5rem)">↳ Migré d'Emergent (GPT-5.2)</span>
+          <span class="badge" style="background:rgba(58,224,134,0.08);color:var(--success);border:1px solid rgba(58,224,134,0.15);font-size:clamp(0.4rem,0.55vw,0.5rem)">Diagnostic + Chat en un modèle</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+@keyframes drawArrow{from{stroke-dashoffset:40}to{stroke-dashoffset:0}}
+</style>
+
+<!-- ===========================================
+     SLIDE 8 — DÉFIS & SOLUTIONS
+     =========================================== -->
+<section class="slide slide-challenges" data-index="8" id="slide-8">
+  <div class="dot-grid"></div>
+  <div class="shape shape-a parallax" style="width:clamp(140px,25vw,300px);height:clamp(140px,25vw,300px);bottom:-8%;left:50%;transform:translateX(-50%)"></div>
+  <div class="slide-content">
+    <h2 class="reveal" contenteditable="false" style="font-family:var(--font-display);font-weight:800;font-size:var(--h2-size);color:var(--text-primary);text-align:center;margin-bottom:clamp(0.3rem,1vh,0.6rem)">Défis techniques surmontés</h2>
+    <p class="reveal d1" contenteditable="false" style="font-family:var(--font-body);font-weight:400;font-size:clamp(0.65rem,1vw,0.8rem);color:var(--text-muted);text-align:center;margin-bottom:clamp(0.4rem,1vh,0.8rem)">Cross-platform, latence IA, et crise de crédits cloud</p>
+    <div class="ch-grid">
+      <div class="ch-card warn reveal d1" contenteditable="false">
+        <div class="ch-header warn">⚠️ DÉFI 01</div>
+        <div class="ch-title">Cross-platform : 1 code, 2 plateformes</div>
+        <div class="ch-sep"></div>
+        <div class="ch-solution-label">SOLUTION</div>
+        <div class="ch-solution-text">Expo + détection Platform.OS pour les cas limites. AsyncStorage web vs SecureStore natif. Google Maps JS (web) vs react-native-maps (natif).</div>
+        <div class="ch-result">✅ iOS · Android · Web depuis 1 seul codebase</div>
+      </div>
+      <div class="ch-card err reveal d2" contenteditable="false">
+        <div class="ch-header err">⚠️ DÉFI 02</div>
+        <div class="ch-title">Intégrer l'IA sans casser l'UX</div>
+        <div class="ch-sep"></div>
+        <div class="ch-solution-label">SOLUTION</div>
+        <div class="ch-solution-text">Streaming des réponses IA pour éviter les temps de chargement bloquants. Parsing automatique des réponses structurées pour mise à jour du dossier.</div>
+        <div class="ch-result">✅ Expérience fluide — diagnostic en < 5 secondes</div>
+      </div>
+      <div class="ch-card err reveal d3" contenteditable="false">
+        <div class="ch-header err">⚠️ DÉFI 03</div>
+        <div class="ch-title">Crédits Emergent Épuisés</div>
+        <div class="ch-sep"></div>
+        <div class="ch-solution-label">SOLUTION</div>
+        <div class="ch-solution-text">La plateforme no-code Emergent a imposé des limites strictes de crédits, rendant la facturation intenable et forçant l'export du code pour une exécution locale.</div>
+        <div class="ch-result">✅ Migration réussie vers Llama 70B via Groq</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+<!-- ===========================================
+     SLIDE 9 — MIGRATION EMERGENT → LOCAL
+     =========================================== -->
+<section class="slide slide-dark" data-index="9" id="slide-9">
+  <div class="noise"></div>
+  <div class="dot-grid"></div>
+  <div class="shape shape-a parallax" style="width:clamp(120px,22vw,280px);height:clamp(120px,22vw,280px);top:5%;left:5%"></div>
+  <div class="shape shape-b parallax" style="width:clamp(80px,14vw,180px);height:clamp(80px,14vw,180px);bottom:10%;right:10%"></div>
+  <div class="slide-content">
+    <div class="tag reveal" contenteditable="false" style="color:var(--accent);border:1px solid rgba(212,255,80,0.2);background:rgba(212,255,80,0.06);margin-bottom:clamp(0.3rem,0.6vh,0.5rem);text-align:center;display:inline-block;align-self:center">Pivot Stratégique</div>
+    <h2 class="reveal d1" contenteditable="false" style="font-family:var(--font-display);font-weight:800;font-size:var(--h2-size);color:var(--text-primary);text-align:center;margin-bottom:clamp(0.2rem,0.5vh,0.4rem)">Migration <span class="gradient-text">Emergent → Local</span></h2>
+    <p class="reveal d2" contenteditable="false" style="font-family:var(--font-body);font-weight:500;font-size:clamp(0.75rem,1.2vw,0.95rem);color:var(--text-secondary);text-align:center;margin-bottom:clamp(0.4rem,1vh,0.8rem)">Du no-code à la maîtrise totale</p>
+    <div class="migration-flow">
+      <div class="mig-step reveal d3">
+        <div class="mig-num">1</div>
+        <h4>Export du Code</h4>
+        <p>Récupération de l'intégralité du backend depuis Emergent</p>
+      </div>
+      <div class="mig-arrow reveal d4">→</div>
+      <div class="mig-step reveal d4">
+        <div class="mig-num">2</div>
+        <h4>Adaptation Locale</h4>
+        <p>FastAPI, Motor, MongoDB en local — plus de dépendance cloud</p>
+      </div>
+      <div class="mig-arrow reveal d5">→</div>
+      <div class="mig-step reveal d5">
+        <div class="mig-num">3</div>
+        <h4>Autonomie Totale</h4>
+        <p>Contrôle complet, coûts maîtrisés, roadmap libre</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 10 — LLAMA 70B VIA GROQ
+     =========================================== -->
+<section class="slide" data-index="10" id="slide-10">
+  <div class="noise"></div>
+  <div class="dot-grid"></div>
+  <div class="glitch-overlay"></div>
+  <div class="shape shape-c parallax" style="width:clamp(100px,18vw,220px);height:clamp(100px,18vw,220px);top:10%;right:8%"></div>
+  <div class="shape shape-b parallax" style="width:clamp(60px,10vw,140px);height:clamp(60px,10vw,140px);bottom:12%;left:6%"></div>
+  <div class="slide-content">
+    <div class="tag reveal" contenteditable="false" style="color:var(--accent);border:1px solid rgba(212,255,80,0.2);background:rgba(212,255,80,0.06);margin-bottom:clamp(0.3rem,0.6vh,0.5rem);text-align:center;display:inline-block;align-self:center">Inférence IA</div>
+    <h2 class="reveal d1" contenteditable="false" style="font-family:var(--font-display);font-weight:800;font-size:var(--h2-size);color:var(--text-primary);text-align:center;margin-bottom:clamp(0.2rem,0.5vh,0.4rem)">Llama 70B <span class="gradient-text">via Groq</span></h2>
+    <p class="reveal d2" contenteditable="false" style="font-family:var(--font-body);font-weight:500;font-size:clamp(0.75rem,1.2vw,0.95rem);color:var(--text-secondary);text-align:center;margin-bottom:clamp(0.4rem,1vh,0.8rem))">Du cloud Emergent (GPT-5.2) vers un modèle open source performant et gratuit</p>
+    <div class="ds-grid">
+      <div class="ds-card reveal d3">
+        <h4>☁️ Avant — GPT-5.2 (Emergent)</h4>
+        <p>Modèle propriétaire hébergé par Emergent — crédits limités, coût élevé, dépendance cloud</p>
+      </div>
+      <div class="ds-arrow reveal d4">→</div>
+      <div class="ds-card highlight reveal d4">
+        <h4>🦙 Après — Llama 70B (Groq)</h4>
+        <p>Modèle open source via API Groq — zéro coût, pas de limite de crédits, remplace GPT-5.2 pour tous les usages</p>
+      </div>
+    </div>
+    <div class="ds-benefits reveal d5">
+      <span>Zéro coût d'API</span>
+      <span>Indépendance totale</span>
+      <span>Backend local · IA via Groq</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 11 — IMPACT & MÉTRIQUES
+     =========================================== -->
+<section class="slide slide-impact" data-index="11" id="slide-11">
+  <div class="noise"></div>
+  <div class="shape shape-b parallax" style="width:clamp(160px,30vw,350px);height:clamp(160px,30vw,350px);top:-12%;left:50%;transform:translateX(-50%)"></div>
+  <div class="slide-content">
+    <h2 class="reveal" contenteditable="false" style="font-family:var(--font-display);font-weight:800;font-size:var(--h2-size);color:var(--text-primary);margin-bottom:clamp(0.3rem,1vh,0.6rem)">Ce que ce projet démontre</h2>
+    <div class="met-grid">
+      <div class="met-card reveal d1" contenteditable="false">
+        <div class="met-number lime" data-target="2" data-suffix="">2</div>
+        <div class="met-label">Plateformes</div>
+        <div class="met-sublabel">Mobile · Web</div>
+      </div>
+      <div class="met-card reveal d2" contenteditable="false">
+        <div class="met-number info" data-target="15" data-suffix="+">15+</div>
+        <div class="met-label">Endpoints API</div>
+        <div class="met-sublabel">REST documentés</div>
+      </div>
+      <div class="met-card reveal d2" contenteditable="false">
+        <div class="met-number success" data-target="1" data-suffix="">1</div>
+        <div class="met-label">Agent IA Expert</div>
+        <div class="met-sublabel">Pathologie végétale · Llama 70B</div>
+      </div>
+      <div class="met-card reveal d3" contenteditable="false">
+        <div class="met-number warn" data-target="5" data-suffix="">5</div>
+        <div class="met-label">Modules complets</div>
+        <div class="met-sublabel">Diagnostic · Dashboard · Alertes...</div>
+      </div>
+      <div class="met-card reveal d4" contenteditable="false">
+        <div class="met-number lime" data-target="100" data-suffix="%">100%</div>
+        <div class="met-label">Backend local</div>
+        <div class="met-sublabel">IA via Groq (cloud gratuit)</div>
+      </div>
+      <div class="met-card reveal d5" contenteditable="false">
+        <div class="met-number cream">∞</div>
+        <div class="met-label">Scalabilité</div>
+        <div class="met-sublabel">Architecture cloud-ready</div>
+      </div>
+    </div>
+    <div class="divider reveal d5" style="margin:clamp(0.3rem,0.8vh,0.6rem) 0"></div>
+    <div class="impact-quote reveal d6" contenteditable="false">Livré en autonomie complète — Mobile, Web, IA, Backend, Design System</div>
+  </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 12 — MON COMPTE & AUTH
+     =========================================== -->
+<section class="slide" data-index="12" id="slide-12" style="background:var(--gradient-hero)">
+  <div class="noise"></div>
+  <div class="shape shape-c parallax" style="width:clamp(90px,16vw,200px);height:clamp(90px,16vw,200px);top:-5%;left:10%"></div>
+  <div class="shape shape-a parallax" style="width:clamp(60px,10vw,140px);height:clamp(60px,10vw,140px);bottom:10%;right:5%"></div>
+  <div class="glow-spot" style="top:50%;left:30%"></div>
+  <div class="focus-split">
+    <div class="focus-left">
+      <div class="focus-mockup reveal d1 phone-mockup" style="padding:0;background:#0A1B0E;position:relative;overflow:hidden">
+        <img src="assets/profile_page.jpg" alt="Profil utilisateur" data-src="assets/profile_page.jpg" class="screenshot-click" style="width:100%;height:auto;display:block;border-radius:clamp(6px,0.8vw,10px)">
+        <div style="position:absolute;inset:0;border-radius:clamp(6px,0.8vw,10px);box-shadow:inset 0 0 0 1px rgba(249,249,242,0.06);pointer-events:none"></div>
+      </div>
+    </div>
+    <div class="focus-right">
+      <div class="focus-label info reveal d1" contenteditable="false">GESTION DE COMPTE</div>
+      <h2 class="focus-title reveal d2" contenteditable="false">Authentification &amp; profil</h2>
+      <ul class="focus-items">
+        <li class="reveal d2" contenteditable="false">Inscription &amp; connexion sécurisées (email + mot de passe)</li>
+        <li class="reveal d3" contenteditable="false">Profil modifiable : photo, nom, email, mot de passe</li>
+        <li class="reveal d3" contenteditable="false">Rôle affiché (Admin / Utilisateur) avec badge distinctif</li>
+        <li class="reveal d4" contenteditable="false">Déconnexion et protection des routes privées</li>
+        <li class="reveal d4" contenteditable="false">Session en mémoire (Zustand) — pas de token persistant</li>
+      </ul>
+      <div class="focus-badges reveal d5" contenteditable="false">
+        <span class="badge" style="background:rgba(77,170,255,0.08);color:var(--info);border:1px solid rgba(77,170,255,0.2)">Zustand</span>
+        <span class="badge" style="background:rgba(212,255,80,0.08);color:var(--accent);border:1px solid rgba(212,255,80,0.2)">Auth simplifiée</span>
+      </div>
+    </div>
+  </div>
+  <div class="slide-vine">
+    <svg viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
+      <path d="M90,55 C70,40 50,50 30,35 C20,28 10,30 5,25" fill="none" stroke="#D4FF50" stroke-width="0.8" opacity="0.25" stroke-dasharray="120" stroke-dashoffset="120"/>
+      <circle cx="85" cy="50" r="3" fill="none" stroke="#D4FF50" stroke-width="0.5" opacity="0.15"/>
+      <circle cx="45" cy="42" r="2.5" fill="none" stroke="#3AE086" stroke-width="0.5" opacity="0.15"/>
+    </svg>
+  </div>
+  <span class="slide-dataparticle dp1">user { role: "admin" }</span>
+  <span class="slide-dataparticle dp2">POST /auth/login</span>
+  <div class="slide-organic-glow"></div>
+</section>
+
+
+
+<!-- ===========================================
+     SLIDE 13 — CAPTEURS IoT SIMULÉS
+     =========================================== -->
+<section class="slide" data-index="13" id="slide-13">
+  <div class="noise"></div>
+  <div class="glitch-overlay"></div>
+  <div class="dot-grid"></div>
+  <div class="vline"></div>
+  <div class="shape shape-b parallax" style="width:clamp(80px,14vw,180px);height:clamp(80px,14vw,180px);top:12%;right:5%"></div>
+  <div class="shape shape-a parallax" style="width:clamp(50px,8vw,120px);height:clamp(50px,8vw,120px);bottom:8%;left:10%"></div>
+  <div class="glow-spot" style="top:40%;left:50%"></div>
+  <div class="focus-split" style="align-items:center">
+    <div class="focus-left">
+      <div class="reveal d1 phone-mockup" style="background:#0A1B0E;border-radius:clamp(8px,1vw,14px);border:1px solid rgba(212,255,80,0.12);overflow:hidden;box-shadow:0 0 30px rgba(212,255,80,0.08)">
+        <img src="assets/capteur_IoT.jpg" alt="Capteurs IoT AgriScan AI" data-src="assets/capteur_IoT.jpg" class="screenshot-click" style="width:100%;height:auto;display:block">
+      </div>
+    </div>
+    <div class="focus-right">
+      <div class="focus-label lime reveal d1">INFRASTRUCTURE IoT</div>
+      <h2 class="focus-title reveal d2">Capteurs au service de l'agriculture de précision</h2>
+      <p class="reveal d2" style="font-family:var(--font-body);font-weight:400;font-size:clamp(0.5rem,0.75vw,0.65rem);color:var(--text-muted);margin-bottom:clamp(0.3rem,0.6vh,0.5rem)">Données simulées en frontend — architecture réelle conçue pour le terrain</p>
+      <ul class="focus-items">
+        <li class="reveal d3">🌡️ Température · 💧 Humidité sol · ☀️ Lumière PAR</li>
+        <li class="reveal d3">🌬️ Vent · 🌱 pH Sol · 🔋 Batterie</li>
+        <li class="reveal d4">📡 Connectivité LoRaWAN — signal 4/5</li>
+        <li class="reveal d4">🔄 Transmission toutes les 3 minutes</li>
+        <li class="reveal d5">⚙️ Architecture prête pour déploiement physique</li>
+      </ul>
+      <div class="focus-result reveal d5" style="margin-top:clamp(0.4rem,0.8vh,0.6rem)">
+        <div class="focus-result-text">6 capteurs · LoRaWAN · 868 MHz</div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-vine">
+    <svg viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
+      <path d="M90,5 C70,15 50,10 30,22 C20,28 10,25 5,32" fill="none" stroke="#3AE086" stroke-width="0.8" opacity="0.2" stroke-dasharray="120" stroke-dashoffset="120"/>
+      <circle cx="85" cy="10" r="3" fill="none" stroke="#3AE086" stroke-width="0.5" opacity="0.12"/>
+      <circle cx="25" cy="18" r="2" fill="none" stroke="#3AE086" stroke-width="0.5" opacity="0.12"/>
+    </svg>
+  </div>
+  <span class="slide-dataparticle dp1">sensor_id: tmp_01</span>
+  <span class="slide-dataparticle dp2">lorawan: 868 MHz</span>
+  <span class="slide-dataparticle dp3">payload: 12 bytes</span>
+  <div class="slide-organic-glow"></div>
+</section>
+
+<!-- ===========================================
+     SLIDE 14 — ADMINISTRATION BACK-OFFICE
+     =========================================== -->
+<section class="slide" data-index="14" id="slide-14" style="background:var(--gradient-hero)">
+  <div class="noise"></div>
+  <div class="shape shape-c parallax" style="width:clamp(100px,18vw,220px);height:clamp(100px,18vw,220px);top:-4%;left:8%"></div>
+  <div class="shape shape-b parallax" style="width:clamp(60px,10vw,140px);height:clamp(60px,10vw,140px);bottom:12%;right:8%"></div>
+  <div class="glow-spot" style="top:30%;right:15%;width:clamp(100px,20vw,280px);height:clamp(100px,20vw,280px);background:radial-gradient(circle,rgba(77,170,255,0.04),transparent 70%)"></div>
+  <div class="focus-split">
+    <div class="focus-left">
+      <div class="focus-mockup reveal d1 phone-mockup" style="padding:0;background:#0A1B0E;position:relative;overflow:hidden">
+        <img src="assets/admin_page.jpg" alt="Administration AgriScan" data-src="assets/admin_page.jpg" class="screenshot-click" style="width:100%;height:auto;display:block;border-radius:clamp(6px,0.8vw,10px)">
+        <div style="position:absolute;inset:0;border-radius:clamp(6px,0.8vw,10px);box-shadow:inset 0 0 0 1px rgba(249,249,242,0.06);pointer-events:none"></div>
+      </div>
+    </div>
+    <div class="focus-right">
+      <div class="focus-label info reveal d1" contenteditable="false">BACK-OFFICE</div>
+      <h2 class="focus-title reveal d2" contenteditable="false">Administration &amp; pilotage</h2>
+      <div style="display:flex;flex-direction:column;gap:clamp(0.3rem,0.6vh,0.6rem)">
+        <div class="tilt-card reveal d4" style="padding:clamp(0.4rem,0.8vw,0.7rem)">
+          <div class="focus-label warn" style="margin-bottom:clamp(0.1rem,0.2vh,0.2rem);font-size:clamp(0.45rem,0.65vw,0.55rem)">GESTION UTILISATEURS</div>
+          <div style="display:flex;flex-wrap:wrap;gap:clamp(2px,0.2vw,4px)">
+            <span style="padding:clamp(1px,0.15vw,3px) clamp(4px,0.5vw,7px);background:rgba(212,255,80,0.06);border:1px solid rgba(212,255,80,0.1);border-radius:2px;font-family:var(--font-mono);font-weight:700;font-size:clamp(0.35rem,0.5vw,0.45rem);color:var(--accent)">Jean D. · Admin</span>
+            <span style="padding:clamp(1px,0.15vw,3px) clamp(4px,0.5vw,7px);background:rgba(249,249,242,0.03);border:1px solid rgba(249,249,242,0.06);border-radius:2px;font-family:var(--font-mono);font-weight:700;font-size:clamp(0.35rem,0.5vw,0.45rem);color:var(--text-muted)">Marie M.</span>
+            <span style="padding:clamp(1px,0.15vw,3px) clamp(4px,0.5vw,7px);background:rgba(249,249,242,0.03);border:1px solid rgba(249,249,242,0.06);border-radius:2px;font-family:var(--font-mono);font-weight:700;font-size:clamp(0.35rem,0.5vw,0.45rem);color:var(--text-muted)">Pierre D.</span>
+            <span style="padding:clamp(1px,0.15vw,3px) clamp(4px,0.5vw,7px);background:rgba(212,255,80,0.06);border:1px solid rgba(212,255,80,0.1);border-radius:2px;font-family:var(--font-mono);font-weight:700;font-size:clamp(0.35rem,0.5vw,0.45rem);color:var(--accent)">Sophie L. · Admin</span>
+            <span style="padding:clamp(1px,0.15vw,3px) clamp(4px,0.5vw,7px);background:rgba(249,249,242,0.03);border:1px solid rgba(249,249,242,0.06);border-radius:2px;font-family:var(--font-mono);font-weight:700;font-size:clamp(0.35rem,0.5vw,0.45rem);color:var(--text-muted)">+ 20 autres...</span>
+          </div>
+        </div>
+        <div class="tilt-card reveal d5" style="padding:clamp(0.4rem,0.8vw,0.7rem);display:flex;align-items:center;justify-content:space-between">
+          <div>
+            <div class="focus-label success" style="margin-bottom:clamp(0.05rem,0.1vh,0.15rem);font-size:clamp(0.45rem,0.65vw,0.55rem)">MODÈLE IA</div>
+            <div style="font-family:var(--font-body);font-weight:400;font-size:clamp(0.4rem,0.55vw,0.5rem);color:var(--text-muted)">Llama 70B · Groq API · Pas de limite</div>
+          </div>
+          <span style="font-family:var(--font-mono);font-weight:700;font-size:clamp(0.4rem,0.5vw,0.45rem);padding:clamp(2px,0.2vw,4px) clamp(6px,0.6vw,8px);background:rgba(58,224,134,0.08);border:1px solid rgba(58,224,134,0.15);border-radius:3px;color:var(--success)">Actif</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-vine">
+    <svg viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
+      <path d="M90,55 C70,40 50,50 30,35 C20,28 10,30 5,25" fill="none" stroke="#4DAAFF" stroke-width="0.8" opacity="0.25" stroke-dasharray="120" stroke-dashoffset="120"/>
+      <circle cx="85" cy="50" r="3" fill="none" stroke="#4DAAFF" stroke-width="0.5" opacity="0.15"/>
+      <circle cx="45" cy="42" r="2.5" fill="none" stroke="#4DAAFF" stroke-width="0.5" opacity="0.15"/>
+    </svg>
+  </div>
+  <span class="slide-dataparticle dp1">admin@agriscan.ai</span>
+  <span class="slide-dataparticle dp2">GET /api/stats</span>
+  <div class="slide-organic-glow"></div>
+</section>
+
+<!-- ===========================================
+     SLIDE 15 — PERSPECTIVES & ÉVOLUTION
+     =========================================== -->
+<section class="slide" data-index="15" id="slide-15" style="background:var(--gradient-warm)">
+  <div class="noise"></div>
+  <div class="dot-grid"></div>
+  <div class="shape shape-a parallax" style="width:clamp(100px,18vw,220px);height:clamp(100px,18vw,220px);top:8%;right:5%"></div>
+  <div class="shape shape-c parallax" style="width:clamp(80px,14vw,180px);height:clamp(80px,14vw,180px);bottom:8%;left:5%"></div>
+  <div class="slide-content">
+    <div class="tag reveal" contenteditable="false" style="color:var(--accent);border:1px solid rgba(212,255,80,0.2);background:rgba(212,255,80,0.06);margin-bottom:clamp(0.3rem,0.6vh,0.5rem);text-align:center;display:inline-block;align-self:center">Roadmap</div>
+    <h2 class="reveal d1" contenteditable="false" style="font-family:var(--font-display);font-weight:800;font-size:var(--h2-size);color:var(--text-primary);text-align:center;margin-bottom:clamp(0.2rem,0.5vh,0.4rem)">Perspectives <span class="gradient-text">&amp; Évolution</span></h2>
+    <p class="reveal d2" contenteditable="false" style="font-family:var(--font-body);font-weight:500;font-size:clamp(0.75rem,1.2vw,0.95rem);color:var(--text-secondary);text-align:center;margin-bottom:clamp(0.6rem,1.5vh,1.2rem)">Prochaines étapes pour AgriScan AI</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:clamp(0.5rem,1.2vw,1rem);max-width:min(90vw,900px);margin:0 auto;width:100%">
+      <div class="tilt-card reveal d3" contenteditable="false" style="padding:clamp(0.6rem,1.3vw,1rem);text-align:left;border:1px solid rgba(212,255,80,0.08)">
+        <div style="font-size:clamp(1rem,2vw,1.5rem);margin-bottom:clamp(0.3rem,0.5vh,0.5rem)">📡</div>
+        <div style="font-family:var(--font-display);font-weight:600;font-size:clamp(0.85rem,1.4vw,1.1rem);color:var(--accent);margin-bottom:clamp(0.2rem,0.3vh,0.3rem)">Capteurs Réels</div>
+        <div style="font-family:var(--font-body);font-weight:400;font-size:clamp(0.55rem,0.85vw,0.7rem);color:var(--text-muted);line-height:1.5">Déploiement physique de capteurs LoRaWAN sur parcelle test — température, humidité, pH sol en conditions réelles</div>
+      </div>
+      <div class="tilt-card reveal d3" contenteditable="false" style="padding:clamp(0.6rem,1.3vw,1rem);text-align:left;border:1px solid rgba(77,170,255,0.08)">
+        <div style="font-size:clamp(1rem,2vw,1.5rem);margin-bottom:clamp(0.3rem,0.5vh,0.5rem)">📴</div>
+        <div style="font-family:var(--font-display);font-weight:600;font-size:clamp(0.85rem,1.4vw,1.1rem);color:var(--info);margin-bottom:clamp(0.2rem,0.3vh,0.3rem)">Mode Hors-Ligne</div>
+        <div style="font-family:var(--font-body);font-weight:400;font-size:clamp(0.55rem,0.85vw,0.7rem);color:var(--text-muted);line-height:1.5">Cache local des diagnostics et alertes — synchronisation automatique au retour du réseau</div>
+      </div>
+      <div class="tilt-card reveal d4" contenteditable="false" style="padding:clamp(0.6rem,1.3vw,1rem);text-align:left;border:1px solid rgba(255,180,67,0.08)">
+        <div style="font-size:clamp(1rem,2vw,1.5rem);margin-bottom:clamp(0.3rem,0.5vh,0.5rem)">🔔</div>
+        <div style="font-family:var(--font-display);font-weight:600;font-size:clamp(0.85rem,1.4vw,1.1rem);color:var(--warning);margin-bottom:clamp(0.2rem,0.3vh,0.3rem)">Notifications Push</div>
+        <div style="font-family:var(--font-body);font-weight:400;font-size:clamp(0.55rem,0.85vw,0.7rem);color:var(--text-muted);line-height:1.5">Alertes temps réel via expo-notifications — prévenir l'agriculteur dès qu'un risque est détecté</div>
+      </div>
+      <div class="tilt-card reveal d4" contenteditable="false" style="padding:clamp(0.6rem,1.3vw,1rem);text-align:left;border:1px solid rgba(58,224,134,0.08)">
+        <div style="font-size:clamp(1rem,2vw,1.5rem);margin-bottom:clamp(0.3rem,0.5vh,0.5rem)">🧪</div>
+        <div style="font-family:var(--font-display);font-weight:600;font-size:clamp(0.85rem,1.4vw,1.1rem);color:var(--success);margin-bottom:clamp(0.2rem,0.3vh,0.3rem)">Tests Terrain</div>
+        <div style="font-family:var(--font-body);font-weight:400;font-size:clamp(0.55rem,0.85vw,0.7rem);color:var(--text-muted);line-height:1.5">Validation agronomique en partenariat avec la Chambre d'Agriculture — précision et pertinence des diagnostics</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 16 — CONCLUSION / REMERCIEMENTS
+     =========================================== -->
+<section class="slide" data-index="16" id="slide-16" style="background:var(--gradient-hero);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center">
+  <div class="noise"></div>
+  <div class="slide-organic-glow" style="position:absolute;bottom:0;left:0;right:0;height:clamp(120px,30vh,300px);background:linear-gradient(to top,rgba(212,255,80,0.04),transparent);z-index:0;pointer-events:none"></div>
+  <div style="position:relative;z-index:3;text-align:center;max-width:min(90vw,1000px);padding:var(--slide-padding);width:100%">
+    <!-- Logo + punchline -->
+    <div class="reveal d1" style="margin-bottom:clamp(0.6rem,1.5vh,1rem)">
+      <h1 contenteditable="false" style="font-family:var(--font-display);font-weight:800;font-size:clamp(1.8rem,5.5vw,3.5rem);color:var(--text-primary);line-height:1.1">
+        AgriScan<span style="color:var(--accent)"> AI</span>
+      </h1>
+    </div>
+    <div class="reveal d2" contenteditable="false" style="font-family:var(--font-display);font-weight:600;font-size:clamp(1rem,2.8vw,1.8rem);color:var(--text-secondary);margin-bottom:clamp(1rem,3vh,2rem)">
+      Du diagnostic agricole à l'application déployée en production
+    </div>
+
+    <!-- 3 cards -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(0.5rem,1.2vw,1rem);max-width:min(90vw,800px);margin:0 auto clamp(1rem,2.5vh,1.8rem)">
+      <div class="tilt-card reveal d3" contenteditable="false" style="text-align:left;padding:clamp(0.5rem,1vw,0.8rem);cursor:default">
+        <div style="font-family:var(--font-mono);font-weight:700;font-size:clamp(0.45rem,0.65vw,0.55rem);color:var(--accent);margin-bottom:clamp(0.2rem,0.4vh,0.3rem)">01 · NO/LOW-CODE</div>
+        <div style="font-family:var(--font-body);font-weight:600;font-size:clamp(0.7rem,1.1vw,0.9rem);color:var(--text-primary);margin-bottom:clamp(0.15rem,0.3vh,0.25rem)">Plateforme Emergent</div>
+        <div style="font-family:var(--font-body);font-weight:400;font-size:clamp(0.5rem,0.75vw,0.6rem);color:var(--text-muted);line-height:1.45">Prototypage no-code accéléré, puis migration vers architecture locale (backend FastAPI + IA via Groq)</div>
+      </div>
+      <div class="tilt-card reveal d4" contenteditable="false" style="text-align:left;padding:clamp(0.5rem,1vw,0.8rem);cursor:default">
+        <div style="font-family:var(--font-mono);font-weight:700;font-size:clamp(0.45rem,0.65vw,0.55rem);color:var(--success);margin-bottom:clamp(0.2rem,0.4vh,0.3rem)">02 · INTELLIGENCE ARTIFICIELLE</div>
+        <div style="font-family:var(--font-body);font-weight:600;font-size:clamp(0.7rem,1.1vw,0.9rem);color:var(--text-primary);margin-bottom:clamp(0.15rem,0.3vh,0.25rem)">1 agent IA spécialisé</div>
+        <div style="font-family:var(--font-body);font-weight:400;font-size:clamp(0.5rem,0.75vw,0.6rem);color:var(--text-muted);line-height:1.45">Diagnostic + chat conversationnel — model Llama 70B via Groq</div>
+      </div>
+      <div class="tilt-card reveal d5" contenteditable="false" style="text-align:left;padding:clamp(0.5rem,1vw,0.8rem);cursor:default">
+        <div style="font-family:var(--font-mono);font-weight:700;font-size:clamp(0.45rem,0.65vw,0.55rem);color:var(--info);margin-bottom:clamp(0.2rem,0.4vh,0.3rem)">03 · VISION PRODUIT</div>
+        <div style="font-family:var(--font-body);font-weight:600;font-size:clamp(0.7rem,1.1vw,0.9rem);color:var(--text-primary);margin-bottom:clamp(0.15rem,0.3vh,0.25rem)">Mobile + Web en production</div>
+        <div style="font-family:var(--font-body);font-weight:400;font-size:clamp(0.5rem,0.75vw,0.6rem);color:var(--text-muted);line-height:1.45">Livré en 8 semaines — autonomie complète du design au déploiement</div>
+      </div>
+    </div>
+
+    <!-- Merci + CTA -->
+    <div class="reveal d6" contenteditable="false" style="font-family:var(--font-display);font-weight:800;font-size:clamp(1.2rem,3vw,2rem);color:var(--accent);margin-bottom:clamp(0.6rem,1.5vh,1rem)">Merci — Des questions ?</div>
+    <div class="reveal d7" contenteditable="false" style="font-family:var(--font-body);font-weight:400;font-size:clamp(0.5rem,0.75vw,0.6rem);color:var(--text-muted)">Démo disponible localement sur demande</div>
+    <div class="reveal d8" contenteditable="false" style="margin-top:clamp(0.6rem,1.5vh,1.2rem);font-family:var(--font-body);font-weight:400;font-size:clamp(0.45rem,0.65vw,0.55rem);color:var(--text-muted)">Bachelor 2025/2026 · Chambre d'Agriculture · Emergent Agent</div>
+  </div>
+</section>
+
+<div class="lightbox" id="screenshotLightbox">
+  <button class="lightbox-close" aria-label="Fermer">✕</button>
+  <button class="lightbox-btn lightbox-prev" aria-label="Précédent">‹</button>
+  <img class="lightbox-img" src="" alt="">
+  <button class="lightbox-btn lightbox-next" aria-label="Suivant">›</button>
+  <div class="lightbox-counter"></div>
+</div>
+
+<script>
+/* ===========================================
+   CINEMA TRANSITION CONTROLLER
+   =========================================== */
+class CinemaController {
+  constructor() {
+    this.slides = document.querySelectorAll('.slide');
+    this.current = 0;
+    this.total = this.slides.length;
+    this.transitioning = false;
+    this.transitionQueue = null;
+    this.autoTimer = null;
+    this.autoInterval = 6000;
+    this.autoEnabled = false;
+
+    this.navDotsContainer = document.getElementById('navDots');
+    this.progressBar = document.getElementById('progressBar');
+    this.slideCounter = document.getElementById('slideCounter');
+    this.cineFlare = document.getElementById('cineFlare');
+
+    document.getElementById('cineVignette').classList.add('pulse');
+    this.buildNavDots();
+    this.setupKeyboardNav();
+    this.setupTouchNav();
+    this.setupWheelNav();
+    this.setupNavDotClicks();
+    this.activateSlide(0, 'cineFadeIn');
+    this.setupGrain();
+    this.setupDust();
+    this.updateProgress();
+    this.setupThemeToggle();
+    this.setupAutoToggle();
+    this.setupSlideNavButtons();
+    this.easeOutExpo = '';
+  }
+
+  /* Film grain canvas — rAF-throttled */
+  setupGrain() {
+    const g = document.getElementById('cineGrain');
+    if (!g) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { g.style.display = 'none'; return; }
+    const scale = 0.5;
+    g.width = Math.round(window.innerWidth * scale);
+    g.height = Math.round(window.innerHeight * scale);
+    const ctx = g.getContext('2d');
+    let imageData;
+    const fps = 12;
+    const interval = 1000 / fps;
+    let last = 0;
+    let rafId = null;
+    function initGrain() {
+      imageData = ctx.createImageData(g.width, g.height);
+    }
+    function noise(now) {
+      rafId = requestAnimationFrame(noise);
+      if (now - last < interval) return;
+      last = now;
+      if (!imageData || imageData.width !== g.width) initGrain();
+      for (let i = 0; i < imageData.data.length; i += 4) {
+        const v = Math.random() * 25;
+        imageData.data[i] = v; imageData.data[i + 1] = v; imageData.data[i + 2] = v;
+        imageData.data[i + 3] = 30;
+      }
+      ctx.putImageData(imageData, 0, 0);
+    }
+    window.addEventListener('resize', () => { g.width = Math.round(window.innerWidth * scale); g.height = Math.round(window.innerHeight * scale); });
+    rafId = requestAnimationFrame(noise);
+  }
+
+  /* Dust/smoke atmosphere particles */
+  setupDust() {
+    const g = document.getElementById('cineDust');
+    if (!g) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { g.style.display = 'none'; return; }
+    g.width = window.innerWidth;
+    g.height = window.innerHeight;
+    const ctx = g.getContext('2d');
+    const dust = [];
+    const DUST_COUNT = 25;
+    for (let i = 0; i < DUST_COUNT; i++) {
+      dust.push({
+        x: Math.random() * g.width, y: Math.random() * g.height,
+        r: Math.random() * 60 + 20, vx: (Math.random() - 0.5) * 0.3,
+        vy: -(Math.random() * 0.4 + 0.1), opacity: Math.random() * 0.12 + 0.03
+      });
+    }
+    window.addEventListener('resize', () => { g.width = window.innerWidth; g.height = window.innerHeight; });
+    const drawDust = () => {
+      ctx.clearRect(0, 0, g.width, g.height);
+      for (const d of dust) {
+        d.x += d.vx; d.y += d.vy;
+        if (d.y < -d.r * 2) { d.y = g.height + d.r; d.x = Math.random() * g.width; }
+        if (d.x < -d.r) d.x = g.width + d.r;
+        if (d.x > g.width + d.r) d.x = -d.r;
+        const grd = ctx.createRadialGradient(d.x, d.y, 0, d.x, d.y, d.r);
+        grd.addColorStop(0, 'rgba(212,255,80,' + d.opacity + ')');
+        grd.addColorStop(0.5, 'rgba(58,224,134,' + (d.opacity * 0.3) + ')');
+        grd.addColorStop(1, 'rgba(212,255,80,0)');
+        ctx.fillStyle = grd;
+        ctx.fillRect(d.x - d.r, d.y - d.r, d.r * 2, d.r * 2);
+      }
+      requestAnimationFrame(drawDust);
+    };
+    drawDust();
+  }
+
+  /* Lens flare trigger */
+  triggerFlare() {
+    if (this.cineFlare) {
+      this.cineFlare.classList.add('active');
+      setTimeout(() => this.cineFlare.classList.remove('active'), 1500);
+    }
+    const ana = document.getElementById('cineAnaflare');
+    if (ana) {
+      ana.classList.add('active');
+      setTimeout(() => ana.classList.remove('active'), 1800);
+    }
+  }
+
+  /* Trigger reveal animations + metrics + typewriter */
+  triggerReveals(slide) {
+    slide.classList.add('visible');
+    /* Trigger metrics count-up */
+    const metEls = slide.querySelectorAll('.met-number[data-target]');
+    metEls.forEach(el => {
+      const target = parseInt(el.dataset.target);
+      const suffix = el.dataset.suffix || '';
+      this.animateMetric(el, target, suffix, 1200);
+    });
+    /* Typewriter — skip si reduced-motion */
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    slide.querySelectorAll('.typewriter-cursor').forEach(el => {
+      if (el.dataset.typed === 'true') return;
+      el.dataset.typed = 'true';
+      const originalHTML = el.innerHTML;
+      const text = el.textContent;
+      el.textContent = '';
+      el.style.opacity = '1';
+      let i = 0;
+      const type = () => {
+        if (i < text.length) {
+          el.textContent += text[i];
+          i++;
+          requestAnimationFrame(() => setTimeout(type, 35));
+        } else {
+          el.innerHTML = originalHTML;
+        }
+      };
+      type();
+    });
+    }
+  }
+
+  /* Metric count-up animation */
+  animateMetric(el, target, suffix, duration) {
+    if (el.dataset.animated === 'true') return;
+    el.dataset.animated = 'true';
+    el.classList.add('counting');
+    const start = performance.now();
+    const tick = (now) => {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = Math.floor(eased * target);
+      el.textContent = current + suffix;
+      if (progress < 1) requestAnimationFrame(tick);
+      else { el.classList.remove('counting'); el.classList.add('flash-glow'); setTimeout(() => el.classList.remove('flash-glow'), 500); }
+    };
+    requestAnimationFrame(tick);
+  }
+
+  /* Transition type per slide — direction-aware cinematic flow */
+  getTransitionForSlide(idx, direction) {
+    if (direction > 0) {
+      if (idx === 0) return 'cineZoomIn';
+      if (idx === 1) return 'cineMorphIn';
+      if (idx === 2) return 'cineSlideInRight';
+      if (idx === 3) return 'cineMorphIn';
+      if (idx === 4) return 'cineSlideInRight';
+      if (idx === 5) return 'cineElevateIn';
+      if (idx === 6) return 'cineGlitchIn';
+      if (idx === 7) return 'cineMorphIn';
+      if (idx === 8) return 'cineElevateIn';
+      if (idx === 9) return 'cineElevateIn';
+      if (idx === 10) return 'cineElevateIn';
+      if (idx === 11) return 'cineZoomIn';
+      if (idx === 16) return 'cineZoomIn';
+      return 'cineSlideInRight';
+    } else {
+      if (idx === 2 || idx === 6) return 'cineSlideBackRight';
+      if (idx === 9) return 'cineElevateIn';
+      if (idx === 10) return 'cineElevateIn';
+      if (idx === 11) return 'cineZoomOut';
+      if (idx === 0 || idx === 16) return 'cineZoomIn';
+      return 'cineSlideInLeft';
+    }
+  }
+
+  /* Duration per animation for pacing */
+  getTransitionDuration(animName) {
+    if (animName === 'cineGlitchIn') return 0.55;
+    if (animName === 'cineFadeThroughBlack') return 0.9;
+    if (animName === 'cineZoomIn' || animName === 'cineZoomOut') return 0.65;
+    return 0.55;
+  }
+
+  /* Animate slide transition with cross-fade */
+  animateTransition(from, to, animName) {
+    const dur = this.getTransitionDuration(animName);
+    if (!this.easeOutExpo) {
+      this.easeOutExpo = getComputedStyle(document.documentElement).getPropertyValue('--ease-out-expo').trim();
+    }
+    const ease = this.easeOutExpo;
+
+    to.style.display = 'flex';
+    to.style.animation = 'none';
+    to.offsetHeight;
+    to.style.willChange = 'transform, opacity';
+    to.style.animation = animName + ' ' + dur + 's ' + ease + ' forwards';
+    to.classList.add('active', 'transitioning');
+
+    if (animName === 'cineGlitchIn') { to.classList.add('chroma'); setTimeout(() => to.classList.remove('chroma'), dur * 1000); }
+    if (animName === 'cineZoomIn' || animName === 'cineZoomOut') { to.classList.add('chroma'); setTimeout(() => to.classList.remove('chroma'), 500); }
+
+    /* Cross-fade the outgoing slide */
+    if (from) {
+      from.style.willChange = 'opacity';
+      from.style.transition = 'opacity ' + (dur * 0.35) + 's ' + ease;
+      from.style.opacity = '0';
+    }
+
+    const onEnd = () => {
+      to.removeEventListener('animationend', onEnd);
+      if (from) {
+        from.style.display = 'none';
+        from.style.transition = '';
+        from.style.willChange = '';
+        from.classList.remove('active', 'visible', 'transitioning');
+        from.style.animation = '';
+      }
+      to.classList.remove('transitioning');
+      to.style.animation = '';
+      to.style.willChange = '';
+      this.triggerReveals(to);
+      this.transitioning = false;
+      if (this.transitionQueue !== null) {
+        const q = this.transitionQueue;
+        this.transitionQueue = null;
+        this.goTo(q);
+      }
+    };
+    to.addEventListener('animationend', onEnd, { once: true });
+  }
+
+  /* Navigate to slide */
+  goTo(idx) {
+    if (idx < 0 || idx >= this.total || idx === this.current || this.transitioning) {
+      if (this.transitioning && idx !== this.current) {
+        this.transitionQueue = idx;
+      }
+      return;
+    }
+    this.transitioning = true;
+    const from = this.slides[this.current];
+    const to = this.slides[idx];
+    const direction = idx - this.current;
+
+    this.current = idx;
+    this.updateNavDots(idx);
+    this.updateCounter(idx);
+    this.updateProgress();
+    this.resetAutoTimer();
+
+    const animName = this.getTransitionForSlide(idx, direction);
+    this.animateTransition(from, to, animName);
+
+    if (idx === 0 || idx === this.total - 1) {
+      setTimeout(() => this.triggerFlare(), 400);
+    }
+  }
+
+  /* Activate slide (initial load) */
+  activateSlide(idx, animName) {
+    const slide = this.slides[idx];
+    slide.style.display = 'flex';
+    slide.style.opacity = '1';
+    slide.classList.add('active');
+    this.triggerReveals(slide);
+    setTimeout(() => this.triggerFlare(), 300);
+  }
+
+  /* Build nav dots */
+  buildNavDots() {
+    this.navDotsContainer.innerHTML = '';
+    this.navDotsContainer.setAttribute('role', 'tablist');
+    this.navDotsContainer.setAttribute('aria-label', 'Navigation entre les slides');
+    for (let i = 0; i < this.total; i++) {
+      const dot = document.createElement('button');
+      dot.className = 'nav-dot';
+      dot.setAttribute('role', 'tab');
+      dot.setAttribute('aria-label', 'Slide ' + (i + 1));
+      dot.setAttribute('aria-controls', 'slide-' + i);
+      dot.setAttribute('tabindex', i === 0 ? '0' : '-1');
+      dot.addEventListener('click', () => this.goTo(i));
+      this.navDotsContainer.appendChild(dot);
+    }
+    this.updateNavDots(0);
+  }
+
+  setupKeyboardNav() {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown' || e.key === 'ArrowRight') { e.preventDefault(); this.goTo(this.current + 1); }
+      else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') { e.preventDefault(); this.goTo(this.current - 1); }
+      else if (e.key === 'PageDown') { e.preventDefault(); this.goTo(this.current + 1); }
+      else if (e.key === 'PageUp') { e.preventDefault(); this.goTo(this.current - 1); }
+      else if (e.key === ' ') { e.preventDefault(); this.goTo(this.current + 1); }
+      else if (e.key === 'Home') { e.preventDefault(); this.goTo(0); }
+      else if (e.key === 'End') { e.preventDefault(); this.goTo(this.total - 1); }
+      else if (e.key === 'f' || e.key === 'F') { e.preventDefault(); this.toggleFullscreen(); }
+    });
+  }
+
+  setupTouchNav() {
+    let touchStartY = 0;
+    document.addEventListener('touchstart', (e) => { touchStartY = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend', (e) => {
+      const diff = touchStartY - e.changedTouches[0].clientY;
+      if (Math.abs(diff) > 50) { this.goTo(diff > 0 ? this.current + 1 : this.current - 1); }
+    });
+  }
+
+  setupWheelNav() {
+    let wheelLocked = false;
+    document.addEventListener('wheel', (e) => {
+      if (this.transitioning || wheelLocked) return;
+      if (Math.abs(e.deltaY) > 30) {
+        wheelLocked = true;
+        this.goTo(e.deltaY > 0 ? this.current + 1 : this.current - 1);
+        setTimeout(() => { wheelLocked = false; }, 800);
+      }
+    }, { passive: true });
+  }
+
+  setupNavDotClicks() {
+    this.navDotsContainer.addEventListener('click', (e) => {
+      if (e.target.classList.contains('nav-dot')) {
+        const dots = Array.from(this.navDotsContainer.children);
+        const idx = dots.indexOf(e.target);
+        if (idx >= 0) this.goTo(idx);
+      }
+    });
+  }
+
+  updateNavDots(idx) {
+    const dots = this.navDotsContainer.children;
+    for (let i = 0; i < dots.length; i++) {
+      dots[i].classList.toggle('active', i === idx);
+      dots[i].setAttribute('aria-selected', i === idx ? 'true' : 'false');
+      dots[i].setAttribute('tabindex', i === idx ? '0' : '-1');
+    }
+    const prev = document.getElementById('slidePrev');
+    const next = document.getElementById('slideNext');
+    if (prev) prev.style.opacity = idx === 0 ? '0.2' : '1';
+    if (next) next.style.opacity = idx === this.total - 1 ? '0.2' : '1';
+  }
+
+  updateCounter(idx) {
+    this.slideCounter.textContent = String(idx + 1).padStart(2, '0') + ' / ' + String(this.total).padStart(2, '0');
+  }
+
+  updateProgress() {
+    const pct = ((this.current + 1) / this.total) * 100;
+    this.progressBar.style.width = pct + '%';
+  }
+
+  toggleFullscreen() {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => {});
+    else document.exitFullscreen();
+  }
+
+  /* Auto-advance */
+  startAutoAdvance() {
+    this.stopAutoAdvance();
+    this.autoTimer = setInterval(() => {
+      if (this.current < this.total - 1) this.goTo(this.current + 1);
+      else this.goTo(0);
+    }, this.autoInterval);
+  }
+  stopAutoAdvance() {
+    if (this.autoTimer) { clearInterval(this.autoTimer); this.autoTimer = null; }
+  }
+  resetAutoTimer() {
+    if (this.autoEnabled) { this.stopAutoAdvance(); this.startAutoAdvance(); }
+  }
+  setupAutoToggle() {
+    const btn = document.getElementById('autoToggle');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      this.autoEnabled = !this.autoEnabled;
+      btn.classList.toggle('active', this.autoEnabled);
+      btn.textContent = this.autoEnabled ? '■ Auto' : '▶ Auto';
+      if (this.autoEnabled) this.startAutoAdvance();
+      else this.stopAutoAdvance();
+    });
+  }
+  setupSlideNavButtons() {
+    const prev = document.getElementById('slidePrev');
+    const next = document.getElementById('slideNext');
+    if (prev) prev.addEventListener('click', () => this.goTo(this.current - 1));
+    if (next) next.addEventListener('click', () => this.goTo(this.current + 1));
+  }
+
+  /* Theme toggle */
+  setupThemeToggle() {
+    const btn = document.getElementById('themeToggle');
+    if (!btn) return;
+    const saved = localStorage.getItem('agriscan-theme');
+    if (saved === 'light') {
+      document.documentElement.classList.add('light');
+      btn.textContent = '☀️ Thème';
+    }
+    btn.addEventListener('click', () => {
+      const isLight = document.documentElement.classList.toggle('light');
+      btn.textContent = isLight ? '☀️ Thème' : '🌙 Thème';
+      localStorage.setItem('agriscan-theme', isLight ? 'light' : 'dark');
+    });
+  }
+}
+
+/* ===========================================
+   ORGANIC DECORATIONS — inject code vine & particles into slides 2-12
+   =========================================== */
+const slideTexts = ['const','=>','predict()','data:','→','scan()','if (leaf)','{ results }','return','async','export','input:','result:','model','train','infer','backprop','loss_fn'];
+(function() {
+  document.querySelectorAll('.slide').forEach((slide, i) => {
+    if (i === 0) return;
+    const vine = document.createElement('div');
+    vine.className = 'slide-vine';
+    vine.innerHTML = '<svg viewBox="0 0 80 30" xmlns="http://www.w3.org/2000/svg"><path d="M0,28 Q30,22 60,25 Q72,26 78,15" fill="none" stroke="#D4FF50" stroke-width="0.8" stroke-linecap="round" opacity="0.5" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100"/><circle cx="78" cy="15" r="4" fill="none" stroke="#D4FF50" stroke-width="0.6" opacity="0.5"/></svg>';
+    const glow = document.createElement('div');
+    glow.className = 'slide-organic-glow';
+    slide.appendChild(glow);
+    slide.appendChild(vine);
+    for (let j = 0; j < 3; j++) {
+      const dp = document.createElement('span');
+      dp.className = 'slide-dataparticle dp' + (j + 1);
+      dp.textContent = slideTexts[(i * 3 + j) % slideTexts.length];
+      slide.appendChild(dp);
+    }
+  });
+})();
+
+const presentation = new CinemaController();
+
+/* ===========================================
+   PARTICLE CANVAS BACKGROUND
+   =========================================== */
+const canvas = document.getElementById('particleCanvas');
+if (canvas && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+  const PARTICLE_COUNT = 70;
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  class Particle {
+    constructor() {
+      this.reset();
+    }
+    reset() {
+      this.x = Math.random() * canvas.width;
+      this.y = Math.random() * canvas.height;
+      this.r = Math.random() * 1.8 + 0.4;
+      this.vx = (Math.random() - 0.5) * 0.3;
+      this.vy = (Math.random() - 0.5) * 0.3;
+      this.opacity = Math.random() * 0.5 + 0.1;
+      this.pulse = Math.random() * Math.PI * 2;
+      this.pulseSpeed = Math.random() * 0.02 + 0.005;
+      this.color = Math.random() < 0.7 ? '212,255,80' : '58,224,134';
+    }
+    update() {
+      this.x += this.vx;
+      this.y += this.vy;
+      this.pulse += this.pulseSpeed;
+      const alpha = this.opacity + Math.sin(this.pulse) * 0.08;
+      if (this.x < -10) this.x = canvas.width + 10;
+      if (this.x > canvas.width + 10) this.x = -10;
+      if (this.y < -10) this.y = canvas.height + 10;
+      if (this.y > canvas.height + 10) this.y = -10;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(' + this.color + ',' + Math.max(0.03, alpha) + ')';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r * 3, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(' + this.color + ',0.01)';
+      ctx.fill();
+    }
+  }
+
+  for (let i = 0; i < PARTICLE_COUNT; i++) { particles.push(new Particle()); }
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (const p of particles) p.update();
+    requestAnimationFrame(animate);
+  }
+  animate();
+}
+
+/* ===========================================
+   3D TILT EFFECT ON CARDS
+   =========================================== */
+function setupTilt() {
+  document.querySelectorAll('.tilt-card').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const rotateX = ((y - centerY) / centerY) * -8;
+      const rotateY = ((x - centerX) / centerX) * 8;
+      card.style.transform = 'perspective(1000px) rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg) scale3d(1.02,1.02,1.02)';
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1,1,1)';
+    });
+  });
+}
+setupTilt();
+
+/* ===========================================
+   INLINE EDITING
+   =========================================== */
+class InlineEditor {
+  constructor() {
+    this.isActive = false;
+    this.editToggle = document.getElementById('editToggle');
+    this.editBanner = document.getElementById('editBanner');
+    this.editHotzone = document.getElementById('editHotzone');
+    this.editableElements = [];
+    this.collectEditable();
+    this.setupToggleClick();
+    this.setupHotzoneHover();
+    this.setupKeyboardShortcut();
+    this.setupSaveShortcut();
+    this.setupEscapeShortcut();
+  }
+
+  collectEditable() {
+    this.editableElements = Array.from(document.querySelectorAll('[contenteditable]'));
+  }
+
+  setupToggleClick() {
+    this.editToggle.addEventListener('click', () => this.toggleEditMode());
+  }
+
+  setupHotzoneHover() {
+    let hideTimeout = null;
+    this.editHotzone.addEventListener('mouseenter', () => {
+      clearTimeout(hideTimeout);
+      this.editToggle.classList.add('show');
+    });
+    this.editHotzone.addEventListener('mouseleave', () => {
+      hideTimeout = setTimeout(() => {
+        if (!this.isActive) this.editToggle.classList.remove('show');
+      }, 400);
+    });
+    this.editToggle.addEventListener('mouseenter', () => clearTimeout(hideTimeout));
+    this.editToggle.addEventListener('mouseleave', () => {
+      hideTimeout = setTimeout(() => {
+        if (!this.isActive) this.editToggle.classList.remove('show');
+      }, 400);
+    });
+    this.editHotzone.addEventListener('click', () => this.toggleEditMode());
+  }
+
+  setupKeyboardShortcut() {
+    document.addEventListener('keydown', (e) => {
+      if ((e.key === 'e' || e.key === 'E') && !e.target.getAttribute('contenteditable')) {
+        if (!e.ctrlKey && !e.metaKey && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+          this.toggleEditMode();
+        }
+      }
+    });
+  }
+
+  setupSaveShortcut() {
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+        if (this.isActive) this.saveFile();
+      }
+    });
+  }
+
+  setupEscapeShortcut() {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && this.isActive) {
+        this.toggleEditMode();
+      }
+    });
+  }
+
+  toggleEditMode() {
+    this.isActive = !this.isActive;
+    if (this.isActive) { this.enableEditMode(); }
+    else { this.disableEditMode(); }
+  }
+
+  enableEditMode() {
+    document.body.classList.add('edit-active');
+    this.editToggle.classList.add('active', 'show');
+    this.editBanner.classList.add('active');
+    this.collectEditable();
+    this.editableElements.forEach(el => el.setAttribute('contenteditable', 'true'));
+    document.querySelectorAll('.slide').forEach(s => s.style.scrollSnapAlign = 'none');
+  }
+
+  disableEditMode() {
+    document.body.classList.remove('edit-active');
+    this.editToggle.classList.remove('active');
+    this.editBanner.classList.remove('active');
+    this.editableElements.forEach(el => el.setAttribute('contenteditable', 'false'));
+    document.querySelectorAll('.slide').forEach(s => s.style.scrollSnapAlign = 'start');
+  }
+
+  saveFile() {
+    const editToggle = document.getElementById('editToggle');
+    const editBanner = document.getElementById('editBanner');
+    const editableEls = Array.from(document.querySelectorAll('[contenteditable]'));
+    editableEls.forEach(el => el.setAttribute('contenteditable', 'false'));
+    document.body.classList.remove('edit-active');
+    editToggle?.classList.remove('active', 'show');
+    editBanner?.classList.remove('active');
+    const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+    document.body.classList.add('edit-active');
+    editableEls.forEach(el => el.setAttribute('contenteditable', 'true'));
+    editToggle?.classList.add('active', 'show');
+    editBanner?.classList.add('active');
+    const blob = new Blob([html], { type: 'text/html' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'agriscan-ai-presentation.html';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+}
+
+const editor = new InlineEditor();
+
+/* ===========================================
+   INITIAL VISIBLE SLIDE
+   =========================================== */
+document.querySelector('.slide-cover').classList.add('visible');
+
+/* ===========================================
+   LIGHTBOX — click screenshots to zoom
+   =========================================== */
+(function(){
+  const images = [
+    {src:'assets/home_page.jpg', label:'Accueil'},
+    {src:'assets/dashboard_page.jpg', label:'Dashboard'},
+    {src:'assets/diag_page.jpg', label:'Diagnostic'},
+    {src:'assets/alert_page.jpg', label:'Alertes'},
+    {src:'assets/profile_page.jpg', label:'Profil'},
+    {src:'assets/admin_page.jpg', label:'Administration'},
+    {src:'assets/capteur_IoT.jpg', label:'Capteurs IoT'}
+  ];
+
+  let currentIndex = 0;
+  const lb = document.getElementById('screenshotLightbox');
+  const lbImg = lb.querySelector('.lightbox-img');
+  const lbCounter = lb.querySelector('.lightbox-counter');
+
+  function openLightbox(idx) {
+    currentIndex = idx;
+    lbImg.src = images[idx].src;
+    lbImg.alt = images[idx].label;
+    lbCounter.textContent = (idx + 1) + ' / ' + images.length;
+    lb.classList.add('open');
+  }
+
+  function closeLightbox() { lb.classList.remove('open'); }
+  function prevImage() { openLightbox((currentIndex - 1 + images.length) % images.length); }
+  function nextImage() { openLightbox((currentIndex + 1) % images.length); }
+
+  /* Attach click to all screenshot images */
+  document.querySelectorAll('.screenshot-click').forEach(el => {
+    el.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const src = this.getAttribute('data-src') || this.src;
+      const idx = images.findIndex(i => i.src === src);
+      if (idx >= 0) openLightbox(idx);
+    });
+  });
+
+  /* Lightbox controls */
+  lb.addEventListener('click', closeLightbox);
+  lbImg.addEventListener('click', function(e) { e.stopPropagation(); });
+
+  document.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
+  document.querySelector('.lightbox-prev').addEventListener('click', function(e) { e.stopPropagation(); prevImage(); });
+  document.querySelector('.lightbox-next').addEventListener('click', function(e) { e.stopPropagation(); nextImage(); });
+
+  document.addEventListener('keydown', function(e) {
+    if (!lb.classList.contains('open')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') prevImage();
+    if (e.key === 'ArrowRight') nextImage();
+  });
+})();
+</script>
+
+</body>
+</html>
