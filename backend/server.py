@@ -8,7 +8,7 @@ from pathlib import Path
 from pydantic import BaseModel, Field
 from typing import List, Optional
 from datetime import datetime
-from emergentintegrations.llm.chat import LlmChat, UserMessage, ImageContent
+from openai import AsyncOpenAI
 import uuid
 
 ROOT_DIR = Path(__file__).parent
@@ -19,8 +19,8 @@ mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
-# LLM API Key
-LLM_API_KEY = os.environ.get('EMERGENT_LLM_KEY')
+# LLM API Key (Groq)
+LLM_API_KEY = os.environ.get('GROQ_API_KEY')
 
 # Create the main app
 app = FastAPI()
@@ -66,7 +66,26 @@ class UserResponse(BaseModel):
     farm_name: Optional[str] = None
     location: Optional[str] = None
     photo_url: Optional[str] = None
+    role: str = "farmer"
     created_at: datetime
+
+class AdminUserResponse(BaseModel):
+    uid: str
+    email: str
+    display_name: str
+    phone_number: Optional[str] = None
+    farm_name: Optional[str] = None
+    location: Optional[str] = None
+    photo_url: Optional[str] = None
+    role: str
+    created_at: datetime
+    diagnostic_count: int = 0
+
+class AdminStatsResponse(BaseModel):
+    total_users: int
+    total_diagnostics: int
+    total_messages: int
+    total_alerts: int
 
 class MessageCreate(BaseModel):
     role: str  # "user" or "assistant" or "diagnosis"
@@ -122,6 +141,12 @@ class ChatResponse(BaseModel):
     image_base64: Optional[str] = None
     created_at: datetime
 
+async def require_admin(user_id: str):
+    user = await db.users.find_one({"uid": user_id, "role": "admin"})
+    if not user:
+        raise HTTPException(status_code=403, detail="Admin access required")
+    return user
+
 # ============= AUTH ENDPOINTS =============
 
 @api_router.post("/auth/signup", response_model=UserResponse)
@@ -157,6 +182,7 @@ async def signup(user_data: UserCreate):
             farm_name=user_dict.get("farm_name"),
             location=user_dict.get("location"),
             photo_url=user_dict.get("photo_url"),
+            role=user_dict.get("role", "farmer"),
             created_at=user_dict["created_at"]
         )
     except HTTPException:
@@ -185,6 +211,7 @@ async def login(credentials: UserLogin):
             farm_name=user.get("farm_name"),
             location=user.get("location"),
             photo_url=user.get("photo_url"),
+            role=user.get("role", "farmer"),
             created_at=user["created_at"]
         )
     except HTTPException:
@@ -209,6 +236,7 @@ async def get_user(uid: str):
             farm_name=user.get("farm_name"),
             location=user.get("location"),
             photo_url=user.get("photo_url"),
+            role=user.get("role", "farmer"),
             created_at=user["created_at"]
         )
     except HTTPException:
@@ -243,6 +271,7 @@ async def update_user(uid: str, user_update: UserUpdate):
             farm_name=user.get("farm_name"),
             location=user.get("location"),
             photo_url=user.get("photo_url"),
+            role=user.get("role", "farmer"),
             created_at=user["created_at"]
         )
     except HTTPException:
@@ -460,12 +489,11 @@ async def chat_with_ai(chat_req: ChatRequest, user_id: str):
         }
         await db[f"messages_{chat_req.diagnostic_id}"].insert_one(user_message_dict)
         
-        # Appeler l'IA
-        chat = LlmChat(
-            api_key=LLM_API_KEY,
-            session_id=chat_req.diagnostic_id,
-            system_message=SYSTEM_PROMPT
-        ).with_model("openai", "gpt-5.2")
+        # Appeler l'IA via Groq
+        client = AsyncOpenAI(api_key=LLM_API_KEY, base_url="https://api.groq.com/openai/v1")
+        
+        # Charger l'historique des messages du diagnostic
+        history = await db[f"messages_{chat_req.diagnostic_id}"].find().sort("created_at", 1).to_list(None)
         
         # Construire le contexte
         if image_b64_clean:
@@ -478,19 +506,38 @@ async def chat_with_ai(chat_req: ChatRequest, user_id: str):
                 f"Confronte ce que tu vois avec les symptômes décrits.\n\n"
                 f"Question / commentaire: {chat_req.message or '(aucun message texte)'}"
             )
-            user_msg = UserMessage(
-                text=context_message,
-                file_contents=[ImageContent(image_base64=image_b64_clean)]
-            )
         else:
             context_message = (
                 f"Culture: {diagnostic['culture']}\n"
                 f"Symptômes: {diagnostic['symptoms']}\n\n"
                 f"Question: {chat_req.message}"
             )
-            user_msg = UserMessage(text=context_message)
         
-        ai_response = await chat.send_message(user_msg)
+        messages = [{"role": "system", "content": SYSTEM_PROMPT}]
+        
+        for msg in history:
+            role = msg.get("role", "user")
+            if role == "diagnosis":
+                role = "assistant"
+            messages.append({"role": role, "content": msg.get("content", "")})
+        
+        if image_b64_clean:
+            messages.append({
+                "role": "user",
+                "content": [
+                    {"type": "text", "text": context_message},
+                    {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{image_b64_clean}"}}
+                ]
+            })
+        else:
+            messages.append({"role": "user", "content": context_message})
+        
+        model_name = "meta-llama/llama-4-scout-17b-16e-instruct" if image_b64_clean else "llama-3.3-70b-versatile"
+        response = await client.chat.completions.create(
+            model=model_name,
+            messages=messages,
+        )
+        ai_response = response.choices[0].message.content
         
         # Sauvegarder la réponse IA
         ai_message_dict = {
@@ -654,6 +701,132 @@ async def get_user_stats(user_id: str):
     except Exception as e:
         logger.error(f"Get stats error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/admin/stats", response_model=AdminStatsResponse)
+async def get_admin_stats(user_id: str):
+    try:
+        await require_admin(user_id)
+        total_users = await db.users.count_documents({})
+        total_diagnostics = await db.diagnostics.count_documents({})
+        total_messages = 0
+        diagnostic_ids = await db.diagnostics.distinct("id")
+        for did in diagnostic_ids:
+            col_name = f"messages_{did}"
+            try:
+                count = await db[col_name].count_documents({})
+                total_messages += count
+            except:
+                pass
+        total_alerts = await db.alerts.count_documents({})
+        return AdminStatsResponse(
+            total_users=total_users,
+            total_diagnostics=total_diagnostics,
+            total_messages=total_messages,
+            total_alerts=total_alerts
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Admin stats error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@api_router.get("/admin/users", response_model=List[AdminUserResponse])
+async def get_admin_users(user_id: str, search: str = ""):
+    try:
+        await require_admin(user_id)
+        query = {}
+        if search:
+            query["$or"] = [
+                {"email": {"$regex": search, "$options": "i"}},
+                {"display_name": {"$regex": search, "$options": "i"}}
+            ]
+        users = await db.users.find(query).sort("created_at", -1).to_list(100)
+        result = []
+        for u in users:
+            diag_count = await db.diagnostics.count_documents({"user_id": u["uid"]})
+            result.append(AdminUserResponse(
+                uid=u["uid"],
+                email=u["email"],
+                display_name=u["display_name"],
+                phone_number=u.get("phone_number"),
+                farm_name=u.get("farm_name"),
+                location=u.get("location"),
+                photo_url=u.get("photo_url"),
+                role=u.get("role", "farmer"),
+                created_at=u["created_at"],
+                diagnostic_count=diag_count
+            ))
+        return result
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Admin users error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@api_router.patch("/admin/users/{uid}/role")
+async def update_user_role(uid: str, user_id: str, role: str):
+    try:
+        await require_admin(user_id)
+        if role not in ("farmer", "admin"):
+            raise HTTPException(status_code=400, detail="Invalid role. Must be 'farmer' or 'admin'")
+        result = await db.users.update_one(
+            {"uid": uid},
+            {"$set": {"role": role}}
+        )
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="User not found")
+        return {"message": f"User role updated to {role}"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Update role error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@api_router.delete("/admin/users/{uid}")
+async def delete_user(uid: str, user_id: str):
+    try:
+        await require_admin(user_id)
+        if uid == user_id:
+            raise HTTPException(status_code=400, detail="Cannot delete yourself")
+        user = await db.users.find_one({"uid": uid})
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        diagnostics = await db.diagnostics.find({"user_id": uid}).to_list(None)
+        for diag in diagnostics:
+            col_name = f"messages_{diag['id']}"
+            try:
+                await db.drop_collection(col_name)
+            except:
+                pass
+        await db.diagnostics.delete_many({"user_id": uid})
+        await db.alerts.delete_many({"user_id": uid})
+        await db.users.delete_one({"uid": uid})
+        return {"message": "User and all associated data deleted"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Delete user error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@api_router.get("/admin/diagnostics", response_model=List[DiagnosticResponse])
+async def get_admin_diagnostics(user_id: str, culture: str = ""):
+    try:
+        await require_admin(user_id)
+        query = {}
+        if culture:
+            query["culture"] = {"$regex": culture, "$options": "i"}
+        diagnostics = await db.diagnostics.find(query).sort("created_at", -1).to_list(100)
+        return [DiagnosticResponse(**d) for d in diagnostics]
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Admin diagnostics error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 # ============= BASIC ROUTES =============
 
