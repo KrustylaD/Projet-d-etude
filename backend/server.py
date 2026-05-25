@@ -66,7 +66,6 @@ class UserResponse(BaseModel):
     farm_name: Optional[str] = None
     location: Optional[str] = None
     photo_url: Optional[str] = None
-    role: str = "farmer"
     created_at: datetime
 
 class MessageCreate(BaseModel):
@@ -158,7 +157,6 @@ async def signup(user_data: UserCreate):
             farm_name=user_dict.get("farm_name"),
             location=user_dict.get("location"),
             photo_url=user_dict.get("photo_url"),
-            role=user_dict.get("role", "farmer"),
             created_at=user_dict["created_at"]
         )
     except HTTPException:
@@ -187,7 +185,6 @@ async def login(credentials: UserLogin):
             farm_name=user.get("farm_name"),
             location=user.get("location"),
             photo_url=user.get("photo_url"),
-            role=user.get("role", "farmer"),
             created_at=user["created_at"]
         )
     except HTTPException:
@@ -212,7 +209,6 @@ async def get_user(uid: str):
             farm_name=user.get("farm_name"),
             location=user.get("location"),
             photo_url=user.get("photo_url"),
-            role=user.get("role", "farmer"),
             created_at=user["created_at"]
         )
     except HTTPException:
@@ -247,7 +243,6 @@ async def update_user(uid: str, user_update: UserUpdate):
             farm_name=user.get("farm_name"),
             location=user.get("location"),
             photo_url=user.get("photo_url"),
-            role=user.get("role", "farmer"),
             created_at=user["created_at"]
         )
     except HTTPException:
@@ -664,7 +659,7 @@ async def get_user_stats(user_id: str):
 
 @api_router.get("/")
 async def root():
-    return {"message": "AgriScan AI API", "version": "1.0.1"}
+    return {"message": "AgriScan AI API", "version": "1.0.0"}
 
 @api_router.get("/health")
 async def health_check():
