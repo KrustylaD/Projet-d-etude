@@ -8,7 +8,6 @@ export interface User {
   farm_name?: string;
   location?: string;
   photo_url?: string;
-  role?: string;
   created_at: string;
 }
 
