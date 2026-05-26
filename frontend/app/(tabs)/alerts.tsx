@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   RefreshControl,
-  Alert as RNAlert,
 } from 'react-native';
 import { useAuthStore } from '../../src/store/authStore';
 import { useRouter } from 'expo-router';
@@ -19,6 +18,11 @@ import { fr } from 'date-fns/locale';
 import { AlertsMap, MapAlert } from '../../src/components/AlertsMap';
 import { Colors } from '../../src/constants/theme';
 import { AsynconfBanner } from '../../src/components/AsynconfBanner';
+import AppDialog, { DialogAction } from '../../src/components/AppDialog';
+import SkeletonLoader from '../../src/components/SkeletonLoader';
+import EmptyState from '../../src/components/EmptyState';
+
+const OK_ACTION = (hide: () => void): DialogAction[] => [{ text: 'OK', style: 'default', onPress: hide }];
 
 interface AlertItem {
   id: string;
@@ -80,6 +84,8 @@ export default function AlertsScreen() {
   const router = useRouter();
   const { user } = useAuthStore();
   const [alerts, setAlerts] = useState<AlertItem[]>([]);
+  const [dialog, setDialog] = useState<{ visible: boolean; title: string; message: string; actions: DialogAction[] }>({ visible: false, title: '', message: '', actions: [] });
+  const hideDialog = () => setDialog(prev => ({ ...prev, visible: false }));
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
@@ -100,7 +106,7 @@ export default function AlertsScreen() {
       setAlerts(data);
     } catch (error) {
       console.error('Error fetching alerts:', error);
-      RNAlert.alert('Erreur', 'Impossible de charger les alertes');
+      setDialog({ visible: true, title: 'Erreur', message: 'Impossible de charger les alertes', actions: OK_ACTION(hideDialog) });
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -128,7 +134,7 @@ export default function AlertsScreen() {
       );
     } catch (error) {
       console.error('Error marking alert as read:', error);
-      RNAlert.alert('Erreur', 'Impossible de marquer l\'alerte comme lue');
+      setDialog({ visible: true, title: 'Erreur', message: 'Impossible de marquer l\'alerte comme lue', actions: OK_ACTION(hideDialog) });
     }
   };
 
@@ -149,7 +155,7 @@ export default function AlertsScreen() {
       await fetchAlerts();
     } catch (error) {
       console.error('Error seeding alerts:', error);
-      RNAlert.alert('Erreur', 'Impossible de créer les alertes de démo');
+      setDialog({ visible: true, title: 'Erreur', message: 'Impossible de créer les alertes de démo', actions: OK_ACTION(hideDialog) });
     } finally {
       setSeeding(false);
     }
@@ -196,7 +202,7 @@ export default function AlertsScreen() {
         <SafeAreaView style={styles.safeArea}>
           <AsynconfBanner />
           <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color={Colors.lime} />
+            <SkeletonLoader variant="card-small" count={5} style={{ paddingHorizontal: 20 }} />
           </View>
         </SafeAreaView>
       </LinearGradient>
@@ -290,25 +296,14 @@ export default function AlertsScreen() {
         {view === 'map' ? (
           <View style={styles.mapContainer}>
             {alerts.length === 0 ? (
-              <View style={styles.emptyState}>
-                <Ionicons name="map-outline" size={64} color={Colors.cream50} />
-                <Text style={styles.emptyText}>Aucune alerte à afficher sur la carte</Text>
-                <TouchableOpacity
-                  style={styles.demoButton}
-                  onPress={seedDemoAlerts}
-                  disabled={seeding}
-                  activeOpacity={0.85}
-                >
-                  {seeding ? (
-                    <ActivityIndicator color={Colors.black} />
-                  ) : (
-                    <>
-                      <Ionicons name="sparkles" size={18} color={Colors.black} />
-                      <Text style={styles.demoButtonText}>Générer des alertes de démo</Text>
-                    </>
-                  )}
-                </TouchableOpacity>
-              </View>
+              <EmptyState
+                icon="map-outline"
+                title="Aucune alerte à afficher sur la carte"
+                subtitle="Les alertes avec position géographique apparaîtront ici"
+                actionLabel={seeding ? undefined : 'Générer des alertes de démo'}
+                actionIcon={seeding ? undefined : 'sparkles'}
+                onAction={seeding ? undefined : seedDemoAlerts}
+              />
             ) : (
               <AlertsMap alerts={mapAlerts} />
             )}
@@ -325,29 +320,14 @@ export default function AlertsScreen() {
             }
           >
             {alerts.length === 0 ? (
-              <View style={styles.emptyState}>
-                <Ionicons name="notifications-off-outline" size={64} color={Colors.cream50} />
-                <Text style={styles.emptyText}>
-                  {filter === 'unread' ? 'Aucune alerte non lue' : 'Aucune alerte'}
-                </Text>
-                {filter === 'all' && (
-                  <TouchableOpacity
-                    style={styles.demoButton}
-                    onPress={seedDemoAlerts}
-                    disabled={seeding}
-                    activeOpacity={0.85}
-                  >
-                    {seeding ? (
-                      <ActivityIndicator color={Colors.black} />
-                    ) : (
-                      <>
-                        <Ionicons name="sparkles" size={18} color={Colors.black} />
-                        <Text style={styles.demoButtonText}>Générer des alertes de démo</Text>
-                      </>
-                    )}
-                  </TouchableOpacity>
-                )}
-              </View>
+              <EmptyState
+                icon="notifications-off-outline"
+                title={filter === 'unread' ? 'Aucune alerte non lue' : 'Aucune alerte'}
+                subtitle="Les alertes apparaîtront ici"
+                actionLabel={filter === 'all' && !seeding ? 'Générer des alertes de démo' : undefined}
+                actionIcon={filter === 'all' && !seeding ? 'sparkles' : undefined}
+                onAction={filter === 'all' && !seeding ? seedDemoAlerts : undefined}
+              />
             ) : (
               alerts.map((alert) => (
                 <TouchableOpacity
@@ -407,6 +387,13 @@ export default function AlertsScreen() {
           <Text style={styles.footerLegalText}>Mentions legales</Text>
         </TouchableOpacity>
       </SafeAreaView>
+      <AppDialog
+        visible={dialog.visible}
+        title={dialog.title}
+        message={dialog.message}
+        actions={dialog.actions}
+        onDismiss={hideDialog}
+      />
     </LinearGradient>
   );
 }

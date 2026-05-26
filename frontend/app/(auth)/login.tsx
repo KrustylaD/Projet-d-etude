@@ -7,7 +7,6 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
-  Alert,
   ActivityIndicator,
 } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -16,6 +15,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Colors, Typography, BorderRadius, Spacing } from '../../src/constants/theme';
 import { Ionicons } from '@expo/vector-icons';
+import AppDialog from '../../src/components/AppDialog';
 
 const AgriScanLogo = ({ size = 60 }: { size?: number }) => (
   <View style={[styles.logoContainer, { width: size, height: size, borderRadius: BorderRadius.squircle }]}>
@@ -29,10 +29,11 @@ export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [dialog, setDialog] = useState<{ title: string; message: string } | null>(null);
 
   const handleLogin = async () => {
     if (!email || !password) {
-      Alert.alert('Erreur', 'Veuillez remplir tous les champs');
+      setDialog({ title: 'Erreur', message: 'Veuillez remplir tous les champs' });
       return;
     }
 
@@ -40,7 +41,7 @@ export default function LoginScreen() {
       await login(email, password);
       router.replace('/(tabs)/home');
     } catch (error: any) {
-      Alert.alert('Erreur de connexion', error.message || 'Email ou mot de passe incorrect');
+      setDialog({ title: 'Erreur de connexion', message: error.message || 'Email ou mot de passe incorrect' });
     }
   };
 
@@ -112,6 +113,14 @@ export default function LoginScreen() {
           </View>
         </KeyboardAvoidingView>
       </SafeAreaView>
+      <AppDialog
+        visible={dialog !== null}
+        title={dialog?.title ?? ''}
+        message={dialog?.message ?? ''}
+        icon="⚠️"
+        actions={[{ text: 'OK', onPress: () => setDialog(null) }]}
+        onDismiss={() => setDialog(null)}
+      />
     </LinearGradient>
   );
 }

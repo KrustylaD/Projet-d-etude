@@ -5,9 +5,7 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  ActivityIndicator,
   RefreshControl,
-  Alert,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuthStore } from '../../src/store/authStore';
@@ -17,8 +15,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Stats } from '../../src/types';
 import { Colors } from '../../src/constants/theme';
 import { AsynconfBanner } from '../../src/components/AsynconfBanner';
+import AppDialog, { DialogAction } from '../../src/components/AppDialog';
+import SkeletonLoader from '../../src/components/SkeletonLoader';
+import EmptyState from '../../src/components/EmptyState';
 
 export default function HomeScreen() {
+  const [dialog, setDialog] = useState<{ visible: boolean; title: string; message: string; actions: DialogAction[] }>({ visible: false, title: '', message: '', actions: [] });
   const router = useRouter();
   const { user } = useAuthStore();
   const [stats, setStats] = useState<Stats | null>(null);
@@ -37,7 +39,7 @@ export default function HomeScreen() {
       setStats(data);
     } catch (error) {
       console.error('Error fetching stats:', error);
-      Alert.alert('Erreur', 'Impossible de charger les données');
+      setDialog({ visible: true, title: 'Erreur', message: 'Impossible de charger les données', actions: [{ text: 'OK', style: 'default', onPress: () => setDialog(prev => ({ ...prev, visible: false })) }] });
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -76,7 +78,7 @@ export default function HomeScreen() {
         <SafeAreaView style={styles.safeArea}>
           <AsynconfBanner />
           <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color={Colors.lime} />
+            <SkeletonLoader variant="card-small" count={3} style={{ paddingHorizontal: 20 }} />
           </View>
         </SafeAreaView>
       </LinearGradient>
@@ -161,7 +163,7 @@ export default function HomeScreen() {
           )}
 
           {/* Recent Diagnostics */}
-          {(stats?.recent_diagnostics?.length ?? 0) > 0 && (
+          {(stats?.recent_diagnostics?.length ?? 0) > 0 ? (
             <View style={styles.section}>
               <View style={styles.sectionHeader}>
                 <Text style={styles.sectionTitle}>Diagnostics récents</Text>
@@ -190,10 +192,12 @@ export default function HomeScreen() {
                 </TouchableOpacity>
               ))}
             </View>
+          ) : stats && (
+            <EmptyState icon="leaf-outline" title="Aucun diagnostic" subtitle="Créez votre premier diagnostic pour commencer" />
           )}
 
           {/* Recent Alerts */}
-          {recentAlerts.length > 0 && (
+          {recentAlerts.length > 0 ? (
             <View style={styles.section}>
               <View style={styles.sectionHeader}>
                 <Text style={styles.sectionTitle}>Alertes récentes</Text>
@@ -224,6 +228,8 @@ export default function HomeScreen() {
                 </TouchableOpacity>
               ))}
             </View>
+          ) : (
+            <EmptyState icon="notifications-off-outline" title="Aucune alerte" subtitle="Les alertes apparaîtront ici" />
           )}
         </ScrollView>
         <TouchableOpacity
@@ -235,6 +241,13 @@ export default function HomeScreen() {
           <Text style={styles.footerLegalText}>Mentions legales</Text>
         </TouchableOpacity>
       </SafeAreaView>
+      <AppDialog
+        visible={dialog.visible}
+        title={dialog.title}
+        message={dialog.message}
+        actions={dialog.actions}
+        onDismiss={() => setDialog(prev => ({ ...prev, visible: false }))}
+      />
     </LinearGradient>
   );
 }

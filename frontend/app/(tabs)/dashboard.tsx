@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   RefreshControl,
-  Alert,
 } from 'react-native';
 import { Colors } from '../../src/constants/theme';
 import { useAuthStore } from '../../src/store/authStore';
@@ -19,6 +18,9 @@ import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { useRouter } from 'expo-router';
 import { AsynconfBanner } from '../../src/components/AsynconfBanner';
+import AppDialog, { DialogAction } from '../../src/components/AppDialog';
+import SkeletonLoader from '../../src/components/SkeletonLoader';
+import EmptyState from '../../src/components/EmptyState';
 
 type DiagnosticStatus = 'en cours' | 'traité' | 'surveillance';
 
@@ -31,19 +33,25 @@ export default function DashboardScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [filter, setFilter] = useState<'all' | DiagnosticStatus>('all');
   const [actioningId, setActioningId] = useState<string | null>(null);
+  const [dialog, setDialog] = useState<{
+    visible: boolean;
+    icon?: string;
+    title: string;
+    message: string;
+    actions: DialogAction[];
+  }>({ visible: false, title: '', message: '', actions: [] });
+  const hideDialog = () => setDialog((prev) => ({ ...prev, visible: false }));
 
   const fetchData = async () => {
     if (!user) return;
 
     try {
-      // Fetch stats
       const statsResponse = await fetch(
         `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/stats/${user.uid}`
       );
       const statsData = await statsResponse.json();
       setStats(statsData);
 
-      // Fetch all diagnostics
       const diagnosticsResponse = await fetch(
         `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/diagnostics/${user.uid}`
       );
@@ -51,7 +59,13 @@ export default function DashboardScreen() {
       setDiagnostics(diagnosticsData);
     } catch (error) {
       console.error('Error fetching data:', error);
-      Alert.alert('Erreur', 'Impossible de charger le tableau de bord');
+      setDialog({
+        visible: true,
+        icon: '⚠️',
+        title: 'Erreur',
+        message: 'Impossible de charger le tableau de bord',
+        actions: [{ text: 'OK' }],
+      });
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -73,18 +87,20 @@ export default function DashboardScreen() {
   };
 
   const confirmDelete = (diagnostic: Diagnostic) => {
-    Alert.alert(
-      'Supprimer ce diagnostic ?',
-      `Le diagnostic de "${diagnostic.culture}" et tout son historique de conversation seront définitivement supprimés.`,
-      [
+    setDialog({
+      visible: true,
+      icon: '🗑️',
+      title: 'Supprimer ce diagnostic\u00A0?',
+      message: `Le diagnostic de "${diagnostic.culture}" et tout son historique de conversation seront définitivement supprimés.`,
+      actions: [
         { text: 'Annuler', style: 'cancel' },
         {
           text: 'Supprimer',
           style: 'destructive',
           onPress: () => deleteDiagnostic(diagnostic.id),
         },
-      ]
-    );
+      ],
+    });
   };
 
   const deleteDiagnostic = async (id: string) => {
@@ -97,11 +113,16 @@ export default function DashboardScreen() {
       );
       if (!resp.ok) throw new Error('Suppression échouée');
       setDiagnostics((prev) => prev.filter((d) => d.id !== id));
-      // Refresh stats
       fetchData();
     } catch (err) {
       console.error('Delete error', err);
-      Alert.alert('Erreur', 'Impossible de supprimer ce diagnostic');
+      setDialog({
+        visible: true,
+        icon: '⚠️',
+        title: 'Erreur',
+        message: 'Impossible de supprimer ce diagnostic',
+        actions: [{ text: 'OK' }],
+      });
     } finally {
       setActioningId(null);
     }
@@ -109,19 +130,20 @@ export default function DashboardScreen() {
 
   const openStatusMenu = (diagnostic: Diagnostic) => {
     const options: DiagnosticStatus[] = ['en cours', 'traité', 'surveillance'];
-    Alert.alert(
-      'Changer le statut',
-      `Statut actuel : ${diagnostic.status}`,
-      [
-        ...options
-          .filter((s) => s !== diagnostic.status)
-          .map((s) => ({
-            text: statusLabel(s),
-            onPress: () => updateStatus(diagnostic.id, s),
-          })),
+    const available = options.filter((s) => s !== diagnostic.status);
+    setDialog({
+      visible: true,
+      icon: '📋',
+      title: 'Changer le statut',
+      message: `Statut actuel : ${diagnostic.status}`,
+      actions: [
+        ...available.map((s) => ({
+          text: statusLabel(s),
+          onPress: () => updateStatus(diagnostic.id, s),
+        })),
         { text: 'Annuler', style: 'cancel' as const },
-      ]
-    );
+      ],
+    });
   };
 
   const updateStatus = async (id: string, status: DiagnosticStatus) => {
@@ -140,7 +162,13 @@ export default function DashboardScreen() {
       fetchData();
     } catch (err) {
       console.error('Status update error', err);
-      Alert.alert('Erreur', 'Impossible de changer le statut');
+      setDialog({
+        visible: true,
+        icon: '⚠️',
+        title: 'Erreur',
+        message: 'Impossible de changer le statut',
+        actions: [{ text: 'OK' }],
+      });
     } finally {
       setActioningId(null);
     }
@@ -156,7 +184,7 @@ export default function DashboardScreen() {
         <SafeAreaView style={styles.safeArea}>
           <AsynconfBanner />
           <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color={Colors.lime} />
+            <SkeletonLoader variant="card" count={4} style={{ paddingHorizontal: 20 }} />
           </View>
         </SafeAreaView>
       </LinearGradient>
@@ -183,7 +211,6 @@ export default function DashboardScreen() {
             />
           }
         >
-          {/* Stats Cards */}
           {stats && (
             <View style={styles.statsContainer}>
               <View style={styles.statCardLarge}>
@@ -214,7 +241,6 @@ export default function DashboardScreen() {
             </View>
           )}
 
-          {/* Filter Buttons */}
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterContainer}>
             <TouchableOpacity
               style={[styles.filterButton, filter === 'all' && styles.filterButtonActive]}
@@ -253,13 +279,9 @@ export default function DashboardScreen() {
             </TouchableOpacity>
           </ScrollView>
 
-          {/* Diagnostics List */}
           <View style={styles.diagnosticsList}>
             {filteredDiagnostics.length === 0 ? (
-              <View style={styles.emptyState}>
-                <Ionicons name="folder-open-outline" size={64} color={Colors.cream50} />
-                <Text style={styles.emptyText}>Aucun diagnostic trouvé</Text>
-              </View>
+              <EmptyState icon="folder-open-outline" title="Aucun diagnostic trouvé" subtitle="Créez un diagnostic depuis l'onglet Diagnostic" />
             ) : (
               filteredDiagnostics.map((diagnostic) => (
                 <TouchableOpacity
@@ -338,7 +360,6 @@ export default function DashboardScreen() {
                     </View>
                   )}
 
-                  {/* Footer actions */}
                   <View style={styles.cardActions}>
                     <View style={styles.continueHint}>
                       <Ionicons name="chatbubble-ellipses-outline" size={14} color={Colors.lime} />
@@ -368,6 +389,15 @@ export default function DashboardScreen() {
           <Ionicons name="shield-checkmark-outline" size={12} color={Colors.cream50} />
           <Text style={styles.footerLegalText}>Mentions legales</Text>
         </TouchableOpacity>
+
+        <AppDialog
+          visible={dialog.visible}
+          icon={dialog.icon}
+          title={dialog.title}
+          message={dialog.message}
+          actions={dialog.actions}
+          onDismiss={hideDialog}
+        />
       </SafeAreaView>
     </LinearGradient>
   );

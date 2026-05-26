@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Alert,
   Image,
   Linking,
 } from 'react-native';
@@ -15,16 +14,19 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Colors } from '../../src/constants/theme';
+import AppDialog, { DialogAction } from '../../src/components/AppDialog';
 
 export default function ProfileScreen() {
   const router = useRouter();
   const { user, logout } = useAuthStore();
+  const [dialog, setDialog] = useState<{ title: string; message: string; icon?: string; actions?: DialogAction[] } | null>(null);
 
   const handleLogout = () => {
-    Alert.alert(
-      'Déconnexion',
-      'Êtes-vous sûr de vouloir vous déconnecter ?',
-      [
+    setDialog({
+      icon: '🚪',
+      title: 'Déconnexion',
+      message: 'Êtes-vous sûr de vouloir vous déconnecter ?',
+      actions: [
         { text: 'Annuler', style: 'cancel' },
         {
           text: 'Déconnexion',
@@ -34,8 +36,8 @@ export default function ProfileScreen() {
             router.replace('/(auth)/login');
           },
         },
-      ]
-    );
+      ],
+    });
   };
 
   return (
@@ -216,6 +218,14 @@ export default function ProfileScreen() {
           </Text>
         </ScrollView>
       </SafeAreaView>
+      <AppDialog
+        visible={dialog !== null}
+        title={dialog?.title || ''}
+        message={dialog?.message || ''}
+        icon={dialog?.icon}
+        actions={dialog?.actions}
+        onDismiss={() => setDialog(null)}
+      />
     </LinearGradient>
   );
 }

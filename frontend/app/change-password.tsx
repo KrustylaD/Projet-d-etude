@@ -8,7 +8,6 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
-  Alert,
   ActivityIndicator,
 } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -17,6 +16,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Colors } from '../src/constants/theme';
+import AppDialog, { DialogAction } from '../src/components/AppDialog';
 
 export default function ChangePasswordScreen() {
   const router = useRouter();
@@ -29,33 +29,37 @@ export default function ChangePasswordScreen() {
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [dialog, setDialog] = useState<{ title: string; message: string; icon?: string; actions?: DialogAction[] } | null>(null);
 
   const handleSave = async () => {
     if (!oldPassword || !newPassword || !confirmPassword) {
-      Alert.alert('Erreur', 'Veuillez remplir tous les champs');
+      setDialog({ title: 'Erreur', message: 'Veuillez remplir tous les champs' });
       return;
     }
     if (newPassword.length < 6) {
-      Alert.alert('Erreur', 'Le nouveau mot de passe doit contenir au moins 6 caractères');
+      setDialog({ title: 'Erreur', message: 'Le nouveau mot de passe doit contenir au moins 6 caractères' });
       return;
     }
     if (newPassword !== confirmPassword) {
-      Alert.alert('Erreur', 'Les nouveaux mots de passe ne correspondent pas');
+      setDialog({ title: 'Erreur', message: 'Les nouveaux mots de passe ne correspondent pas' });
       return;
     }
     if (oldPassword === newPassword) {
-      Alert.alert('Erreur', "Le nouveau mot de passe doit être différent de l'ancien");
+      setDialog({ title: 'Erreur', message: "Le nouveau mot de passe doit être différent de l'ancien" });
       return;
     }
 
     setLoading(true);
     try {
       await updatePassword(oldPassword, newPassword);
-      Alert.alert('Succès', 'Mot de passe modifié avec succès !', [
-        { text: 'OK', onPress: () => router.back() },
-      ]);
+      setDialog({
+        title: 'Succès',
+        message: 'Mot de passe modifié avec succès !',
+        icon: '🔑',
+        actions: [{ text: 'OK', onPress: () => router.back() }],
+      });
     } catch (error: any) {
-      Alert.alert('Erreur', error.message || 'Impossible de changer le mot de passe');
+      setDialog({ title: 'Erreur', message: error.message || 'Impossible de changer le mot de passe' });
     } finally {
       setLoading(false);
     }
@@ -163,6 +167,14 @@ export default function ChangePasswordScreen() {
           </ScrollView>
         </KeyboardAvoidingView>
       </SafeAreaView>
+      <AppDialog
+        visible={dialog !== null}
+        title={dialog?.title ?? ''}
+        message={dialog?.message ?? ''}
+        icon={dialog?.icon ?? '⚠️'}
+        actions={dialog?.actions ?? [{ text: 'OK', onPress: () => setDialog(null) }]}
+        onDismiss={() => setDialog(null)}
+      />
     </LinearGradient>
   );
 }

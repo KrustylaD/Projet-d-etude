@@ -8,7 +8,6 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
-  Alert,
   ActivityIndicator,
   Image,
 } from 'react-native';
@@ -19,6 +18,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
 import { Colors } from '../src/constants/theme';
+import AppDialog, { DialogAction } from '../src/components/AppDialog';
 
 export default function EditProfileScreen() {
   const router = useRouter();
@@ -30,6 +30,7 @@ export default function EditProfileScreen() {
   const [location, setLocation] = useState(user?.location || '');
   const [photoUrl, setPhotoUrl] = useState<string | undefined>(user?.photo_url);
   const [loading, setLoading] = useState(false);
+  const [dialog, setDialog] = useState<{ title: string; message: string; icon?: string; actions?: DialogAction[] } | null>(null);
 
   const pickImage = async () => {
     try {
@@ -40,19 +41,15 @@ export default function EditProfileScreen() {
 
         if (status !== 'granted') {
           if (!canAskAgain) {
-            Alert.alert(
-              'Permission requise',
-              "L'accès aux photos est nécessaire pour choisir une image de profil. Activez-le dans les réglages.",
-              [
-                { text: 'Annuler', style: 'cancel' },
-                {
-                  text: 'Ouvrir les réglages',
-                  onPress: () => {
-                    // Linking.openSettings() pourrait être utilisé ici si nécessaire
-                  },
-                },
-              ]
-            );
+            setDialog({
+              title: 'Permission requise',
+              message: "L'accès aux photos est nécessaire pour choisir une image de profil. Activez-le dans les réglages.",
+              icon: '📷',
+              actions: [
+                { text: 'Annuler', style: 'cancel', onPress: () => setDialog(null) },
+                { text: 'Ouvrir les réglages', onPress: () => {} },
+              ],
+            });
           }
           return;
         }
@@ -72,13 +69,13 @@ export default function EditProfileScreen() {
       }
     } catch (error) {
       console.error('Image picker error:', error);
-      Alert.alert('Erreur', "Impossible de sélectionner l'image");
+      setDialog({ title: 'Erreur', message: "Impossible de sélectionner l'image" });
     }
   };
 
   const handleSave = async () => {
     if (!displayName.trim()) {
-      Alert.alert('Erreur', 'Le pseudo ne peut pas être vide');
+      setDialog({ title: 'Erreur', message: 'Le pseudo ne peut pas être vide' });
       return;
     }
 
@@ -92,11 +89,14 @@ export default function EditProfileScreen() {
         photo_url: photoUrl,
       });
 
-      Alert.alert('Succès', 'Profil mis à jour avec succès !', [
-        { text: 'OK', onPress: () => router.back() },
-      ]);
+      setDialog({
+        title: 'Succès',
+        message: 'Profil mis à jour avec succès !',
+        icon: '✅',
+        actions: [{ text: 'OK', onPress: () => router.back() }],
+      });
     } catch (error: any) {
-      Alert.alert('Erreur', error.message || 'Impossible de mettre à jour le profil');
+      setDialog({ title: 'Erreur', message: error.message || 'Impossible de mettre à jour le profil' });
     } finally {
       setLoading(false);
     }
@@ -241,6 +241,14 @@ export default function EditProfileScreen() {
           </ScrollView>
         </KeyboardAvoidingView>
       </SafeAreaView>
+      <AppDialog
+        visible={dialog !== null}
+        title={dialog?.title ?? ''}
+        message={dialog?.message ?? ''}
+        icon={dialog?.icon ?? '⚠️'}
+        actions={dialog?.actions ?? [{ text: 'OK', onPress: () => setDialog(null) }]}
+        onDismiss={() => setDialog(null)}
+      />
     </LinearGradient>
   );
 }

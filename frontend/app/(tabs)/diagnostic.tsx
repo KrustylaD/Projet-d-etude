@@ -8,7 +8,6 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
-  Alert,
   ActivityIndicator,
   Image,
 } from 'react-native';
@@ -18,8 +17,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Message } from '../../src/types';
 import { MarkdownMessage } from '../../src/components/MarkdownMessage';
+import SkeletonLoader from '../../src/components/SkeletonLoader';
 import { Colors } from '../../src/constants/theme';
 import { AsynconfBanner } from '../../src/components/AsynconfBanner';
+import AppDialog, { DialogAction } from '../../src/components/AppDialog';
 import * as ImagePicker from 'expo-image-picker';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 
@@ -31,15 +32,22 @@ export default function DiagnosticScreen() {
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
-  const [pendingImage, setPendingImage] = useState<string | null>(null); // base64 data URI
+  const [pendingImage, setPendingImage] = useState<string | null>(null);
   const [culture, setCulture] = useState('');
   const [symptoms, setSymptoms] = useState('');
   const [diagnosticId, setDiagnosticId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [loadingHistory, setLoadingHistory] = useState(false);
   const [showInitialForm, setShowInitialForm] = useState(true);
+  const [dialog, setDialog] = useState<{
+    visible: boolean;
+    icon?: string;
+    title: string;
+    message: string;
+    actions: DialogAction[];
+  }>({ visible: false, title: '', message: '', actions: [] });
+  const hideDialog = () => setDialog((prev) => ({ ...prev, visible: false }));
 
-  // Si un id est passé en paramètre, charger le diagnostic et son historique
   useEffect(() => {
     const id = params.id;
     if (id && user) {
@@ -52,14 +60,12 @@ export default function DiagnosticScreen() {
     if (!user) return;
     setLoadingHistory(true);
     try {
-      // Charger le diagnostic
       const diagResp = await fetch(
         `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/diagnostics/${id}/detail?user_id=${user.uid}`
       );
       if (!diagResp.ok) throw new Error('Diagnostic introuvable');
       const diagnostic = await diagResp.json();
 
-      // Charger les messages
       const msgsResp = await fetch(
         `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/messages/${id}?user_id=${user.uid}`
       );
@@ -69,7 +75,6 @@ export default function DiagnosticScreen() {
       setSymptoms(diagnostic.symptoms);
       setDiagnosticId(id);
 
-      // S'il n'y a aucun message historique, ajouter un message d'accueil
       if (msgs.length === 0) {
         setMessages([
           {
@@ -85,7 +90,13 @@ export default function DiagnosticScreen() {
       setShowInitialForm(false);
     } catch (error) {
       console.error('Error loading diagnostic:', error);
-      Alert.alert('Erreur', 'Impossible de charger ce diagnostic');
+      setDialog({
+        visible: true,
+        icon: '⚠️',
+        title: 'Erreur',
+        message: 'Impossible de charger ce diagnostic',
+        actions: [{ text: 'OK' }],
+      });
     } finally {
       setLoadingHistory(false);
     }
@@ -93,7 +104,13 @@ export default function DiagnosticScreen() {
 
   const createDiagnostic = async () => {
     if (!culture.trim() || !symptoms.trim()) {
-      Alert.alert('Erreur', 'Veuillez remplir tous les champs');
+      setDialog({
+        visible: true,
+        icon: '⚠️',
+        title: 'Erreur',
+        message: 'Veuillez remplir tous les champs',
+        actions: [{ text: 'OK' }],
+      });
       return;
     }
 
@@ -122,7 +139,13 @@ export default function DiagnosticScreen() {
       setMessages([welcomeMessage]);
     } catch (error) {
       console.error('Error creating diagnostic:', error);
-      Alert.alert('Erreur', 'Impossible de créer le diagnostic');
+      setDialog({
+        visible: true,
+        icon: '⚠️',
+        title: 'Erreur',
+        message: 'Impossible de créer le diagnostic',
+        actions: [{ text: 'OK' }],
+      });
     } finally {
       setLoading(false);
     }
@@ -134,10 +157,13 @@ export default function DiagnosticScreen() {
         const { status, canAskAgain } = await ImagePicker.requestCameraPermissionsAsync();
         if (status !== 'granted') {
           if (!canAskAgain) {
-            Alert.alert(
-              'Permission requise',
-              "L'accès à la caméra est nécessaire. Activez-le dans les réglages."
-            );
+            setDialog({
+              visible: true,
+              icon: '📷',
+              title: 'Permission requise',
+              message: "L'accès à la caméra est nécessaire. Activez-le dans les réglages.",
+              actions: [{ text: 'OK' }],
+            });
           }
           return;
         }
@@ -155,10 +181,13 @@ export default function DiagnosticScreen() {
         const { status, canAskAgain } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (status !== 'granted') {
           if (!canAskAgain) {
-            Alert.alert(
-              'Permission requise',
-              "L'accès aux photos est nécessaire. Activez-le dans les réglages."
-            );
+            setDialog({
+              visible: true,
+              icon: '🖼️',
+              title: 'Permission requise',
+              message: "L'accès aux photos est nécessaire. Activez-le dans les réglages.",
+              actions: [{ text: 'OK' }],
+            });
           }
           return;
         }
@@ -175,20 +204,28 @@ export default function DiagnosticScreen() {
       }
     } catch (error) {
       console.error('Image picker error:', error);
-      Alert.alert('Erreur', "Impossible de sélectionner l'image");
+      setDialog({
+        visible: true,
+        icon: '⚠️',
+        title: 'Erreur',
+        message: "Impossible de sélectionner l'image",
+        actions: [{ text: 'OK' }],
+      });
     }
   };
 
   const handleAttachPhoto = () => {
-    Alert.alert(
-      'Ajouter une photo',
-      'Choisissez la source de la photo',
-      [
-        { text: 'Annuler', style: 'cancel' },
+    setDialog({
+      visible: true,
+      icon: '📸',
+      title: 'Ajouter une photo',
+      message: 'Choisissez la source de la photo',
+      actions: [
         { text: '📷 Caméra', onPress: () => pickImageFromSource('camera') },
         { text: '🖼️ Galerie', onPress: () => pickImageFromSource('library') },
-      ]
-    );
+        { text: 'Annuler', style: 'cancel' },
+      ],
+    });
   };
 
   const sendMessage = async () => {
@@ -237,7 +274,13 @@ export default function DiagnosticScreen() {
       }, 100);
     } catch (error) {
       console.error('Error sending message:', error);
-      Alert.alert('Erreur', "Impossible d'envoyer le message");
+      setDialog({
+        visible: true,
+        icon: '⚠️',
+        title: 'Erreur',
+        message: "Impossible d'envoyer le message",
+        actions: [{ text: 'OK' }],
+      });
     } finally {
       setLoading(false);
     }
@@ -251,7 +294,6 @@ export default function DiagnosticScreen() {
     setSymptoms('');
     setInputText('');
     setPendingImage(null);
-    // Effacer le paramètre URL si présent (sinon useEffect rechargerait)
     if (params.id) {
       router.setParams({ id: '' });
     }
@@ -263,7 +305,7 @@ export default function DiagnosticScreen() {
         <SafeAreaView style={styles.safeArea}>
           <AsynconfBanner />
           <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color={Colors.lime} />
+            <SkeletonLoader variant="card-small" count={6} />
             <Text style={styles.loadingText}>Chargement de la conversation...</Text>
           </View>
         </SafeAreaView>
@@ -295,15 +337,15 @@ export default function DiagnosticScreen() {
                   style={styles.input}
                   placeholder="Ex: Tomates, Maïs, Blé..."
                   placeholderTextColor={Colors.cream50}
-                   value={culture}
-                   onChangeText={setCulture}
-                 />
+                  value={culture}
+                  onChangeText={setCulture}
+                />
 
-                 <Text style={styles.label}>Symptômes observés *</Text>
-                 <TextInput
-                   style={[styles.input, styles.textArea]}
-                   placeholder="Décrivez les symptômes : taches, flétrissement, décoloration..."
-                   placeholderTextColor={Colors.cream50}
+                <Text style={styles.label}>Symptômes observés *</Text>
+                <TextInput
+                  style={[styles.input, styles.textArea]}
+                  placeholder="Décrivez les symptômes : taches, flétrissement, décoloration..."
+                  placeholderTextColor={Colors.cream50}
                   value={symptoms}
                   onChangeText={setSymptoms}
                   multiline
@@ -324,9 +366,9 @@ export default function DiagnosticScreen() {
                 >
                   {loading ? (
                     <ActivityIndicator color={Colors.black} />
-                   ) : (
-                     <>
-                       <Ionicons name="arrow-forward" size={20} color={Colors.black} />
+                  ) : (
+                    <>
+                      <Ionicons name="arrow-forward" size={20} color={Colors.black} />
                       <Text style={styles.buttonText}>Commencer le diagnostic</Text>
                     </>
                   )}
@@ -377,34 +419,34 @@ export default function DiagnosticScreen() {
                     name="leaf"
                     size={20}
                     color={Colors.lime}
-                     style={styles.messageIcon}
-                   />
-                 )}
-                 <View style={styles.messageContent}>
-                   {message.image_base64 && (
-                     <Image
-                       source={{ uri: message.image_base64 }}
-                       style={styles.messageImage}
-                       resizeMode="cover"
-                     />
-                   )}
-                   {message.role === 'user' ? (
-                     message.content ? (
-                       <Text style={[styles.messageText, styles.userText]}>
-                         {message.content}
-                       </Text>
-                     ) : null
-                   ) : (
-                     <View style={styles.aiTextWrapper}>
-                       <MarkdownMessage content={message.content} />
-                     </View>
-                   )}
-                 </View>
-               </View>
-             ))}
-             {loading && (
-               <View style={[styles.messageBubble, styles.aiBubble]}>
-                 <Ionicons name="leaf" size={20} color={Colors.lime} style={styles.messageIcon} />
+                    style={styles.messageIcon}
+                  />
+                )}
+                <View style={styles.messageContent}>
+                  {message.image_base64 && (
+                    <Image
+                      source={{ uri: message.image_base64 }}
+                      style={styles.messageImage}
+                      resizeMode="cover"
+                    />
+                  )}
+                  {message.role === 'user' ? (
+                    message.content ? (
+                      <Text style={[styles.messageText, styles.userText]}>
+                        {message.content}
+                      </Text>
+                    ) : null
+                  ) : (
+                    <View style={styles.aiTextWrapper}>
+                      <MarkdownMessage content={message.content} />
+                    </View>
+                  )}
+                </View>
+              </View>
+            ))}
+            {loading && (
+              <View style={[styles.messageBubble, styles.aiBubble]}>
+                <Ionicons name="leaf" size={20} color={Colors.lime} style={styles.messageIcon} />
                 <View style={styles.aiTextWrapper}>
                   <View style={styles.typingContainer}>
                     <ActivityIndicator size="small" color={Colors.lime} />
@@ -415,7 +457,6 @@ export default function DiagnosticScreen() {
             )}
           </ScrollView>
 
-          {/* Image Preview */}
           {pendingImage && (
             <View style={styles.previewContainer}>
               <Image source={{ uri: pendingImage }} style={styles.previewImage} />
@@ -471,6 +512,15 @@ export default function DiagnosticScreen() {
             </TouchableOpacity>
           </View>
         </KeyboardAvoidingView>
+
+        <AppDialog
+          visible={dialog.visible}
+          icon={dialog.icon}
+          title={dialog.title}
+          message={dialog.message}
+          actions={dialog.actions}
+          onDismiss={hideDialog}
+        />
       </SafeAreaView>
     </LinearGradient>
   );

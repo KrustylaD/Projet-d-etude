@@ -7,7 +7,6 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
-  Alert,
   ActivityIndicator,
   ScrollView,
 } from 'react-native';
@@ -17,6 +16,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Colors, Typography, BorderRadius, Spacing } from '../../src/constants/theme';
+import AppDialog from '../../src/components/AppDialog';
 
 const AgriScanLogo = ({ size = 60 }: { size?: number }) => (
   <View style={[signupStyles.logoContainer, { width: size, height: size, borderRadius: BorderRadius.squircle }]}>
@@ -42,15 +42,16 @@ export default function SignupScreen() {
   const [displayName, setDisplayName] = useState('');
   const [farmName, setFarmName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [dialog, setDialog] = useState<{ title: string; message: string } | null>(null);
 
   const handleSignup = async () => {
     if (!email || !password || !displayName) {
-      Alert.alert('Erreur', 'Veuillez remplir tous les champs obligatoires');
+      setDialog({ title: 'Erreur', message: 'Veuillez remplir tous les champs obligatoires' });
       return;
     }
 
     if (password.length < 6) {
-      Alert.alert('Erreur', 'Le mot de passe doit contenir au moins 6 caractères');
+      setDialog({ title: 'Erreur', message: 'Le mot de passe doit contenir au moins 6 caractères' });
       return;
     }
 
@@ -58,7 +59,7 @@ export default function SignupScreen() {
       await signup(email, password, displayName, farmName);
       router.replace('/(tabs)/home');
     } catch (error: any) {
-      Alert.alert('Erreur d\'inscription', error.message || 'Une erreur est survenue');
+      setDialog({ title: "Erreur d'inscription", message: error.message || 'Une erreur est survenue' });
     }
   };
 
@@ -161,6 +162,14 @@ export default function SignupScreen() {
           </ScrollView>
         </KeyboardAvoidingView>
       </SafeAreaView>
+      <AppDialog
+        visible={dialog !== null}
+        title={dialog?.title ?? ''}
+        message={dialog?.message ?? ''}
+        icon="⚠️"
+        actions={[{ text: 'OK', onPress: () => setDialog(null) }]}
+        onDismiss={() => setDialog(null)}
+      />
     </LinearGradient>
   );
 }

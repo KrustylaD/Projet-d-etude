@@ -5,9 +5,7 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  ActivityIndicator,
   RefreshControl,
-  Alert,
   TextInput,
 } from 'react-native';
 import { Colors } from '../../src/constants/theme';
@@ -25,6 +23,9 @@ import {
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { AsynconfBanner } from '../../src/components/AsynconfBanner';
+import AppDialog, { DialogAction } from '../../src/components/AppDialog';
+import SkeletonLoader from '../../src/components/SkeletonLoader';
+import EmptyState from '../../src/components/EmptyState';
 
 type Section = 'stats' | 'users' | 'diagnostics';
 
@@ -32,6 +33,8 @@ export default function AdminScreen() {
   const { user } = useAuthStore();
   const [activeSection, setActiveSection] = useState<Section>('stats');
   const [stats, setStats] = useState<AdminStatsOverview | null>(null);
+  const [dialog, setDialog] = useState<{ visible: boolean; title: string; message: string; actions: DialogAction[] }>({ visible: false, title: '', message: '', actions: [] });
+  const hideDialog = () => setDialog(prev => ({ ...prev, visible: false }));
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [totalUsers, setTotalUsers] = useState(0);
   const [diagnostics, setDiagnostics] = useState<AdminDiagnosticItem[]>([]);
@@ -81,7 +84,7 @@ export default function AdminScreen() {
         setDiagnostics(data);
       }
     } catch {
-      Alert.alert('Erreur', 'Impossible de charger les données');
+      setDialog({ visible: true, title: 'Erreur', message: 'Impossible de charger les données', actions: [{ text: 'OK', style: 'default', onPress: hideDialog }] });
     } finally {
       setLoading(false);
     }
@@ -106,7 +109,7 @@ export default function AdminScreen() {
         setDiagnostics(data);
       }
     } catch {
-      Alert.alert('Erreur', 'Impossible de charger les données');
+      setDialog({ visible: true, title: 'Erreur', message: 'Impossible de charger les données', actions: [{ text: 'OK', style: 'default', onPress: hideDialog }] });
     } finally {
       setRefreshing(false);
     }
@@ -122,7 +125,7 @@ export default function AdminScreen() {
     if (loading) {
       return (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={Colors.lime} />
+          <SkeletonLoader variant="card" count={2} />
         </View>
       );
     }
@@ -162,13 +165,10 @@ export default function AdminScreen() {
       )}
       {loading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={Colors.lime} />
+          <SkeletonLoader variant="card-small" count={4} />
         </View>
       ) : users.length === 0 ? (
-        <View style={styles.emptyState}>
-          <Ionicons name="people-outline" size={64} color={Colors.cream50} />
-          <Text style={styles.emptyText}>Aucun utilisateur trouvé</Text>
-        </View>
+        <EmptyState icon="people-outline" title="Aucun utilisateur trouvé" />
       ) : (
         users.map((u) => (
           <View key={u.uid} style={styles.card}>
@@ -210,13 +210,10 @@ export default function AdminScreen() {
       />
       {loading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={Colors.lime} />
+          <SkeletonLoader variant="card-small" count={4} />
         </View>
       ) : diagnostics.length === 0 ? (
-        <View style={styles.emptyState}>
-          <Ionicons name="folder-open-outline" size={64} color={Colors.cream50} />
-          <Text style={styles.emptyText}>Aucun diagnostic trouvé</Text>
-        </View>
+        <EmptyState icon="folder-open-outline" title="Aucun diagnostic trouvé" />
       ) : (
         diagnostics.map((d) => (
           <View key={d.id} style={styles.card}>
@@ -286,6 +283,13 @@ export default function AdminScreen() {
           {activeSection === 'diagnostics' && renderDiagnostics()}
         </ScrollView>
       </SafeAreaView>
+      <AppDialog
+        visible={dialog.visible}
+        title={dialog.title}
+        message={dialog.message}
+        actions={dialog.actions}
+        onDismiss={hideDialog}
+      />
     </LinearGradient>
   );
 }
