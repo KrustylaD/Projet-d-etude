@@ -15,6 +15,7 @@ import { useAuthStore } from '../../src/store/authStore';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Redirect } from 'expo-router';
 import {
   AdminStatsOverview,
   AdminUser,
@@ -242,6 +243,8 @@ export default function AdminScreen() {
       )}
     </View>
   );
+
+  if (user?.role !== 'admin') return <Redirect href="/(tabs)/profile" />;
 
   return (
     <LinearGradient colors={[Colors.forest, Colors.black]} style={styles.container}>

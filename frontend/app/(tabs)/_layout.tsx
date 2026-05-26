@@ -1,4 +1,5 @@
 import { Tabs } from 'expo-router';
+import { View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../../src/constants/theme';
 import { useAuthStore } from '../../src/store/authStore';
@@ -71,17 +72,16 @@ export default function TabsLayout() {
           ),
         }}
       />
-      {user?.role === 'admin' && (
-        <Tabs.Screen
-          name="admin"
-          options={{
-            title: 'Admin',
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="shield-checkmark" size={size} color={color} />
-            ),
-          }}
-        />
-      )}
+      <Tabs.Screen
+        name="admin"
+        options={{
+          title: 'Admin',
+          tabBarItemStyle: user?.role !== 'admin' ? { display: 'none' } : undefined,
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="shield-checkmark" size={size} color={color} />
+          ),
+        }}
+      />
       <Tabs.Screen
         name="profile"
         options={{

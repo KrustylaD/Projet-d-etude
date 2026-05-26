@@ -125,15 +125,15 @@
 ### Slide 7 — Architecture
 
 **Texte :**
-> Regardons maintenant l'**architecture technique** dans son ensemble.
+> Regardons comment s'organise l'**architecture** d'AgriScan AI — en 3 couches simples.
 >
-> En haut, le **client** : une application React Native avec Expo SDK, compatible mobile et web, avec Google Maps intégré. La navigation est gérée par Expo Router et l'état global par Zustand.
+> En haut, le **client** : une seule application qui fonctionne sur mobile et sur web. L'utilisateur peut voir ses alertes sur une carte interactive, et sa session reste active le temps de l'utilisation.
 >
-> Au milieu, le **serveur** : une API REST FastAPI en Python avec MongoDB pour la persistance des données. L'authentification est simplifiée — pas de JWT, on utilise directement l'identifiant utilisateur. Le serveur expose **~23 endpoints REST** couvrant l'auth, les diagnostics, le chat, les alertes et les statistiques. Tout ce code tourne en **local**, plus aucune dépendance au cloud Emergent.
+> Au milieu, le **serveur** : une API Python hébergée sur le cloud qui gère toute la logique métier — connexion des utilisateurs, stockage des diagnostics, historique des conversations. Les données sont sauvegardées dans une base MongoDB.
 >
-> Et enfin, la couche **IA** : nous utilisons l'API **Groq** (compatible OpenAI) avec deux modèles **Llama** — le **Llama 3.3-70B** pour les conversations et le **Llama 4 Scout 17B** pour l'analyse d'images. C'est une migration complète depuis l'ancien **GPT-5.2** d'Emergent.
+> Et en bas, **l'IA** : deux modèles Llama de Meta, accessibles via le service Groq. Le premier gère les conversations et les diagnostics textuels, le second analyse les photos de culture. Les deux sont spécialisés dans la pathologie végétale grâce à des instructions précises.
 >
-> C'est une architecture en **3 couches** — propre, maintenable, et 100% maîtrisée.
+> Une architecture simple, en 3 couches, qui a migré depuis la plateforme Emergent (GPT-5.2) vers notre solution actuelle.
 
 ---
 

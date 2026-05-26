@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TouchableOpacity, Text, StyleSheet, Linking, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -6,9 +6,24 @@ const ASYNCONF_URL = 'https://app.itsasync.fr/conference';
 const ASYNCONF_BLUE = '#3B82F6';
 
 let bannerDismissed = false;
+const listeners = new Set<() => void>();
+
+function notifyListeners() {
+  listeners.forEach(fn => fn());
+}
 
 export function AsynconfBanner() {
-  const [visible, setVisible] = useState(!bannerDismissed);
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    if (bannerDismissed) setVisible(false);
+    listeners.add(sync);
+    return () => { listeners.delete(sync); };
+  }, []);
+
+  function sync() {
+    setVisible(false);
+  }
 
   const handlePress = () => {
     Linking.openURL(ASYNCONF_URL);
@@ -17,6 +32,7 @@ export function AsynconfBanner() {
   const handleClose = () => {
     bannerDismissed = true;
     setVisible(false);
+    notifyListeners();
   };
 
   if (!visible) return null;
